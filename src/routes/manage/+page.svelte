@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Entry } from '$lib/storage';
 	import { loadData, saveData } from '$lib/storage';
@@ -41,4 +41,4 @@
 
 <div class="mt-8 text-center">
 	<a href="/" class="text-blue-700 underline">Zurück zur Erfassung</a>
-</div>
+</div> -->
