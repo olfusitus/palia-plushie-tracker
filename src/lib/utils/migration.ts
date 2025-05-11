@@ -1,32 +1,33 @@
+import { getProfiles, setActiveProfile } from '../profile';
+import { loadDataWithoutProfile, saveData, getStorageKeyWithoutProfile } from '../storage';
+import type { ResourceType } from '../storage';
+
+const DEFAULT_PROFILE = 'default';
+
 export function migratePaliaData() {
-    const OLD_KEY = 'palia_ore_tracker_data';
-    const NEW_KEY = 'palia_tracker_ores_gold';
-    const TARGET_VERSION = 2;
-  
-    const oldDataRaw = localStorage.getItem(OLD_KEY);
-  //  const newDataRaw = localStorage.getItem(NEW_KEY);
-  
-  
-    if (oldDataRaw) {
-      try {
-        const oldArray = JSON.parse(oldDataRaw);
-  
-        if (Array.isArray(oldArray)) {
-          const newArray = oldArray.map(entry => ({
-            timestamp: entry.timestamp,
-            type: entry.type,
-            rareDrops: entry.gold
-          }));
-  
-          localStorage.setItem(NEW_KEY, JSON.stringify({
-            version: TARGET_VERSION,
-            data: newArray
-          }));
-  
-          localStorage.removeItem(OLD_KEY);
-        }
-      } catch {
-        localStorage.removeItem(OLD_KEY);
-      }
-    }
-  }
+	const profiles = getProfiles();
+
+	// Wenn keine Profile existieren, migriere bestehende Daten
+	if (profiles.length === 1 && profiles[0] === DEFAULT_PROFILE) {
+		const resourceTypes: ResourceType[] = [
+			'ore_silver',
+			'ore_gold',
+			'animal_chapaa',
+			'animal_sernuk',
+			'animal_muujin'
+		];
+
+		resourceTypes.forEach((resourceType) => {
+			const data = loadDataWithoutProfile(resourceType);
+
+			// Wenn Daten ohne Profil existieren, migriere sie zum Default-Profil
+			if (data.length > 0) {
+				saveData(resourceType, data); // Speichert unter dem Default-Profil
+				localStorage.removeItem(getStorageKeyWithoutProfile(resourceType)); // Löscht die alten Daten
+			}
+		});
+
+		// Stelle sicher, dass das Default-Profil aktiv ist
+		setActiveProfile(DEFAULT_PROFILE);
+	}
+}

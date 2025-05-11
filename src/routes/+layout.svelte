@@ -1,25 +1,24 @@
 <script lang="ts">
 	import '../app.css';
 	let { children } = $props();
-	
+
 	import { onMount } from 'svelte';
 	import { migratePaliaData } from '$lib/utils/migration';
 
 	onMount(() => {
-    	migratePaliaData();
-  	});
+		migratePaliaData();
+	});
 </script>
 
 <div class="min-h-screen bg-gradient-to-br from-gray-100 via-sky-100 to-blue-200 bg-fixed">
-	<div class="flex flex-col items-center justify-start px-4 py-8">	
+	<div class="flex flex-col items-center justify-start px-4 py-8">
+		<nav class="mb-8 flex space-x-4 rounded-lg bg-white/70 p-4 shadow-md backdrop-blur-md">
+			<a href="/">Home</a>
+			<a href="/ores/ore_gold">Gold</a>
+			<a href="/ores/ore_silver">Silber</a>
+			<a href="/animals">Tierchen</a>
+		</nav>
 
-		<nav class="mb-8 flex space-x-4 bg-white/70 backdrop-blur-md p-4 rounded-lg shadow-md">
-		<a href="/">Home</a>
-		<a href="/ores/ore_gold" >Gold</a>
-		<a href="/ores/ore_silver">Silber</a>
-		<a href="/animals">Tierchen</a>
-	</nav>
-
-	{@render children()}
-</div>
+		{@render children()}
+	</div>
 </div>

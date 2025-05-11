@@ -5,8 +5,8 @@
 
 	let stats: Record<string, any> = {};
 
-    export let data;            // kommt von load()
-    $: resourceType = data.resourceType;
+	export let data; // kommt von load()
+	$: resourceType = data.resourceType;
 
 	onMount(() => {
 		const data = loadData(resourceType as ResourceType);
