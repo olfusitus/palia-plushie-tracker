@@ -28,15 +28,26 @@
 		}
 	}
 
-	function buttonClass(type: string, gold: number): string {
-		// const base = 'px-4 py-2 rounded w-[48%] transition-all duration-300';
+	function buttonClass(type: OreSize, gold: number): string {
 		const base =
-			'w-[45%] h-20 text-lg flex items-center justify-center rounded transition-all duration-300';
+			'w-[45%] h-20 text-base sm:text-lg flex items-center justify-center rounded-lg shadow-md transition-all duration-200 ease-out active:scale-95 active:shadow-inner text-white';
+
+		const activeClass = 'bg-green-600';
+
+		const colorByType: Record<OreSize, string> = {
+			small: 'bg-amber-400',
+			medium: 'bg-orange-400',
+			large: 'bg-rose-400'
+		};
+
+		const hoverColors: Record<OreSize, string> = {
+			small: 'hover:bg-amber-300',
+			medium: 'hover:bg-orange-300',
+			large: 'hover:bg-rose-300'
+		};
 
 		const active = buttonStatus[type][gold];
-		return active
-			? `${base} bg-green-600 text-white`
-			: `${base} bg-blue-500 text-white hover:bg-blue-600`;
+		return active ? `${base} ${activeClass}` : `${base} ${colorByType[type]} ${hoverColors[type]}`;
 	}
 
 	function handleClick(type: OreSize, gold: number) {
@@ -70,11 +81,14 @@
 	playsinline
 	class="fixed top-0 left-0 w-full h-full object-cover z-[-1] blur-sm opacity-60"
 ></video> -->
-
 <div class="flex h-screen flex-col items-center justify-start px-4 py-8">
-<h1 class="mb-6 text-center text-2xl font-bold">Erz-Drop Tracker</h1>
+	<h1 class="mb-6 text-center text-3xl font-bold tracking-tight text-gray-800">Erz-Drop Tracker</h1>
+
+	<!-- <h1 class="mb-6 text-center text-2xl font-bold">Erz-Drop Tracker</h1> -->
 	<div class="w-full max-w-md space-y-8">
+		<!-- <div class="w-full max-w-md rounded-xl bg-white/80 backdrop-blur-sm p-6 shadow-xl space-y-8"> -->
 		<!-- S -->
+
 		<div class="mb-8 flex w-full max-w-md flex-wrap justify-center gap-4">
 			{#each [0, 1] as g}
 				<button
@@ -86,6 +100,7 @@
 				</button>
 			{/each}
 		</div>
+		<!-- </div> -->
 
 		<!-- M -->
 		<div class="mb-8 flex w-full max-w-md flex-wrap justify-center gap-4">
@@ -116,12 +131,20 @@
 		<div class="mt-8 flex flex-col items-center gap-4 text-center">
 			<button
 				on:click={downloadCSV}
-				class="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+				class="rounded-lg bg-emerald-500 px-6 py-3 text-white shadow-md transition-all duration-200 hover:bg-emerald-400 active:scale-95"
 			>
 				Daten exportieren (CSV)
 			</button>
-			<a href="/stats" class="text-blue-700 underline">Statistik anzeigen</a>
-			<a href="/manage" class="text-blue-700 underline">Einträge bearbeiten</a>
+			<a
+				href="/stats"
+				class="text-blue-700 underline transition-colors duration-200 hover:text-blue-900"
+				>Statistik anzeigen</a
+			>
+			<a
+				href="/manage"
+				class="text-blue-700 underline transition-colors duration-200 hover:text-blue-900"
+				>Einträge bearbeiten</a
+			>
 		</div>
 	</div>
 </div>
