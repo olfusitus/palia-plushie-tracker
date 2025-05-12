@@ -9,7 +9,9 @@
 		(resource) =>
 			resource.type === 'animal_chapaa' ||
 			resource.type === 'animal_muujin' ||
-			resource.type === 'animal_sernuk'
+			resource.type === 'animal_sernuk' ||
+			resource.type === 'animal_ogopuu' ||
+			resource.type === 'animal_shmole' 
 	);
 
 	function handleAddEntry(resourceType: string, size: string, rareDrops: number) {

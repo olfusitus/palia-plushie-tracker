@@ -13,7 +13,9 @@ export type ResourceType =
 	| 'ore_gold'
 	| 'animal_chapaa'
 	| 'animal_sernuk'
-	| 'animal_muujin';
+	| 'animal_muujin'
+	| 'animal_ogopuu'
+	| 'animal_shmole';
 
 export interface Resource {
 	type: ResourceType;
@@ -27,7 +29,9 @@ export const STORAGE_KEYS: Record<ResourceType, string> = {
 	ore_gold: 'palia_tracker_ores_gold',
 	animal_chapaa: 'palia_tracker_animals_chapaa',
 	animal_sernuk: 'palia_tracker_animals_sernuk',
-	animal_muujin: 'palia_tracker_animals_muujin'
+	animal_muujin: 'palia_tracker_animals_muujin',
+	animal_ogopuu: 'palia_tracker_animals_ogopuu',
+	animal_shmole: 'palia_tracker_animals_shmole'
 };
 
 const CURRENT_VERSION = 3;

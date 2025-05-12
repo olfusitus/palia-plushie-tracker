@@ -70,5 +70,33 @@ export const resources: Resource[] = [
 			medium: 'Gebändert',
 			large: 'Blaugeborstet'
 		}
+	},
+	{
+		type: 'animal_ogopuu',
+		name: 'Ogopuu',
+		sizes: {
+			small: [0, 1],
+			medium: [0, 1],
+			large: [0, 1]
+		},
+		labels: {
+			small: 'Ogopuu',
+			medium: 'Smaragd',
+			large: 'Wellenrücken'
+		}
+	},
+	{
+		type: 'animal_shmole',
+		name: 'Shmole',
+		sizes: {
+			small: [0, 1],
+			medium: [0, 1],
+			large: [0, 1]
+		},
+		labels: {
+			small: 'Shmole',
+			medium: 'Holunder',
+			large: 'Piksii'
+		}
 	}
 ];
