@@ -28,13 +28,14 @@
 					.filter(idx => idx !== -1);
 				let lastDistance = 0;
 				let avgDistance = 0;
+				let allDistances: number[] = [];
 				if (rareDropIndices.length >= 2) {
-					const distances = rareDropIndices
+					allDistances = rareDropIndices
 						.slice(1)
 						.map((val, i) => val - rareDropIndices[i]);
 
-					lastDistance = distances[distances.length - 1];
-					avgDistance = distances.reduce((a, b) => a + b, 0) / distances.length;
+					lastDistance = allDistances[allDistances.length - 1];
+					avgDistance = allDistances.reduce((a, b) => a + b, 0) / allDistances.length;
 				}
 
 				
@@ -47,7 +48,8 @@
                         share,
 						totalRareDrops,
 						lastDistance,
-                        avgDistance
+                        avgDistance,
+						allDistances
                     }
                 ];
             })
@@ -67,6 +69,19 @@
 			<p><strong>Anzahl Plüschis:</strong> {data.totalRareDrops}</p>
             <p><strong>Anteil:</strong> {data.share}</p>
             <p><strong>Letzter Abstand:</strong> {data.lastDistance}</p>
+            <!-- <p><strong>Alle Abstände:</strong> {data.allDistances.length > 0 
+				? data.allDistances.map((n: number) => n).join(" → ") 
+				: "keine"}</p> -->
+			<p>
+				<strong>Letzte 10 Abstände:</strong> {
+					data.allDistances.length
+					? data.allDistances
+						.slice(-10)
+						.map((n: number) => n)
+						.join(" → ")
+					: "keine"
+				}
+			</p>
             <p><strong>Ø Abstand:</strong> {data.avgDistance}</p>
         </div>
     {/each}
