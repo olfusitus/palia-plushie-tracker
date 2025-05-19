@@ -71,91 +71,88 @@
 	}
 </script>
 
-<div class="mb-8 flex w-full max-w-md flex-wrap justify-center gap-4">
-	<div class="flex w-full items-center justify-center gap-4">
-		<h2 class="text-xl font-semibold">{resource.name}</h2>
-		<div class="relative sm:hidden">
+<div class="card bg-base-100 shadow-xl border border-base-200 w-full max-w-md mb-8">
+	<div class="card-body px-4 w-full">
+		<div class="flex w-full items-center justify-center gap-4 mb-4">
+			<h2 class="card-title ">{resource.name}</h2>
+			<div class="relative sm:hidden">
+				<button
+					on:click={toggleMobileMenu}
+					class="rounded-full bg-gray-500 p-2 text-white shadow-md transition-all duration-200 hover:bg-gray-400 active:scale-95"
+					aria-label="Menü öffnen"
+				>
+					&#x22EE; <!-- Drei-Punkt-Symbol -->
+				</button>
+				{#if showMobileMenu}
+					<div class="absolute right-0 z-50 mt-2 w-48 rounded-lg bg-white shadow-lg">
+						<button
+							on:click={downloadCSV}
+							class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+						>
+							Daten exportieren (CSV)
+						</button>
+						<a
+							href={`/huntingStats/${resource.type}`}
+							class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+						>
+							Statistik anzeigen
+						</a>
+						<a
+							href={`/manage/${resource.type}`}
+							class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+						>
+							Einträge bearbeiten
+						</a>
+					</div>
+				{/if}
+			</div>
+		</div>
+
+		<!-- Buttons für die verschiedenen Größen -->
+		<div class="flex w-full flex-wrap justify-center gap-4">
+			{#each Object.keys(resource.sizes) as size}
+				<button
+					on:click={() => handleClick(size, 0)}
+					class={buttonClass(size)}
+					disabled={buttonStatus[size]}
+				>
+					{#if buttonStatus[size]}Gespeichert ✓{:else}{resource.labels[size]}{/if}
+				</button>
+			{/each}
+
+			<!-- Button für RareDrop mit Untermenü -->
+			<div class="relative w-[45%]">
+				<button
+					on:click={toggleRareDropMenu}
+					class="flex h-20 w-full items-center justify-center rounded-lg bg-purple-500 text-base text-white shadow-md transition-all duration-200 hover:bg-purple-400 active:scale-95 sm:text-lg"
+				>
+					RareDrop
+				</button>
+				{#if showRareDropMenu}
+					<div class="absolute left-0 z-40 mt-2 w-48 rounded-lg bg-white shadow-lg">
+						{#each Object.keys(resource.sizes) as size}
+							<button
+								on:click={() => handleRareDrop(size)}
+								class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+							>
+								{resource.labels[size]}
+							</button>
+						{/each}
+					</div>
+				{/if}
+			</div>
+		</div>
+
+		<!-- <div class="divider my-2 hidden sm:block">Aktionen</div> -->
+		<div class="hidden sm:flex flex-col items-center gap-2 mt-2">
 			<button
-				on:click={toggleMobileMenu}
-				class="rounded-full bg-gray-500 p-2 text-white shadow-md transition-all duration-200 hover:bg-gray-400 active:scale-95"
-				aria-label="Menü öffnen"
+				on:click={downloadCSV}
+				class="btn btn-outline btn-success w-48"
 			>
-				&#x22EE; <!-- Drei-Punkt-Symbol -->
+				Daten exportieren (CSV)
 			</button>
-			{#if showMobileMenu}
-				<div class="absolute right-0 z-50 mt-2 w-48 rounded-lg bg-white shadow-lg">
-					<button
-						on:click={downloadCSV}
-						class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
-					>
-						Daten exportieren (CSV)
-					</button>
-					<a
-						href="/huntingStats/{resource.type}"
-						class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
-					>
-						Statistik anzeigen
-					</a>
-					<a
-						href="/manage/{resource.type}"
-						class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
-					>
-						Einträge bearbeiten
-					</a>
-				</div>
-			{/if}
+			<a href={`/huntingStats/${resource.type}`} class="btn btn-link">Statistik anzeigen</a>
+			<a href={`/manage/${resource.type}`} class="btn btn-link">Einträge bearbeiten</a>
 		</div>
 	</div>
-
-	<!-- Buttons für die verschiedenen Größen -->
-	{#each Object.keys(resource.sizes) as size}
-		<button
-			on:click={() => handleClick(size, 0)}
-			class={buttonClass(size)}
-			disabled={buttonStatus[size]}
-		>
-			{#if buttonStatus[size]}Gespeichert ✓{:else}{resource.labels[size]}{/if}
-		</button>
-	{/each}
-
-	<!-- Button für RareDrop mit Untermenü -->
-	<div class="relative w-[45%]">
-		<button
-			on:click={toggleRareDropMenu}
-			class="flex h-20 w-full items-center justify-center rounded-lg bg-purple-500 text-base text-white shadow-md transition-all duration-200 hover:bg-purple-400 active:scale-95 sm:text-lg"
-		>
-			RareDrop
-		</button>
-		{#if showRareDropMenu}
-			<div class="absolute left-0 z-40 mt-2 w-48 rounded-lg bg-white shadow-lg">
-				{#each Object.keys(resource.sizes) as size}
-					<button
-						on:click={() => handleRareDrop(size)}
-						class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
-					>
-						{resource.labels[size]}
-					</button>
-				{/each}
-			</div>
-		{/if}
-	</div>
-</div>
-
-<div class="mt-8 hidden flex-col items-center gap-4 text-center sm:flex">
-	<button
-		on:click={downloadCSV}
-		class="rounded-lg bg-emerald-500 px-6 py-3 text-white shadow-md transition-all duration-200 hover:bg-emerald-400 active:scale-95"
-	>
-		Daten exportieren (CSV)
-	</button>
-	<a
-		href="/huntingStats/{resource.type}"
-		class="text-blue-700 underline transition-colors duration-200 hover:text-blue-900"
-		>Statistik anzeigen</a
-	>
-	<a
-		href="/manage/{resource.type}"
-		class="text-blue-700 underline transition-colors duration-200 hover:text-blue-900"
-		>Einträge bearbeiten</a
-	>
 </div>

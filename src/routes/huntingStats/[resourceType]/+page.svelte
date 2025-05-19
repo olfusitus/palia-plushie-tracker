@@ -17,11 +17,10 @@
 		});
 
 		stats = Object.fromEntries(
-            Object.entries(grouped).map(([typ, werte]) => {
-                const count = werte.length;
+			Object.entries(grouped).map(([typ, werte]) => {
+				const count = werte.length;
 				const totalRareDrops = werte.reduce((sum, value) => sum + value, 0);
-               // const total = Object.values(grouped).flat().length;
-                const share = totalRareDrops ? ((totalRareDrops / count) * 100).toFixed(2) + '%' : '–';
+				const share = totalRareDrops ? ((totalRareDrops / count) * 100).toFixed(2) + '%' : '–';
 
 				const rareDropIndices = werte
 					.map((val, idx) => (val !== 0 ? idx : -1))
@@ -38,55 +37,54 @@
 					avgDistance = allDistances.reduce((a, b) => a + b, 0) / allDistances.length;
 				}
 
-				
-
-
-                return [
-                    typ,
-                    {
-                        count,
-                        share,
+				return [
+					typ,
+					{
+						count,
+						share,
 						totalRareDrops,
 						lastDistance,
-                        avgDistance,
+						avgDistance,
 						allDistances
-                    }
-                ];
-            })
-        );
+					}
+				];
+			})
+		);
 	});
 </script>
 
-<h1 class="mb-6 text-center text-2xl font-bold">Statistik</h1>
+<h1 class="mb-6 text-center text-3xl font-bold">Hunting Stats</h1>
 
-<div class="grid grid-cols-1 gap-4 text-center md:grid-cols-3">
+<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 	{#each Object.entries(stats) as [typ, data]}
-        <div class="rounded bg-white p-4 shadow">
-            <h2 class="mb-2 text-lg font-semibold">
-                {typ.charAt(0).toUpperCase() + typ.slice(1)}
-            </h2>
-            <p><strong>Einträge:</strong> {data.count}</p>
-			<p><strong>Anzahl Plüschis:</strong> {data.totalRareDrops}</p>
-            <p><strong>Anteil:</strong> {data.share}</p>
-            <p><strong>Letzter Abstand:</strong> {data.lastDistance}</p>
-            <!-- <p><strong>Alle Abstände:</strong> {data.allDistances.length > 0 
-				? data.allDistances.map((n: number) => n).join(" → ") 
-				: "keine"}</p> -->
-			<p>
-				<strong>Letzte 10 Abstände:</strong> {
-					data.allDistances.length
-					? data.allDistances
-						.slice(-10)
-						.map((n: number) => n)
-						.join(" → ")
-					: "keine"
-				}
-			</p>
-            <p><strong>Ø Abstand:</strong> {data.avgDistance}</p>
-        </div>
-    {/each}
+		<div class="card bg-base-100 shadow-xl border border-base-200">
+			<div class="card-body items-center text-center p-4">
+				<h2 class="card-title mb-2 capitalize">{typ}</h2>
+				<div class="flex flex-wrap gap-2 justify-center mb-2">
+					<span class="badge badge-primary">Einträge: {data.count}</span>
+					<span class="badge badge-secondary">Plüschis: {data.totalRareDrops}</span>
+					<span class="badge badge-accent">Anteil: {data.share}</span>
+				</div>
+				<div class="divider my-2">Abstände</div>
+				<div class="flex flex-col gap-1 w-full">
+					<span class="badge badge-outline w-full flex justify-between">
+						<span>Letzter Abstand</span>
+						<span>{data.lastDistance}</span>
+					</span>
+					<span class="badge badge-outline w-full flex justify-between">
+						<span>Ø Abstand</span>
+						<span>{data.avgDistance}</span>
+					</span>
+					<span class="badge badge-outline w-full flex justify-between">
+						<span>Letzte 10 Abstände</span>
+						<span>{data.allDistances.length ? data.allDistances.slice(-10).join(' → ') : 'keine'}</span>
+					</span>
+				</div>
+			</div>
+		</div>
+	{/each}
 </div>
 
 <div class="mt-8 text-center">
-	<a href="/" class="text-blue-700 underline">Zurück zur Erfassung</a>
+	<a href="/" class="btn btn-link">Zurück zur Erfassung</a>
 </div>

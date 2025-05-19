@@ -10,15 +10,30 @@
 	});
 </script>
 
-<div class="min-h-screen bg-gradient-to-br from-gray-100 via-sky-100 to-blue-200 bg-fixed">
-	<div class="flex flex-col items-center justify-start px-4 py-8">
-		<nav class="mb-8 flex space-x-4 rounded-lg bg-white/70 p-4 shadow-md backdrop-blur-md">
-			<a href="/">Home</a>
-			<a href="/ores/ore_gold">Gold</a>
-			<a href="/ores/ore_silver">Silber</a>
-			<a href="/animals">Tierchen</a>
-		</nav>
+<div class="min-h-screen bg-gradient-to-br from-base-100 via-primary/10 to-base-200 flex flex-col">
+	<nav class="navbar bg-base-100 shadow-md rounded-b-xl px-4 py-2 mb-8">
+		<div class="navbar-start">
+			<a href="/" class="btn btn-ghost normal-case text-xl text-primary">Palia Tracker</a>
+		</div>
+		<div class="navbar-center hidden md:flex">
+			<ul class="menu menu-horizontal px-1 gap-2">
+				<li><a href="/ores/ore_gold" class="text-base">Gold</a></li>
+				<li><a href="/ores/ore_silver" class="text-base">Silber</a></li>
+				<li><a href="/animals" class="text-base">Tierchen</a></li>
+			</ul>
+		</div>
+		<div class="navbar-end">
+			<a href="/manage/profiles" class="btn btn-outline btn-sm">Verwalten</a>
+		</div>
+	</nav>
 
-		{@render children()}
-	</div>
+	<main class="flex-1 flex flex-col items-center justify-start px-2 md:px-4 py-6 w-full">
+			{@render children()}
+	</main>
+
+	<footer class="footer footer-center p-4 bg-base-100 text-base-content rounded-t-xl mt-8">
+		<div>
+			<p class="text-sm opacity-70">&copy; {new Date().getFullYear()} Palia Ore & Hunting Tracker</p>
+		</div>
+	</footer>
 </div>

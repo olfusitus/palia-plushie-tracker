@@ -62,49 +62,44 @@
 	}
 </script>
 
-<div class="mx-auto w-full max-w-sm space-y-6 rounded-xl bg-white p-6 shadow-md">
-	<h2 class="text-2xl font-bold text-gray-800">Profile</h2>
+<div class="max-w-lg w-full mx-auto p-6 bg-base-200 rounded-box shadow space-y-6">
+	<h2 class="text-2xl font-bold text-primary mb-2">Profile</h2>
 	<ul class="space-y-4">
 		{#each profiles as profile}
-			<li class="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-gray-100 p-3">
+			<li class="flex flex-wrap items-center justify-between gap-2 rounded-lg hover:bg-base-300 transition p-3">
 				{#if renameMode && profileToRename === profile}
 					<div class="flex-1">
 						<input
 							type="text"
 							bind:value={newProfileName}
-							class="w-full rounded border border-gray-300 px-2 py-1"
+							class="input input-bordered w-full"
 						/>
 					</div>
 					<div class="flex gap-2">
 						<button
 							on:click={confirmRename}
-							class="rounded bg-green-500 px-3 py-1 text-white hover:bg-green-600">Speichern</button
-						>
+							class="btn btn-success btn-sm"
+						>Speichern</button>
 						<button
 							on:click={cancelRename}
-							class="rounded bg-gray-400 px-3 py-1 text-white hover:bg-gray-500">Abbrechen</button
-						>
+							class="btn btn-ghost btn-sm"
+						>Abbrechen</button>
 					</div>
 				{:else}
-					<span class="flex-1 text-gray-700">{profile}</span>
+					<span class="flex-1 text-base-content font-medium">{profile}</span>
 					<div class="flex flex-wrap justify-end gap-2">
 						<button
 							on:click={() => confirmDelete(profile)}
-							class="rounded bg-red-500 px-3 py-1 text-white hover:bg-red-600">Löschen</button
-						>
+							class="btn btn-warning btn-sm btn-outline"
+						>Löschen</button>
 						<button
 							on:click={() => startRename(profile)}
-							class="rounded bg-yellow-500 px-3 py-1 text-white hover:bg-yellow-600"
-							>Umbenennen</button
-						>
+							class="btn btn-info btn-sm btn-outline"
+						>Umbenennen</button>
 						<button
 							on:click={() => switchProfile(profile)}
 							disabled={activeProfile === profile}
-							class={`${
-								activeProfile === profile
-									? 'cursor-not-allowed bg-blue-300'
-									: 'bg-blue-500 hover:bg-blue-600'
-							} rounded px-3 py-1 text-white`}
+							class={`btn btn-primary btn-sm ${activeProfile === profile ? 'btn-disabled' : ''}`}
 						>
 							{activeProfile === profile ? 'Aktiv' : 'Wechseln'}
 						</button>
@@ -118,13 +113,11 @@
 			type="text"
 			bind:value={newProfile}
 			placeholder="Neues Profil"
-			class="flex-1 rounded border border-gray-300 px-3 py-2"
+			class="input input-bordered flex-1"
 		/>
 		<button
 			on:click={createProfile}
-			class="rounded bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
-		>
-			Erstellen
-		</button>
+			class="btn btn-success"
+		>Erstellen</button>
 	</div>
 </div>
