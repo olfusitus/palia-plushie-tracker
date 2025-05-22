@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+ <script>
+    const resetBtn = document.getElementById("resetBtn");
+
+    resetBtn.addEventListener("click", () => {
+        document.getElementById("count").value = "0";
+        // count = 0;
+    //   const payload = {
+    //     action: "reset-settings",
+    //   };
+
+    //   // Sende eine Nachricht an das Plugin
+    //   sendToPlugin(pi_context, payload);
+    });
+
+    // function sendToPlugin(context, payload) {
+    //   const json = {
+    //     event: "sendToPlugin",
+    //     context: context,
+    //     payload: payload
+    //   };
+    //   websocket.send(JSON.stringify(json));
+    // }
+  </script>
+
+<html>
+
+<head lang="en">
+    <title>Increment Counter Settings</title>
+    <meta charset="utf-8" />
+    <script src="https://sdpi-components.dev/releases/v4/sdpi-components.js"></script>
+</head>
+
+<body>
+    <!--
+        Learn more about property inspector components at https://sdpi-components.dev/docs/components
+    -->
+    <sdpi-item label="Animal">
+        <sdpi-select setting="animal" placeholder="Please choose an animal">
+            <option value="animal_chapaa">Chapaa</option>
+            <option value="animal_ogopuu">Ogopuu</option>
+        </sdpi-select>
+    </sdpi-item>
+
+    <sdpi-item label="Size">
+        <sdpi-select setting="animal_size" placeholder="Please choose a size for the animal">
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+        </sdpi-select>
+    </sdpi-item>
+
+    <sdpi-item label="Plushie">
+        <sdpi-checkbox setting="is_plushie" label="Is it a plushie?"></sdpi-checkbox>
+    </sdpi-item>
+
+    <sdpi-item label="Count">
+        <sdpi-textfield setting="count" id="count"></sdpi-textfield>
+    </sdpi-item>
+    <!-- <sdpi-item>
+    <sdpi-button class="sdpi-item" id="resetBtn">Count zurücksetzen</sdpi-button>
+    </sdpi-item> -->
+</body>
+
+</html>

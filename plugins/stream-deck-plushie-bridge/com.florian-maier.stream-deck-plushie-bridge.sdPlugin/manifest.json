@@ -20,10 +20,11 @@
 			]
 		},
 		{
-			"Name": "Normal Chapaa",
+			"Name": "Animal",
 			"UUID": "com.florian-maier.stream-deck-plushie-bridge.chapaaincrement",
 			"Icon": "imgs/actions/counter/icon",
 			"Tooltip": "Displays a count, which increments by one on press.",
+			"PropertyInspectorPath": "ui/increment-drop.html",
 			"Controllers": [
 				"Keypad"
 			],

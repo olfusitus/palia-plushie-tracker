@@ -1,5 +1,34 @@
-import { streamDeck, action, KeyDownEvent, SingletonAction, WillAppearEvent } from "@elgato/streamdeck";
+import { streamDeck, action, KeyDownEvent, SingletonAction, WillAppearEvent, DidReceiveSettingsEvent } from "@elgato/streamdeck";
 import WebSocket from 'ws';
+
+
+const animalNames = [
+    { animal: "animal_chapaa", size: "small", name: "Kleiner\nChapaa" },
+    { animal: "animal_chapaa", size: "medium", name: "Mittlerer\nChapaa" },
+    { animal: "animal_chapaa", size: "large", name: "Großer\nChapaa" },
+	{ animal: "animal_ogopuu", size: "small", name: "Kleiner\nOgopuu" },
+    { animal: "animal_ogopuu", size: "medium", name: "Mittlerer\nOgopuu" },
+    { animal: "animal_ogopuu", size: "large", name: "Großer\nOgopuu" },
+	{ animal: "animal_shmole", size: "small", name: "Kleiner\nShmole" },
+    { animal: "animal_shmole", size: "medium", name: "Mittlerer\nShmole" },
+    { animal: "animal_shmole", size: "large", name: "Großer\nShmole" },
+    { animal: "animal_sernuk", size: "small", name: "Kleiner\nSernuk" },
+    { animal: "animal_sernuk", size: "medium", name: "Mittlerer\nSernuk" },
+    { animal: "animal_sernuk", size: "large", name: "Großer\nSernuk" },
+    { animal: "animal_muujin", size: "small", name: "Kleiner\nMuujin" },
+    { animal: "animal_muujin", size: "medium", name: "Mittlerer\nMuujin" },
+    { animal: "animal_muujin", size: "large", name: "Großer\nMuujin" },
+
+    // ...weitere Einträge...
+];
+
+// Lookup-Funktion
+function lookupAnimalName(animal: string, size: string): string | undefined {
+    const entry = animalNames.find(
+        (item) => item.animal === animal && item.size === size
+    );
+    return entry?.name;
+}
 
 /**
  * An example action class that displays a count that increments by one each time the button is pressed.
@@ -12,9 +41,20 @@ export class ChapaaCounter extends SingletonAction<CounterSettings> {
 	 * we're setting the title to the "count" that is incremented in {@link IncrementCounter.onKeyDown}.
 	 */
 	override onWillAppear(ev: WillAppearEvent<CounterSettings>): void | Promise<void> {
-		return ev.action.setTitle(`Chapaa: ${ev.payload.settings.count ?? 0}`);
+		return ev.action.setTitle(`${ev.payload.settings.animal} \n ${ev.payload.settings.count ?? 0}`);
 	}
 
+	override async onDidReceiveSettings(ev: DidReceiveSettingsEvent<CounterSettings>): void {
+		// Handle the settings changing in the property inspector (UI).
+		const { settings } = ev.payload;
+
+		settings.count = (isNaN(Number(settings.count)) ? 0 : Number(settings.count)).toString();
+		const displayName = lookupAnimalName(settings.animal ?? "", settings.animal_size ?? "") ?? "Unbekannt";
+		await ev.action.setSettings(settings);
+		await ev.action.setTitle(`${displayName} \n ${settings.count}`);
+
+
+	}
 	/**
 	 * Listens for the {@link SingletonAction.onKeyDown} event which is emitted by Stream Deck when an action is pressed. Stream Deck provides various events for tracking interaction
 	 * with devices including key down/up, dial rotations, and device connectivity, etc. When triggered, {@link ev} object contains information about the event including any payloads
@@ -23,28 +63,29 @@ export class ChapaaCounter extends SingletonAction<CounterSettings> {
 	 */
 	override async onKeyDown(ev: KeyDownEvent<CounterSettings>): Promise<void> {
 		streamDeck.logger.info(`Key pressed!`);
+
+		const { settings } = ev.payload;
+
+		settings.count = (isNaN(Number(settings.count)) ? 0 : Number(settings.count) + 1).toString();
+
+		const displayName = lookupAnimalName(settings.animal ?? "", settings.animal_size ?? "") ?? "Unbekannt";
+
+		// Update the current count in the action's settings, and change the title.
+		await ev.action.setSettings(settings);
+		await ev.action.setTitle(`${displayName} \n ${settings.count}`);
+
+
 		const socket = new WebSocket('ws://localhost:1234');
 		socket.on('open', () => {
 			streamDeck.logger.info(`Websocket connected!`);
 
 			socket.send(
-				JSON.stringify({ action: 'addEntry', resourceType: 'animal_chapaa', size: 'small', rareDrops: 0 }));
-				// JSON.stringify({ action: 'setLocalStorage,
-				// 	key: 'darkMode',
-				// 	value: true
-				// }));
+				JSON.stringify({ action: 'addEntry', resourceType: settings.animal, size: settings.animal_size, rareDrops: settings.is_plushie ? 1 : 0 }));
 			socket.close();
 		});
 
 
-		// Update the count from the settings.
-		const { settings } = ev.payload;
-		settings.incrementBy ??= 1;
-		settings.count = (settings.count ?? 0) + settings.incrementBy;
 
-		// Update the current count in the action's settings, and change the title.
-		await ev.action.setSettings(settings);
-		await ev.action.setTitle(`Chapaa: ${settings.count}`);
 	}
 }
 
@@ -52,6 +93,8 @@ export class ChapaaCounter extends SingletonAction<CounterSettings> {
  * Settings for {@link IncrementCounter}.
  */
 type CounterSettings = {
-	count?: number;
-	incrementBy?: number;
+	count?: string;
+	animal?: string;
+	animal_size?: string;
+	is_plushie?: boolean;
 };
