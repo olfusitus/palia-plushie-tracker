@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"name": "Root",
+			"path": "."
+		},
+		{
+			"name": "Web",
+			"path": "apps/web"
+		},
+		{
+			"name": "Desktop",
+			"path": "apps/desktop"
+		},
+		{
+			"name": "Stream Deck Plugin",
+			"path": "plugins/stream-deck-plushie-bridge"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"node_modules/": true,
+			"packages/": true
+		},
+	}
+}
