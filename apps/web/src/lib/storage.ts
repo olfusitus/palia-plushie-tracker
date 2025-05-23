@@ -15,7 +15,13 @@ export type ResourceType =
 	| 'animal_sernuk'
 	| 'animal_muujin'
 	| 'animal_ogopuu'
-	| 'animal_shmole';
+	| 'animal_shmole'
+	| 'bug_rtb'
+    | 'bug_ladybug'
+    | 'bug_snail'
+    | 'bug_lunar_fairy_moth'
+    | 'bug_proudhorn_beetle'
+	| 'bug_lanternbug';
 
 export interface Resource {
 	type: ResourceType;
@@ -31,7 +37,13 @@ export const STORAGE_KEYS: Record<ResourceType, string> = {
 	animal_sernuk: 'palia_tracker_animals_sernuk',
 	animal_muujin: 'palia_tracker_animals_muujin',
 	animal_ogopuu: 'palia_tracker_animals_ogopuu',
-	animal_shmole: 'palia_tracker_animals_shmole'
+	animal_shmole: 'palia_tracker_animals_shmole',
+	bug_rtb: 'palia_tracker_bugs_rtb',
+	bug_ladybug: 'palia_tracker_bugs_ladybug',
+	bug_snail: 'palia_tracker_bugs_snail',
+	bug_lunar_fairy_moth: 'palia_tracker_bugs_lunar_fairy_moth',
+	bug_proudhorn_beetle: 'palia_tracker_bugs_proudhorn_beetle',
+	bug_lanternbug: 'palia_tracker_bugs_lanternbug'
 };
 
 const CURRENT_VERSION = 3;

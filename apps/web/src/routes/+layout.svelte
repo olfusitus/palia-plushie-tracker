@@ -88,24 +88,11 @@
 					<!-- Navbar menu content here -->
 					<li>
 						<a href="/animals">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-5 w-5"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-								/>
-							</svg>
-
-							Tierchen</a
-						>
+							Tierchen
+						</a>
 					</li>
+					<li><a href="/bugs2">Käferchen</a></li>
+					<li><a href="/bugs">Käferchen einzeln</a></li>
 					<li><a href="/manage/profiles"> Verwalten</a></li>
 				</ul>
 			</div>
@@ -150,6 +137,8 @@
 		<ul class="menu bg-base-200 min-h-full w-80 p-4 text-lg">
 			<!-- Sidebar content here -->
 			<li><a href="/animals" onclick={closeDrawer}>Tierchen</a></li>
+			<li><a href="/bugs2" onclick={closeDrawer}>Käferchen</a></li>
+			<li><a href="/bugs" onclick={closeDrawer}>Käferchen einzeln</a></li>
 			<div class="divider"></div>
 			<li>
 				<a href="/manage/profiles" onclick={closeDrawer}>

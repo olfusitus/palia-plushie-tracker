@@ -98,5 +98,65 @@ export const resources: Resource[] = [
 			medium: 'Holunder',
 			large: 'Piksii'
 		}
+	},
+	{
+		type: 'bug_rtb',
+		name: 'Regenbogenfalter',
+		sizes: {
+			small: [0, 1]
+		},
+		labels: {
+			small: 'Regenbogenfalter'
+		}
+	},
+	{
+		type: 'bug_ladybug',
+		name: 'Garten-Marienkäfer',
+		sizes: {
+			small: [0, 1]
+		},
+		labels: {
+			small: 'Garten-Marienkäfer'
+		}
+	},
+	{
+		type: 'bug_snail',
+		name: 'Garten-Schnecke',
+		sizes: {
+			small: [0, 1]
+		},
+		labels: {
+			small: 'Garten-Schnecke'
+		}
+	},
+	{
+		type: 'bug_lunar_fairy_moth',
+		name: 'Mondfee-Motte',
+		sizes: {
+			small: [0, 1]
+		},
+		labels: {
+			small: 'Mondfee-Motte'
+		}
+	},
+	{
+		type: 'bug_proudhorn_beetle',
+		name: 'Stolzgehörnter Hirschkäfer',
+		sizes: {
+			small: [0, 1]
+		},
+		labels: {
+			small: 'Stolzgehörnter Hirschkäfer'
+		}
+	},
+	{
+		type: 'bug_lanternbug',
+		name: 'Papier-Lampionwürmchen',
+		sizes: {
+			small: [0, 1]
+		},
+		labels: {
+			small: 'Papier-Lampionwürmchen'
+		}
 	}
 ];
