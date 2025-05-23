@@ -44,7 +44,7 @@ export class ChapaaCounter extends SingletonAction<CounterSettings> {
 		return ev.action.setTitle(`${ev.payload.settings.animal} \n ${ev.payload.settings.count ?? 0}`);
 	}
 
-	override async onDidReceiveSettings(ev: DidReceiveSettingsEvent<CounterSettings>): void {
+	override async onDidReceiveSettings(ev: DidReceiveSettingsEvent<CounterSettings>): Promise<void> {
 		// Handle the settings changing in the property inspector (UI).
 		const { settings } = ev.payload;
 
