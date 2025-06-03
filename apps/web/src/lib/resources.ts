@@ -4,7 +4,7 @@ export const resources: Resource[] = [
 	{
 		type: 'animal_chapaa',
 		name: 'Chapaa',
-		 availableSizes: ['small', 'medium', 'large'],
+		availableSizes: ['small', 'medium', 'large'],
 		labels: {
 			small: 'Gefleckt',
 			medium: 'Gestreift',
