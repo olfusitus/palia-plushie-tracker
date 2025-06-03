@@ -174,6 +174,20 @@ export function exportCSV(resourceType: ResourceType): string {
 	return rows.join('\n');
 }
 
+/**
+ * Utility to trigger a CSV file download from a string.
+ * @param csv - The CSV string to download.
+ * @param filename - The filename for the downloaded file.
+ */
+export function downloadCSV(csv: string, filename: string) {
+	const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement('a');
+	link.href = url;
+	link.download = filename;
+	link.click();
+}
+
 export function exportCompleteStorage(): string {
 	const data = JSON.stringify(localStorage);
 	return data;

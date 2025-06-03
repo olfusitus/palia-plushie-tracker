@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Resource } from '$lib/storage';
-	import { exportCSV } from '$lib/storage';
+	import { exportCSV, downloadCSV } from '$lib/storage';
 
 	export let resource: Resource;
 	export let addEntry: (type: string, rareDrops: number) => void;
@@ -52,14 +52,9 @@
 		showRareDropMenu = false; // Schließt das Untermenü
 	}
 
-	function downloadCSV() {
+	function handleDownloadCSV() {
 		const csv = exportCSV(resource.type);
-		const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-		const url = URL.createObjectURL(blob);
-		const link = document.createElement('a');
-		link.href = url;
-		link.download = `${resource.type}_data.csv`;
-		link.click();
+		downloadCSV(csv, `${resource.type}_data.csv`);
 	}
 </script>
 
@@ -84,7 +79,7 @@
 				<ul
 					class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
 				>
-					<li><button on:click={downloadCSV}>Daten exportieren (CSV)</button></li>
+					<li><button on:click={handleDownloadCSV}>Daten exportieren (CSV)</button></li>
 					<li><a href={`/bugStats/${resource.type}`}>Statistik anzeigen</a></li>
 					<li><a href={`/manage/${resource.type}`}>Einträge bearbeiten</a></li>
 				</ul>
@@ -118,7 +113,7 @@
 
 		<!-- <div class="divider my-2 hidden sm:block">Aktionen</div> -->
 		<div class="mt-2 hidden flex-col items-center gap-2 sm:flex">
-			<button on:click={downloadCSV} class="btn btn-outline btn-success w-48">
+			<button on:click={handleDownloadCSV} class="btn btn-outline btn-success w-48">
 				Daten exportieren (CSV)
 			</button>
 			<a href={`/bugStats/${resource.type}`} class="btn btn-link">Statistik anzeigen</a>
