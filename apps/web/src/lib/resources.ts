@@ -4,11 +4,7 @@ export const resources: Resource[] = [
 	{
 		type: 'animal_chapaa',
 		name: 'Chapaa',
-		sizes: {
-			small: [0, 1],
-			medium: [0, 1],
-			large: [0, 1]
-		},
+		 availableSizes: ['small', 'medium', 'large'],
 		labels: {
 			small: 'Gefleckt',
 			medium: 'Gestreift',
@@ -18,11 +14,7 @@ export const resources: Resource[] = [
 	{
 		type: 'animal_sernuk',
 		name: 'Sernuk',
-		sizes: {
-			small: [0, 1],
-			medium: [0, 1],
-			large: [0, 1]
-		},
+		availableSizes: ['small', 'medium', 'large'],
 		labels: {
 			small: 'Sernuk',
 			medium: 'Älter',
@@ -32,11 +24,7 @@ export const resources: Resource[] = [
 	{
 		type: 'animal_muujin',
 		name: 'Muujin',
-		sizes: {
-			small: [0, 1],
-			medium: [0, 1],
-			large: [0, 1]
-		},
+		availableSizes: ['small', 'medium', 'large'],
 		labels: {
 			small: 'Muujin',
 			medium: 'Gebändert',
@@ -46,11 +34,7 @@ export const resources: Resource[] = [
 	{
 		type: 'animal_ogopuu',
 		name: 'Ogopuu',
-		sizes: {
-			small: [0, 1],
-			medium: [0, 1],
-			large: [0, 1]
-		},
+		availableSizes: ['small', 'medium', 'large'],
 		labels: {
 			small: 'Ogopuu',
 			medium: 'Smaragd',
@@ -60,11 +44,7 @@ export const resources: Resource[] = [
 	{
 		type: 'animal_shmole',
 		name: 'Shmole',
-		sizes: {
-			small: [0, 1],
-			medium: [0, 1],
-			large: [0, 1]
-		},
+		availableSizes: ['small', 'medium', 'large'],
 		labels: {
 			small: 'Shmole',
 			medium: 'Holunder',

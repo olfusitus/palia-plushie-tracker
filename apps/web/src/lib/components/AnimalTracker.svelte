@@ -12,7 +12,7 @@
 
 	// Initialisiere den Button-Status für jede Größe
 	onMount(() => {
-		for (const size in resource.sizes) {
+		for (const size in resource.availableSizes) {
 			buttonStatus[size] = false;
 		}
 	});
@@ -101,7 +101,7 @@
 
 		<!-- Buttons für die verschiedenen Größen -->
 		<div class="flex w-full flex-wrap justify-center gap-4">
-			{#each Object.keys(resource.sizes) as size}
+			{#each resource.availableSizes as size}
 				<button
 					on:click={() => handleClick(size, 0)}
 					class={buttonClass(size)}
@@ -121,7 +121,7 @@
 				</button>
 				{#if showRareDropMenu}
 					<div class="absolute left-0 z-40 mt-2 w-48 rounded-lg bg-white shadow-lg">
-						{#each Object.keys(resource.sizes) as size}
+						{#each resource.availableSizes as size}
 							<button
 								on:click={() => handleRareDrop(size)}
 								class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"

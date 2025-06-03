@@ -1,4 +1,4 @@
-import type { OreOrAnimalEntry, ResourceEntry, BugEntry } from '$lib/storage';
+import type { AnimalEntry, ResourceEntry, BugEntry } from '$lib/storage';
 
 export interface StatResult {
 	count: number;
@@ -8,9 +8,9 @@ export interface StatResult {
 	allDistances: number[];
 }
 
-export function calculateStats(entries: OreOrAnimalEntry[]) {
+export function calculateStats(entries: AnimalEntry[]) {
 	const grouped: Record<string, number[]> = { small: [], medium: [], large: [] };
-	entries.forEach((e: OreOrAnimalEntry) => {
+	entries.forEach((e: AnimalEntry) => {
 		grouped[e.type].push(e.rareDrops);
 	});
 

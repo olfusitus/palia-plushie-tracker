@@ -2,7 +2,7 @@ import { getActiveProfile } from './profile';
 
 export type ResourceSize = 'small' | 'medium' | 'large';
 
-export interface OreOrAnimalEntry {
+export interface AnimalEntry {
     timestamp: string;
     type: ResourceSize; // 'small' | 'medium' | 'large'
     rareDrops: number;
@@ -19,7 +19,7 @@ export interface BugEntry {
 // 	rareDrops: number;
 // }
 
-export type ResourceEntry = OreOrAnimalEntry | BugEntry;
+export type ResourceEntry = AnimalEntry | BugEntry;
 
 export type ResourceType =
 	| 'animal_chapaa'
@@ -37,7 +37,7 @@ export type ResourceType =
 export interface AnimalResource {
     type: 'animal_chapaa' | 'animal_sernuk' | 'animal_muujin' | 'animal_ogopuu' | 'animal_shmole';
     name: string;
-    sizes: Record<ResourceSize, number[]>;
+	availableSizes: ResourceSize[];
     labels: Record<ResourceSize, string>;
 }
 
