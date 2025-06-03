@@ -85,7 +85,7 @@
 					class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
 				>
 					<li><button on:click={downloadCSV}>Daten exportieren (CSV)</button></li>
-					<li><a href={`/huntingStats/${resource.type}`}>Statistik anzeigen</a></li>
+					<li><a href={`/bugStats/${resource.type}`}>Statistik anzeigen</a></li>
 					<li><a href={`/manage/${resource.type}`}>Einträge bearbeiten</a></li>
 				</ul>
 			</div>
@@ -121,7 +121,7 @@
 			<button on:click={downloadCSV} class="btn btn-outline btn-success w-48">
 				Daten exportieren (CSV)
 			</button>
-			<a href={`/huntingStats/${resource.type}`} class="btn btn-link">Statistik anzeigen</a>
+			<a href={`/bugStats/${resource.type}`} class="btn btn-link">Statistik anzeigen</a>
 			<a href={`/manage/${resource.type}`} class="btn btn-link">Einträge bearbeiten</a>
 		</div>
 	</div>

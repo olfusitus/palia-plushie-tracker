@@ -2,11 +2,24 @@ import { getActiveProfile } from './profile';
 
 export type ResourceSize = 'small' | 'medium' | 'large';
 
-export interface ResourceEntry {
-	timestamp: string;
-	type: ResourceSize;
-	rareDrops: number;
+export interface OreOrAnimalEntry {
+    timestamp: string;
+    type: ResourceSize; // 'small' | 'medium' | 'large'
+    rareDrops: number;
 }
+
+export interface BugEntry {
+    timestamp: string;
+    rareDrops: number;
+}
+
+// export interface ResourceEntry {
+// 	timestamp: string;
+// 	type: ResourceSize;
+// 	rareDrops: number;
+// }
+
+export type ResourceEntry = OreOrAnimalEntry | BugEntry;
 
 export type ResourceType =
 	| 'ore_silver'
@@ -23,12 +36,35 @@ export type ResourceType =
     | 'bug_proudhorn_beetle'
 	| 'bug_lanternbug';
 
-export interface Resource {
-	type: ResourceType;
-	name: string;
-	sizes: Record<string, number[]>; // z.B. { small: [0, 1], medium: [0, 1, 2] }
-	labels: Record<string, string>; // z.B. { small: 'S', medium: 'M' }
+
+export interface OreResource {
+    type: 'ore_silver' | 'ore_gold';
+    name: string;
+    sizes: Record<ResourceSize, number[]>;  // z.B. { small: [0, 1], medium: [0, 1, 2] }
+    labels: Record<ResourceSize, string>; // z.B. { small: 'S', medium: 'M' }
 }
+
+export interface AnimalResource {
+    type: 'animal_chapaa' | 'animal_sernuk' | 'animal_muujin' | 'animal_ogopuu' | 'animal_shmole';
+    name: string;
+    sizes: Record<ResourceSize, number[]>;
+    labels: Record<ResourceSize, string>;
+}
+
+export interface BugResource {
+    type: 'bug_rtb' | 'bug_ladybug' | 'bug_snail' | 'bug_lunar_fairy_moth' | 'bug_proudhorn_beetle' | 'bug_lanternbug';
+    name: string;
+    // Bugs haben keine sizes, nur ein Label
+    // label: string;
+}
+
+export type Resource = OreResource | AnimalResource | BugResource; 
+// export interface Resource {
+// 	type: ResourceType;
+// 	name: string;
+// 	sizes: Record<string, number[]>; // z.B. { small: [0, 1], medium: [0, 1, 2] }
+// 	labels: Record<string, string>; // z.B. { small: 'S', medium: 'M' }
+// }
 
 export const STORAGE_KEYS: Record<ResourceType, string> = {
 	ore_silver: 'palia_tracker_ores_silver',
@@ -79,6 +115,25 @@ export function loadDataWithoutProfile(resourceType: ResourceType): ResourceEntr
 	// }
 }
 
+// export function loadResourceEntries(resourceType: ResourceType): ResourceEntry[] {
+// 	if (typeof localStorage === 'undefined') return [];
+
+// 	const raw = localStorage.getItem(getStorageKey(resourceType));
+// 	// console.log('Roh:', raw);
+// 	// console.log(resourceType, getStorageKey(resourceType));
+// 	if (!raw) return [];
+
+// 	const parsed = JSON.parse(raw);
+// 	// console.log('Rohdaten:', parsed);
+
+// 	if (parsed.version === CURRENT_VERSION) {
+// 		// console.log('Rohdaten:', parsed.data);
+// 		return parsed.data;
+// 	} else {
+// 		console.warn(`Veraltete Version für ${resourceType}:`, parsed.version);
+// 		return []; // optional: automatische Migration ergänzen
+// 	}
+// }
 export function loadResourceEntries(resourceType: ResourceType): ResourceEntry[] {
 	if (typeof localStorage === 'undefined') return [];
 
@@ -113,11 +168,20 @@ export function addEntry(resourceType: ResourceType, size: ResourceSize, rareDro
 	saveData(resourceType, data);
 }
 
+export function addBugEntry(resourceType: ResourceType, rareDrops: number) {
+	const data = loadResourceEntries(resourceType);	
+	data.push({ timestamp: new Date().toISOString(), rareDrops });
+	saveData(resourceType, data);
+}
+
 export function exportCSV(resourceType: ResourceType): string {
 	const data = loadResourceEntries(resourceType);
 	const rows = [
 		'Zeitstempel,Größe,Rare Drops',
-		...data.map((e) => `${e.timestamp},${e.type},${e.rareDrops}`)
+		...data.map((e) => {
+			const size = 'type' in e ? e.type : '';
+			return `${e.timestamp},${size},${e.rareDrops}`;
+		})
 	];
 	return rows.join('\n');
 }

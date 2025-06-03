@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { resources } from '$lib/resources';
-	import { addEntry, type ResourceType, type ResourceSize } from '$lib/storage';
+	import { addEntry, type ResourceType, type ResourceSize, type AnimalResource } from '$lib/storage';
 	import AnimalTracker from '$lib/components/AnimalTracker.svelte';
 
-	// Filtere nur die Ressourcen vom Typ "animal"
-	const resourcesList = resources.filter(
-		(resource) =>
+	const resourcesList: AnimalResource[] = resources.filter(
+		(resource): resource is AnimalResource =>
 			resource.type === 'animal_chapaa' ||
 			resource.type === 'animal_muujin' ||
 			resource.type === 'animal_sernuk' ||

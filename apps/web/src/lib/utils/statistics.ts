@@ -1,4 +1,4 @@
-import type { ResourceEntry } from '$lib/storage';
+import type { OreOrAnimalEntry, ResourceEntry, BugEntry } from '$lib/storage';
 
 export interface StatResult {
 	count: number;
@@ -8,9 +8,9 @@ export interface StatResult {
 	allDistances: number[];
 }
 
-export function calculateStats(entries: ResourceEntry[]) {
+export function calculateStats(entries: OreOrAnimalEntry[]) {
 	const grouped: Record<string, number[]> = { small: [], medium: [], large: [] };
-	entries.forEach((e: ResourceEntry) => {
+	entries.forEach((e: OreOrAnimalEntry) => {
 		grouped[e.type].push(e.rareDrops);
 	});
 
@@ -46,4 +46,33 @@ export function calculateStats(entries: ResourceEntry[]) {
 			];
 		})
 	);
+}
+
+export function calculateBugStats(entries: BugEntry[]) {
+	const werte = entries.map((e) => e.rareDrops);
+	const count = werte.length;
+	const totalRareDrops = werte.reduce((sum, value) => sum + value, 0);
+	const share = totalRareDrops ? ((totalRareDrops / count) * 100).toFixed(2) + '%' : '–';
+
+	const rareDropIndices = werte
+		.map((val, idx) => (val !== 0 ? idx : -1))
+		.filter((idx) => idx !== -1);
+	let avgDistance = 0;
+	let allDistances: number[] = [];
+	let timeSinceLast = 0;
+	if (rareDropIndices.length > 0) {
+		timeSinceLast = count - (rareDropIndices[rareDropIndices.length - 1] + 1);
+	}
+	if (rareDropIndices.length >= 2) {
+		allDistances = rareDropIndices.slice(1).map((val, i) => val - rareDropIndices[i]);
+		avgDistance = allDistances.reduce((a, b) => a + b, 0) / allDistances.length;
+	}
+	return {
+		count,
+		share,
+		totalRareDrops,
+		avgDistance,
+		allDistances,
+		timeSinceLast
+	};
 }

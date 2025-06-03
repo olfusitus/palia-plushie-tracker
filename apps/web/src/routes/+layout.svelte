@@ -50,11 +50,11 @@
 	function closeDrawer() {
 		drawerOpen.set(false);
 	}
-	console.log('__TAURI__ =', __TAURI__);
-	console.log("Wird dieser Code überhaupt ausgeführt?");
-	if (__TAURI__) {
-  		console.log("Läuft in Tauri-Umgebung!");
-	}
+	// console.log('__TAURI__ =', __TAURI__);
+	// console.log("Wird dieser Code überhaupt ausgeführt?");
+	// if (__TAURI__) {
+  	// 	console.log("Läuft in Tauri-Umgebung!");
+	// }
 </script>
 
 <div class="drawer">

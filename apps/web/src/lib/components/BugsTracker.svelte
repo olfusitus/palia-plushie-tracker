@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { Resource } from '$lib/storage';
+	import type { BugResource, Resource } from '$lib/storage';
 	import { exportCSV } from '$lib/storage';
 
-	export let resources: Resource[]; // Array statt einzelner Resource
+	export let resources: BugResource[]; // Array statt einzelner Resource
 	export let addEntry: (type: string, rareDrops: number) => void;
 
 	let buttonStatus: Record<string, boolean> = {};
@@ -46,7 +46,6 @@
 	}
 
 	function handleClick(resource: Resource, rareDrops: number) {
-		const size = Object.keys(resource.sizes)[0];
 		addEntry(resource.type, rareDrops);
 		buttonStatus[resource.type] = true;
 		setTimeout(() => {
@@ -68,7 +67,6 @@
 	}
 
 	function handleRareDrop(resource: Resource) {
-		const size = Object.keys(resource.sizes)[0];
 		handleClick(resource, 1);
 		showRareDropMenu = false;
 	}
@@ -107,7 +105,7 @@
 				>
 					{#each resources as resource}
 						<!-- <li><button on:click={() => downloadCSV(resource)}>Daten exportieren ({resource.name})</button></li> -->
-						<li><a href={`/huntingStats/${resource.type}`}>Statistik anzeigen ({resource.name})</a></li>
+						<li><a href={`/bugStats/${resource.type}`}>Statistik anzeigen ({resource.name})</a></li>
 						<li><a href={`/manage/${resource.type}`}>Einträge bearbeiten ({resource.name})</a></li>
 					{/each}
 				</ul>
@@ -122,7 +120,7 @@
 					class={buttonClass(resource.type)}
 					disabled={buttonStatus[resource.type]}
 				>
-					{#if buttonStatus[resource.type]}Gespeichert ✓{:else}{resource.labels[Object.keys(resource.sizes)[0]]}{/if}
+					{#if buttonStatus[resource.type]}Gespeichert ✓{:else}{resource.name}{/if}
 				</button>
 			{/each}
 
@@ -144,7 +142,7 @@
 								on:click={() => handleRareDrop(resource)}
 								class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
 							>
-								{resource.labels[Object.keys(resource.sizes)[0]]}
+								{resource.name}
 							</button>
 						{/each}
 					</div>
@@ -157,7 +155,7 @@
 				<!-- <button on:click={() => downloadCSV(resource)} class="btn btn-outline btn-success w-48">
 					Daten exportieren ({resource.name})
 				</button> -->
-				<a href={`/huntingStats/${resource.type}`} class="btn btn-link">Statistik anzeigen ({resource.name})</a>
+				<a href={`/bugStats/${resource.type}`} class="btn btn-link">Statistik anzeigen ({resource.name})</a>
 				<a href={`/manage/${resource.type}`} class="btn btn-link">Einträge bearbeiten ({resource.name})</a>
 			{/each}
 		</div>

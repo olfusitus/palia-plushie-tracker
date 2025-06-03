@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { Resource } from '$lib/storage';
+	import type { AnimalResource, Resource, ResourceSize } from '$lib/storage';
 	import { exportCSV } from '$lib/storage';
 
-	export let resource: Resource;
+	export let resource: AnimalResource;
 	export let addEntry: (type: string, size: string, rareDrops: number) => void;
 
 	let buttonStatus: Record<string, boolean> = {};
@@ -107,7 +107,7 @@
 					class={buttonClass(size)}
 					disabled={buttonStatus[size]}
 				>
-					{#if buttonStatus[size]}Gespeichert ✓{:else}{resource.labels[size]}{/if}
+					{#if buttonStatus[size]}Gespeichert ✓{:else}{resource.labels[size as ResourceSize]}{/if}
 				</button>
 			{/each}
 
@@ -126,7 +126,7 @@
 								on:click={() => handleRareDrop(size)}
 								class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
 							>
-								{resource.labels[size]}
+								{resource.labels[size as ResourceSize]}
 							</button>
 						{/each}
 					</div>

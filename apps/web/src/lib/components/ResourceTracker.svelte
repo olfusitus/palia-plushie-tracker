@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Resource } from '$lib/storage';
 	import { exportCSV } from '$lib/storage';
@@ -92,4 +92,4 @@
 			>Einträge bearbeiten</a
 		>
 	</div>
-</div>
+</div> -->

@@ -14,7 +14,9 @@
 		const grouped = { small: [], medium: [], large: [] } as Record<string, number[]>;
 
 		data.forEach((e: ResourceEntry) => {
-			grouped[e.type].push(e.rareDrops);
+			if ('type' in e && e.type in grouped) {
+				grouped[e.type].push(e.rareDrops);
+			}
 		});
 
 		stats = Object.fromEntries(

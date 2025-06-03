@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resources } from '$lib/resources';
-	import { addEntry, type ResourceType, type ResourceSize } from '$lib/storage';
+	import { addBugEntry, type ResourceType, type ResourceSize } from '$lib/storage';
 	import BugTracker from '$lib/components/BugTracker.svelte';
 
 	// Filtere nur die Ressourcen vom Typ "bug"
@@ -15,7 +15,7 @@
 	);
 
 	function handleAddEntry(resourceType: string, rareDrops: number) {
-		addEntry(resourceType as ResourceType, 'small', rareDrops);
+		addBugEntry(resourceType as ResourceType, rareDrops);
 	}
 </script>
 

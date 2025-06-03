@@ -43,7 +43,9 @@
 							{new Date(eintrag.timestamp).toLocaleString()}
 						</p>
 						<p class="text-base-content font-semibold">
-							<span class="badge badge-outline badge-info mr-2">{eintrag.type.toUpperCase()}</span>
+							{#if 'type' in eintrag}
+								<span class="badge badge-outline badge-info mr-2">{eintrag.type.toUpperCase()}</span>
+							{/if}
 							<span class="badge badge-outline badge-info">{eintrag.rareDrops} Rare Drops</span>
 						</p>
 					</div>
