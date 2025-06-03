@@ -10,7 +10,7 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		prerender: {
-			entries: ['/ores/ore_gold', '/stats/ore_gold']
+			// entries: ['/ores/ore_gold', '/stats/ore_gold']
 		},
         paths: {
             base: process.env.ELECTRON ? '' : ''

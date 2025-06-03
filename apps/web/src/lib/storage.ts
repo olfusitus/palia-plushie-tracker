@@ -22,8 +22,6 @@ export interface BugEntry {
 export type ResourceEntry = OreOrAnimalEntry | BugEntry;
 
 export type ResourceType =
-	| 'ore_silver'
-	| 'ore_gold'
 	| 'animal_chapaa'
 	| 'animal_sernuk'
 	| 'animal_muujin'
@@ -35,14 +33,6 @@ export type ResourceType =
     | 'bug_lunar_fairy_moth'
     | 'bug_proudhorn_beetle'
 	| 'bug_lanternbug';
-
-
-export interface OreResource {
-    type: 'ore_silver' | 'ore_gold';
-    name: string;
-    sizes: Record<ResourceSize, number[]>;  // z.B. { small: [0, 1], medium: [0, 1, 2] }
-    labels: Record<ResourceSize, string>; // z.B. { small: 'S', medium: 'M' }
-}
 
 export interface AnimalResource {
     type: 'animal_chapaa' | 'animal_sernuk' | 'animal_muujin' | 'animal_ogopuu' | 'animal_shmole';
@@ -58,7 +48,7 @@ export interface BugResource {
     // label: string;
 }
 
-export type Resource = OreResource | AnimalResource | BugResource; 
+export type Resource = AnimalResource | BugResource; 
 // export interface Resource {
 // 	type: ResourceType;
 // 	name: string;
@@ -67,8 +57,6 @@ export type Resource = OreResource | AnimalResource | BugResource;
 // }
 
 export const STORAGE_KEYS: Record<ResourceType, string> = {
-	ore_silver: 'palia_tracker_ores_silver',
-	ore_gold: 'palia_tracker_ores_gold',
 	animal_chapaa: 'palia_tracker_animals_chapaa',
 	animal_sernuk: 'palia_tracker_animals_sernuk',
 	animal_muujin: 'palia_tracker_animals_muujin',

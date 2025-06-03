@@ -2,34 +2,6 @@ import type { Resource } from './storage';
 
 export const resources: Resource[] = [
 	{
-		type: 'ore_gold',
-		name: 'Gold',
-		sizes: {
-			small: [0, 1],
-			medium: [0, 1, 2],
-			large: [0, 1, 2, 3]
-		},
-		labels: {
-			small: 'S',
-			medium: 'M',
-			large: 'L'
-		}
-	},
-	{
-		type: 'ore_silver',
-		name: 'Silver',
-		sizes: {
-			small: [0, 1],
-			medium: [0, 1, 2],
-			large: [0, 1, 2, 3]
-		},
-		labels: {
-			small: 'S',
-			medium: 'M',
-			large: 'L'
-		}
-	},
-	{
 		type: 'animal_chapaa',
 		name: 'Chapaa',
 		sizes: {

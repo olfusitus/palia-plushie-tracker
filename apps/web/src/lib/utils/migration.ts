@@ -10,8 +10,6 @@ export function migratePaliaData() {
 	// Wenn keine Profile existieren, migriere bestehende Daten
 	if (profiles.length === 1 && profiles[0] === DEFAULT_PROFILE) {
 		const resourceTypes: ResourceType[] = [
-			'ore_silver',
-			'ore_gold',
 			'animal_chapaa',
 			'animal_sernuk',
 			'animal_muujin'
