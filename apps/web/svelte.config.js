@@ -12,9 +12,9 @@ const config = {
 		prerender: {
 			// entries: ['/ores/ore_gold', '/stats/ore_gold']
 		},
-        paths: {
-            base: process.env.ELECTRON ? '' : ''
-        }
+		paths: {
+			// base: process.env.ELECTRON ? '' : ''
+		}
 	}
 };
 

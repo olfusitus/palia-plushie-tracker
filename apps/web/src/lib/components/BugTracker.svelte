@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { Resource } from '$lib/storage';
+	import type { BugResource } from '$lib/storage';
 	import { exportCSV, downloadCSV } from '$lib/storage';
 
-	export let resource: Resource;
+	export let resource: BugResource;
 	export let addEntry: (type: string, rareDrops: number) => void;
 
 	let buttonStatus: boolean = false;
@@ -16,20 +16,6 @@
 		// 	buttonStatus[size] = false;
 		// }
 	});
-
-	function buttonClass(): string {
-		const base =
-			'btn w-[45%] h-20 sm:text-lg flex items-center justify-center rounded-lg shadow-md transition-all duration-200 ease-out active:scale-95 active:shadow-inner text-white';
-
-		const activeClass = 'bg-green-600!';
-
-		const colorByType = 'bg-amber-400';
-
-		const hoverColors = 'hover:bg-amber-300';
-
-		const active = buttonStatus;
-		return active ? `${base} ${activeClass}` : `${base} ${colorByType} ${hoverColors}`;
-	}
 
 	function handleClick(rareDrops: number) {
 		addEntry(resource.type, rareDrops);
@@ -88,16 +74,13 @@
 
 		<!-- Buttons für die verschiedenen Größen -->
 		<div class="flex w-full flex-wrap justify-center gap-4">
-
-				<button
-					on:click={() => handleClick(0)}
-					class="btn btn-soft btn-primary w-[45%] h-20 rounded-lg"
-
-					disabled={buttonStatus}
-					
-				>
-					{#if buttonStatus}Gespeichert ✓{:else}{resource.name}{/if}
-				</button>
+			<button
+				on:click={() => handleClick(0)}
+				class="btn btn-soft btn-primary h-20 w-[45%] rounded-lg"
+				disabled={buttonStatus}
+			>
+				{#if buttonStatus}Gespeichert ✓{:else}{resource.name}{/if}
+			</button>
 
 			<!-- Button für RareDrop mit Untermenü -->
 			<div class="relative w-[45%]">
@@ -107,7 +90,6 @@
 				>
 					Plüschi
 				</button>
-
 			</div>
 		</div>
 

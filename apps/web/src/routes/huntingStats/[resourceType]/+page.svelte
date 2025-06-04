@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { OreOrAnimalEntry, ResourceEntry, ResourceType } from '$lib/storage';
+	import type { AnimalEntry, ResourceEntry, ResourceType } from '$lib/storage';
 	import { loadResourceEntries } from '$lib/storage';
 	import { resources } from '$lib/resources';
 	import { chartRender } from '$lib/actions/chartRender.js';
@@ -17,10 +17,10 @@
 
 	const entriesStore = createResourceEntriesStore(resourceType);
 	resourceType.set(data.resourceType as ResourceType);
- 
+
 	// $: $entriesStore;
-	$: if ($entriesStore){
-		const rawStats = calculateStats($entriesStore as OreOrAnimalEntry[]);
+	$: if ($entriesStore) {
+		const rawStats = calculateStats($entriesStore as AnimalEntry[]);
 		// console.log('rawStats', rawStats);
 		stats = Object.fromEntries(
 			Object.entries(rawStats).map(([typ, data]) => [

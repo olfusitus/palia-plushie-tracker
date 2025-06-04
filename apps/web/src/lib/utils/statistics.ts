@@ -1,4 +1,4 @@
-import type { AnimalEntry, ResourceEntry, BugEntry } from '$lib/storage';
+import type { AnimalEntry, BugEntry } from '$lib/storage';
 
 export interface StatResult {
 	count: number;

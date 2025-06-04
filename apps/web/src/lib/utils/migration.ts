@@ -9,11 +9,7 @@ export function migratePaliaData() {
 
 	// Wenn keine Profile existieren, migriere bestehende Daten
 	if (profiles.length === 1 && profiles[0] === DEFAULT_PROFILE) {
-		const resourceTypes: ResourceType[] = [
-			'animal_chapaa',
-			'animal_sernuk',
-			'animal_muujin'
-		];
+		const resourceTypes: ResourceType[] = ['animal_chapaa', 'animal_sernuk', 'animal_muujin'];
 
 		resourceTypes.forEach((resourceType) => {
 			const data = loadDataWithoutProfile(resourceType);

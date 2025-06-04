@@ -7,7 +7,7 @@
 	let resourceType: ResourceType;
 	let daten: ResourceEntry[] = [];
 
-	$: resourceType = page.params.resourceType as ResourceType;
+	resourceType = page.params.resourceType as ResourceType;
 
 	onMount(() => {
 		if (resourceType) {
@@ -44,7 +44,8 @@
 						</p>
 						<p class="text-base-content font-semibold">
 							{#if 'type' in eintrag}
-								<span class="badge badge-outline badge-info mr-2">{eintrag.type.toUpperCase()}</span>
+								<span class="badge badge-outline badge-info mr-2">{eintrag.type.toUpperCase()}</span
+								>
 							{/if}
 							<span class="badge badge-outline badge-info">{eintrag.rareDrops} Rare Drops</span>
 						</p>

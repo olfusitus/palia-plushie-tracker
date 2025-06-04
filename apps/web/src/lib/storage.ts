@@ -3,14 +3,14 @@ import { getActiveProfile } from './profile';
 export type ResourceSize = 'small' | 'medium' | 'large';
 
 export interface AnimalEntry {
-    timestamp: string;
-    type: ResourceSize; // 'small' | 'medium' | 'large'
-    rareDrops: number;
+	timestamp: string;
+	type: ResourceSize; // 'small' | 'medium' | 'large'
+	rareDrops: number;
 }
 
 export interface BugEntry {
-    timestamp: string;
-    rareDrops: number;
+	timestamp: string;
+	rareDrops: number;
 }
 
 // export interface ResourceEntry {
@@ -28,27 +28,33 @@ export type ResourceType =
 	| 'animal_ogopuu'
 	| 'animal_shmole'
 	| 'bug_rtb'
-    | 'bug_ladybug'
-    | 'bug_snail'
-    | 'bug_lunar_fairy_moth'
-    | 'bug_proudhorn_beetle'
+	| 'bug_ladybug'
+	| 'bug_snail'
+	| 'bug_lunar_fairy_moth'
+	| 'bug_proudhorn_beetle'
 	| 'bug_lanternbug';
 
 export interface AnimalResource {
-    type: 'animal_chapaa' | 'animal_sernuk' | 'animal_muujin' | 'animal_ogopuu' | 'animal_shmole';
-    name: string;
+	type: 'animal_chapaa' | 'animal_sernuk' | 'animal_muujin' | 'animal_ogopuu' | 'animal_shmole';
+	name: string;
 	availableSizes: ResourceSize[];
-    labels: Record<ResourceSize, string>;
+	labels: Record<ResourceSize, string>;
 }
 
 export interface BugResource {
-    type: 'bug_rtb' | 'bug_ladybug' | 'bug_snail' | 'bug_lunar_fairy_moth' | 'bug_proudhorn_beetle' | 'bug_lanternbug';
-    name: string;
-    // Bugs haben keine sizes, nur ein Label
-    // label: string;
+	type:
+		| 'bug_rtb'
+		| 'bug_ladybug'
+		| 'bug_snail'
+		| 'bug_lunar_fairy_moth'
+		| 'bug_proudhorn_beetle'
+		| 'bug_lanternbug';
+	name: string;
+	// Bugs haben keine sizes, nur ein Label
+	// label: string;
 }
 
-export type Resource = AnimalResource | BugResource; 
+export type Resource = AnimalResource | BugResource;
 // export interface Resource {
 // 	type: ResourceType;
 // 	name: string;
@@ -157,7 +163,7 @@ export function addEntry(resourceType: ResourceType, size: ResourceSize, rareDro
 }
 
 export function addBugEntry(resourceType: ResourceType, rareDrops: number) {
-	const data = loadResourceEntries(resourceType);	
+	const data = loadResourceEntries(resourceType);
 	data.push({ timestamp: new Date().toISOString(), rareDrops });
 	saveData(resourceType, data);
 }

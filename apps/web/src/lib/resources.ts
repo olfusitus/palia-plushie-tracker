@@ -53,31 +53,26 @@ export const resources: Resource[] = [
 	},
 	{
 		type: 'bug_rtb',
-		name: 'Regenbogenfalter',
-
+		name: 'Regenbogenfalter'
 	},
 	{
 		type: 'bug_ladybug',
-		name: 'Garten-Marienkäfer',
-
+		name: 'Garten-Marienkäfer'
 	},
 	{
 		type: 'bug_snail',
-		name: 'Garten-Schnecke',
-
+		name: 'Garten-Schnecke'
 	},
 	{
 		type: 'bug_lunar_fairy_moth',
-		name: 'Mondfee-Motte',
-
+		name: 'Mondfee-Motte'
 	},
 	{
 		type: 'bug_proudhorn_beetle',
-		name: 'Stolzgehörnter Hirschkäfer',
-
+		name: 'Stolzgehörnter Hirschkäfer'
 	},
 	{
 		type: 'bug_lanternbug',
-		name: 'Papier-Lampionwürmchen',
+		name: 'Papier-Lampionwürmchen'
 	}
 ];

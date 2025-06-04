@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { AnimalResource, Resource, ResourceSize } from '$lib/storage';
+	import type { AnimalResource, ResourceSize } from '$lib/storage';
 	import { downloadCSV, exportCSV } from '$lib/storage';
 
 	export let resource: AnimalResource;

@@ -7,7 +7,9 @@
 		getActiveProfile,
 		setActiveProfile
 	} from '$lib/profile';
+
 	import { downloadLocalStorage, importLocalStorage } from '$lib/storage';
+	import { toasts } from '$lib/stores/toastStore';
 
 	let profiles = getProfiles();
 	let newProfile = '';
@@ -28,10 +30,15 @@
 			profiles = getProfiles();
 			activeProfile = getActiveProfile();
 			renameMode = false;
+			toasts.success(
+				`Profil "${profileToRename}" erfolgreich in "${newProfileName.trim()}" umbenannt.`
+			);
 			profileToRename = '';
 			newProfileName = '';
 		} catch (error) {
-			alert(error instanceof Error ? error.message : 'An unknown error occurred');
+			toasts.error(
+				error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten.'
+			);
 		}
 	}
 
@@ -46,24 +53,37 @@
 			if (newProfile.trim()) {
 				addProfile(newProfile.trim());
 				profiles = getProfiles();
+				toasts.success(`Profil "${newProfile.trim()}" erfolgreich erstellt.`);
 				newProfile = '';
+			} else {
+				toasts.warning('Profilname darf nicht leer sein.');
 			}
 		} catch (error) {
-			alert(error instanceof Error ? error.message : 'An unknown error occurred');
+			toasts.error(
+				error instanceof Error ? error.message : 'Ein unbekannter Fehler ist aufgetreten.'
+			);
 		}
 	}
 
 	function switchProfile(profile: string) {
 		setActiveProfile(profile);
 		activeProfile = profile;
+		toasts.info(`Aktives Profil zu "${profile}" gewechselt.`);
 	}
 
 	function confirmDelete(profile: string) {
-		const confirmed = confirm(`Möchtest du das Profil "${profile}" wirklich löschen?`);
+		const confirmed = confirm(
+			`Möchtest du das Profil "${profile}" wirklich löschen? Alle zugehörigen Daten gehen verloren!`
+		);
 		if (confirmed) {
-			deleteProfile(profile);
-			profiles = getProfiles();
-			activeProfile = getActiveProfile();
+			try {
+				deleteProfile(profile);
+				profiles = getProfiles();
+				activeProfile = getActiveProfile();
+				toasts.success(`Profil "${profile}" erfolgreich gelöscht.`);
+			} catch (error) {
+				toasts.error(error instanceof Error ? error.message : 'Fehler beim Löschen des Profils.');
+			}
 		}
 	}
 
@@ -72,11 +92,20 @@
 	function handleImport() {
 		const files = fileInput?.files;
 		if (files && files.length > 0) {
-			importLocalStorage(files[0]);
-			alert('Import abgeschlossen! Die Seite wird neu geladen.');
-			location.reload();
+			try {
+				importLocalStorage(files[0]);
+				toasts.success('Import abgeschlossen! Die Seite wird neu geladen.');
+				// Delay to allow the user to see the success message
+				setTimeout(() => {
+					location.reload();
+				}, 1500);
+			} catch (error) {
+				toasts.error(error instanceof Error ? error.message : 'Fehler beim importieren der Datei.');
+				console.error('Import error:', error);
+				return;
+			}
 		} else {
-			alert('Bitte zuerst eine Datei auswählen.');
+			toasts.warning('Bitte zuerst eine Datei auswählen.');
 		}
 	}
 </script>

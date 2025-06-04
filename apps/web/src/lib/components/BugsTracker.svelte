@@ -30,14 +30,14 @@
 
 		// Farben nach resourceType
 		const colorByType: Record<string, string> = {
-			'bug_rtb': 'btn-primary',
-			'bug_ladybug': 'btn-secondary',
-			'bug_snail': 'btn-accent',
-			'bug_lunar_fairy_moth': 'btn-info',
-			'bug_proudhorn_beetle': 'btn-warning',
-			'bug_lanternbug': 'btn-error',
+			bug_rtb: 'btn-primary',
+			bug_ladybug: 'btn-secondary',
+			bug_snail: 'btn-accent',
+			bug_lunar_fairy_moth: 'btn-info',
+			bug_proudhorn_beetle: 'btn-warning',
+			bug_lanternbug: 'btn-error',
 			// fallback
-			'default': 'btn-neutral'
+			default: 'btn-neutral'
 		};
 
 		const color = colorByType[resourceType] || colorByType['default'];
@@ -56,14 +56,14 @@
 	function toggleRareDropMenu() {
 		showRareDropMenu = !showRareDropMenu;
 		if (showRareDropMenu && plushieButtonRef) {
-        // Timeout, damit das Element im DOM ist
-        setTimeout(() => {
-            const rect = plushieButtonRef!.getBoundingClientRect();
-            const spaceBelow = window.innerHeight - rect.bottom;
-            const menuHeight = 48 * resources.length; // 48px pro Button, ggf. anpassen
-            rareDropMenuDirection = spaceBelow < menuHeight ? 'up' : 'down';
-        }, 0);
-    }
+			// Timeout, damit das Element im DOM ist
+			setTimeout(() => {
+				const rect = plushieButtonRef!.getBoundingClientRect();
+				const spaceBelow = window.innerHeight - rect.bottom;
+				const menuHeight = 48 * resources.length; // 48px pro Button, ggf. anpassen
+				rareDropMenuDirection = spaceBelow < menuHeight ? 'up' : 'down';
+			}, 0);
+		}
 	}
 
 	function handleRareDrop(resource: Resource) {
@@ -71,15 +71,15 @@
 		showRareDropMenu = false;
 	}
 
-	function downloadCSV(resource: Resource) {
-		const csv = exportCSV(resource.type);
-		const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-		const url = URL.createObjectURL(blob);
-		const link = document.createElement('a');
-		link.href = url;
-		link.download = `${resource.type}_data.csv`;
-		link.click();
-	}
+	// function downloadCSV(resource: Resource) {
+	// 	const csv = exportCSV(resource.type);
+	// 	const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+	// 	const url = URL.createObjectURL(blob);
+	// 	const link = document.createElement('a');
+	// 	link.href = url;
+	// 	link.download = `${resource.type}_data.csv`;
+	// 	link.click();
+	// }
 </script>
 
 <div class="card bg-base-100 border-base-200 mb-8 w-full max-w-md border shadow-xl">
@@ -134,8 +134,11 @@
 					Plüschi
 				</button>
 				{#if showRareDropMenu}
-					<div class="absolute left-0 z-40 mt-2 w-48 rounded-lg bg-white shadow-lg"
-						style="top: {rareDropMenuDirection === 'down' ? '100%' : 'auto'}; bottom: {rareDropMenuDirection === 'up' ? '100%' : 'auto'};"
+					<div
+						class="absolute left-0 z-40 mt-2 w-48 rounded-lg bg-white shadow-lg"
+						style="top: {rareDropMenuDirection === 'down'
+							? '100%'
+							: 'auto'}; bottom: {rareDropMenuDirection === 'up' ? '100%' : 'auto'};"
 					>
 						{#each resources as resource}
 							<button
@@ -155,8 +158,12 @@
 				<!-- <button on:click={() => downloadCSV(resource)} class="btn btn-outline btn-success w-48">
 					Daten exportieren ({resource.name})
 				</button> -->
-				<a href={`/bugStats/${resource.type}`} class="btn btn-link">Statistik anzeigen ({resource.name})</a>
-				<a href={`/manage/${resource.type}`} class="btn btn-link">Einträge bearbeiten ({resource.name})</a>
+				<a href={`/bugStats/${resource.type}`} class="btn btn-link"
+					>Statistik anzeigen ({resource.name})</a
+				>
+				<a href={`/manage/${resource.type}`} class="btn btn-link"
+					>Einträge bearbeiten ({resource.name})</a
+				>
 			{/each}
 		</div>
 	</div>

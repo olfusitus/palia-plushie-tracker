@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { resources } from '$lib/resources';
-	import { addEntry, type ResourceType, type ResourceSize, type BugResource, addBugEntry } from '$lib/storage';
+	import {
+		addEntry,
+		type ResourceType,
+		type ResourceSize,
+		type BugResource,
+		addBugEntry
+	} from '$lib/storage';
 	import BugsTracker from '$lib/components/BugsTracker.svelte';
 
 	// Filtere nur die Ressourcen vom Typ "bug"
@@ -23,11 +29,11 @@
 
 <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 	<!-- {#each resourcesList as animal} -->
-		<!-- <div class="card bg-base-100 shadow-xl border border-base-200">
+	<!-- <div class="card bg-base-100 shadow-xl border border-base-200">
 			<div class="card-body p-4"> -->
-		<BugsTracker resources={resourcesList} addEntry={handleAddEntry} />
-		<!-- <BugTracker resource={animal} addEntry={handleAddEntry} /> -->
-		<!-- </div> -->
-		<!-- </div> -->
+	<BugsTracker resources={resourcesList} addEntry={handleAddEntry} />
+	<!-- <BugTracker resource={animal} addEntry={handleAddEntry} /> -->
+	<!-- </div> -->
+	<!-- </div> -->
 	<!-- {/each} -->
 </div>

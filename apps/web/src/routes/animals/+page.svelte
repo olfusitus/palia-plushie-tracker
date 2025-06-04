@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { resources } from '$lib/resources';
-	import { addEntry, type ResourceType, type ResourceSize, type AnimalResource } from '$lib/storage';
+	import {
+		addEntry,
+		type ResourceType,
+		type ResourceSize,
+		type AnimalResource
+	} from '$lib/storage';
 	import AnimalTracker from '$lib/components/AnimalTracker.svelte';
 
 	const resourcesList: AnimalResource[] = resources.filter(

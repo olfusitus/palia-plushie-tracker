@@ -5,43 +5,44 @@
 	import { onMount } from 'svelte';
 	import { migratePaliaData } from '$lib/utils/migration';
 	import { writable } from 'svelte/store';
-	import { listen } from "@tauri-apps/api/event";
+	import { listen } from '@tauri-apps/api/event';
 	import { addEntry } from '$lib/storage';
 	import { triggerResourceEntriesRefresh } from '$lib/stores/resourceEntriesStore';
-	
+	import ToastContainer from '$lib/components/ToastContainer.svelte';
+
 	onMount(() => {
 		migratePaliaData();
 
-		 if (__TAURI__) {
+		if (__TAURI__) {
 			// Nur wenn in Tauri
 			listen('ws-to-webview', (event: any) => {
-			try {
-				console.log('Received WebSocket event:', event.payload);
-				if (typeof event.payload !== 'string') {
-					throw new Error('Payload is not a string');
-				}
-				const data = JSON.parse(event.payload);
-				// const
-				// action: 'addEntry', resourceType: 'animal_chapaa', size: 'small', rareDrops: 0
-				if(data.action === 'addEntry') {
-					console.log('Received action:', data.action);
-					const { action, resourceType, size, rareDrops } = data;
-					addEntry(resourceType, size, rareDrops);
-					console.log('Added entry:', resourceType, size, rareDrops);
+				try {
+					console.log('Received WebSocket event:', event.payload);
+					if (typeof event.payload !== 'string') {
+						throw new Error('Payload is not a string');
+					}
+					const data = JSON.parse(event.payload);
+					// const
+					// action: 'addEntry', resourceType: 'animal_chapaa', size: 'small', rareDrops: 0
+					if (data.action === 'addEntry') {
+						console.log('Received action:', data.action);
+						const { action, resourceType, size, rareDrops } = data;
+						addEntry(resourceType, size, rareDrops);
+						console.log('Added entry:', resourceType, size, rareDrops);
 
-					triggerResourceEntriesRefresh();
+						triggerResourceEntriesRefresh();
 
-					return;
+						return;
+					}
+					// const { action, key, value } = JSON.parse(event.payload);
+					// if (action === 'setLocalStorage' && key) {
+					// 	console.log(`[Tauri WS] ${key} set to`, value);
+					// localStorage.setItem(key, JSON.stringify(value));
+					// console.log(`[Tauri WS] ${key} set to`, value);
+					//}
+				} catch (e) {
+					console.error('Invalid WebSocket payload:', e);
 				}
-				// const { action, key, value } = JSON.parse(event.payload);
-				// if (action === 'setLocalStorage' && key) {
-				// 	console.log(`[Tauri WS] ${key} set to`, value);
-				// localStorage.setItem(key, JSON.stringify(value));
-				// console.log(`[Tauri WS] ${key} set to`, value);
-				//}
-			} catch (e) {
-				console.error('Invalid WebSocket payload:', e);
-			}
 			});
 		}
 	});
@@ -50,12 +51,12 @@
 	function closeDrawer() {
 		drawerOpen.set(false);
 	}
-	// console.log('__TAURI__ =', __TAURI__);
-	// console.log("Wird dieser Code überhaupt ausgeführt?");
 	// if (__TAURI__) {
-  	// 	console.log("Läuft in Tauri-Umgebung!");
+	// 	console.log("Läuft in Tauri-Umgebung!");
 	// }
 </script>
+
+<ToastContainer />
 
 <div class="drawer">
 	<input id="my-drawer-3" type="checkbox" class="drawer-toggle" bind:checked={$drawerOpen} />
@@ -87,9 +88,7 @@
 				<ul class="menu menu-horizontal">
 					<!-- Navbar menu content here -->
 					<li>
-						<a href="/animals">
-							Tierchen
-						</a>
+						<a href="/animals"> Tierchen </a>
 					</li>
 					<li><a href="/bugs2">Käferchen</a></li>
 					<li><a href="/bugs">Käferchen einzeln</a></li>
