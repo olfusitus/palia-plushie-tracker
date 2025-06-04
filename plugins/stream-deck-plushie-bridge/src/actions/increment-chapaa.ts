@@ -33,7 +33,7 @@ function lookupAnimalName(animal: string, size: string): string | undefined {
 /**
  * An example action class that displays a count that increments by one each time the button is pressed.
  */
-@action({ UUID: "com.florian-maier.stream-deck-plushie-bridge.chapaaincrement" })
+@action({ UUID: "com.olfusitus.stream-deck-plushie-bridge.chapaaincrement" })
 export class ChapaaCounter extends SingletonAction<CounterSettings> {
 	/**
 	 * The {@link SingletonAction.onWillAppear} event is useful for setting the visual representation of an action when it becomes visible. This could be due to the Stream Deck first
@@ -75,7 +75,8 @@ export class ChapaaCounter extends SingletonAction<CounterSettings> {
 		await ev.action.setTitle(`${displayName} \n ${settings.count}`);
 
 
-		const socket = new WebSocket('ws://localhost:1234');
+		const socket = new WebSocket('ws://localhost:8422');
+		streamDeck.logger.info(`Connecting to websocket...`);
 		socket.on('open', () => {
 			streamDeck.logger.info(`Websocket connected!`);
 

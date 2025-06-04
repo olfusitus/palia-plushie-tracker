@@ -2,7 +2,7 @@
     "name": "stream-deck-plushie-bridge",
     "scripts": {
         "build": "rollup -c",
-        "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.florian-maier.stream-deck-plushie-bridge\""
+        "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.olfusitus.stream-deck-plushie-bridge\""
     },
     "type": "module",
     "devDependencies": {

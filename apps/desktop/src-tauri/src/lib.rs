@@ -39,11 +39,11 @@ pub fn run() {
 }
 
 async fn start_websocket_server(window: WebviewWindow) {
-    let listener = TcpListener::bind("127.0.0.1:1234")
+    let listener = TcpListener::bind("127.0.0.1:8422")
         .await
         .expect("WebSocket port konnte nicht gebunden werden");
 
-    println!("WebSocket-Server läuft auf ws://localhost:1234");
+    println!("WebSocket-Server läuft auf ws://localhost:8422");
 
     while let Ok((stream, _)) = listener.accept().await {
         println!("WebSocket-Verbindung akzeptiert");

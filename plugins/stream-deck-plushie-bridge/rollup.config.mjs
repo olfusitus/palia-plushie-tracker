@@ -6,7 +6,7 @@ import path from "node:path";
 import url from "node:url";
 
 const isWatching = !!process.env.ROLLUP_WATCH;
-const sdPlugin = "com.florian-maier.stream-deck-plushie-bridge.sdPlugin";
+const sdPlugin = "com.olfusitus.stream-deck-plushie-bridge.sdPlugin";
 
 /**
  * @type {import('rollup').RollupOptions}
