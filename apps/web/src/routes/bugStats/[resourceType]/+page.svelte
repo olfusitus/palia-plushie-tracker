@@ -3,10 +3,10 @@
 	import type { ResourceType } from '$lib/storage';
 	// import { loadResourceEntries } from '$lib/storage';
 	import { resources } from '$lib/resources';
-	import { chartRender } from '$lib/actions/chartRender.js';
+	import { chartRender } from '$lib/actions/chartRender';
 	import { calculateBugStats } from '$lib/utils/statistics';
 	import { buildDistanceHistogramData } from '$lib/utils/chartData';
-	import { createResourceEntriesStore } from '$lib/stores/resourceEntriesStore.js';
+	import { createResourceEntriesStore } from '$lib/stores/resourceEntriesStore';
 	import { writable } from 'svelte/store';
 
 	let stats: any = {};
