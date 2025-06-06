@@ -5,32 +5,20 @@
  * It provides methods to add, delete, and manage resource entries while persisting data to localStorage.
  */
 
-// import { resources } from "$lib/resources";
 import {
-	loadResourceEntries,
-	saveData,
 	type AnimalEntry,
 	type BugEntry,
 	type ResourceEntry,
 	type ResourceSize,
 	type ResourceType
-} from '$lib/storage';
+} from '$lib/storage/types';
+import repository from '$lib/storage/index';
 import { get, writable } from 'svelte/store';
+import { getActiveProfile } from '$lib/profile';
 
 // Dictionary mapping ResourceType to an array of ResourceEntry objects
 // Each resource type (e.g., animal_chapaa, animal_sernuk) has its own array of entries
 type ResourceStoreState = Record<ResourceType, ResourceEntry[] | undefined>;
-
-/**
- * Creates an empty initial state with all resource types initialized to empty arrays
- */
-// function createInitialState(): ResourceStoreState {
-//     const initialState: Partial<ResourceStoreState> = {};
-//     resources.forEach(resource => {
-//         initialState[resource.type as ResourceType] = [];
-//     });
-//     return initialState as ResourceStoreState;
-// }
 
 /**
  * Creates a Svelte store for managing resource entries
@@ -39,7 +27,7 @@ type ResourceStoreState = Record<ResourceType, ResourceEntry[] | undefined>;
 function createResourceStore() {
 	const { subscribe, set, update } = writable<ResourceStoreState>({} as ResourceStoreState);
 	const loadAndCache = (resourceType: ResourceType): ResourceEntry[] => {
-		const entries = loadResourceEntries(resourceType);
+		const entries = repository.getEntries(resourceType, getActiveProfile());
 		update((state) => ({
 			...state,
 			[resourceType]: entries
@@ -82,7 +70,7 @@ function createResourceStore() {
 					currentEntries = loadAndCache(resourceType);
 				}
 				const newEntries = [...currentEntries, entry];
-				saveData(resourceType, newEntries);
+				repository.saveEntries(resourceType, getActiveProfile(), newEntries);
 				return { ...state, [resourceType]: newEntries };
 			});
 		},
@@ -103,7 +91,7 @@ function createResourceStore() {
 					currentEntries = loadAndCache(resourceType);
 				}
 				const newEntries = [...currentEntries, entry];
-				saveData(resourceType, newEntries);
+				repository.saveEntries(resourceType, getActiveProfile(), newEntries);
 				return { ...state, [resourceType]: newEntries };
 			});
 		},
@@ -123,7 +111,7 @@ function createResourceStore() {
 					currentEntries = loadAndCache(resourceType);
 				}
 				const updatedEntries = [...currentEntries, ...newEntries];
-				saveData(resourceType, updatedEntries);
+				repository.saveEntries(resourceType, getActiveProfile(), updatedEntries);
 				return { ...state, [resourceType]: updatedEntries };
 			});
 		},
@@ -142,22 +130,10 @@ function createResourceStore() {
 				}
 				const newEntries = currentEntries.filter((e) => e.id !== id);
 
-				saveData(resourceType, newEntries);
+				repository.saveEntries(resourceType, getActiveProfile(), newEntries);
 				return { ...state, [resourceType]: newEntries };
 			});
 		}
-		/**
-		 * Initializes the store with all resource types and their entries
-		 * Loads data from localStorage for each resource type
-		 */
-		// initializeAll: () => {
-		//     const initialState = createInitialState();
-		//     resources.forEach(resource => {
-		//         const type = resource.type as ResourceType;
-		//         initialState[type] = loadResourceEntries(type);
-		//     });
-		//     set(initialState);
-		// }
 	};
 }
 

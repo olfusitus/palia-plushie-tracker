@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { BugResource } from '$lib/storage';
-	import { exportCSV, downloadCSV } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
+	import { exportResourceAsCSV, downloadFile } from '$lib/utils/exporter';
 
 	export let resource: BugResource;
 
@@ -28,8 +28,8 @@
 	}
 
 	function handleDownloadCSV() {
-		const csv = exportCSV(resource.type);
-		downloadCSV(csv, `${resource.type}_data.csv`);
+		const csv = exportResourceAsCSV(resource.type);
+		downloadFile(csv, `${resource.type}_data.csv`);
 	}
 </script>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { BugEntry, ResourceType } from '$lib/storage';
+	import type { BugEntry, ResourceType } from '$lib/storage/types';
 	import { resources } from '$lib/resources';
 	import { chartRender } from '$lib/actions/chartRender';
 	import { calculateBugStats } from '$lib/utils/statistics';

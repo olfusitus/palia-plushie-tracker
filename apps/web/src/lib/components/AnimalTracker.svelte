@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { AnimalResource, ResourceSize } from '$lib/storage';
-	import { downloadCSV, exportCSV } from '$lib/storage';
+	import type { AnimalResource } from '$lib/storage';
+	import type { ResourceSize } from '$lib/storage/types';
+	// import { downloadCSV, exportCSV } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
-
+	import { exportResourceAsCSV, downloadFile } from '$lib/utils/exporter';
 	export let resource: AnimalResource;
 
 	let buttonStatus: Record<string, boolean> = {};
@@ -57,8 +58,8 @@
 	}
 
 	function handleDownloadCSV() {
-		const csv = exportCSV(resource.type);
-		downloadCSV(csv, `${resource.type}_data.csv`);
+		const csv = exportResourceAsCSV(resource.type);
+		downloadFile(csv, `${resource.type}_data.csv`);
 	}
 </script>
 

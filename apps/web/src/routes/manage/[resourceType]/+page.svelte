@@ -3,7 +3,7 @@
 	import { page } from '$app/state';
 	// import { loadResourceEntries, saveData } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
-	import { type ResourceType, type ResourceEntry } from '$lib/storage';
+	import { type ResourceType, type ResourceEntry } from '$lib/storage/types';
 
 	let resourceType: ResourceType;
 	// let daten: ResourceEntry[] = [];

@@ -3,16 +3,16 @@
 	let { children } = $props();
 
 	import { onMount } from 'svelte';
-	import { migrateToProfiles } from '$lib/utils/migration';
+	// import { migrateToProfiles } from '$lib/utils/migration';
 	import { writable } from 'svelte/store';
 	import { listen } from '@tauri-apps/api/event';
 	// import { addAEntry } from '$lib/storage';
-	import { triggerResourceEntriesRefresh } from '$lib/stores/resourceEntriesStore';
+	// import { triggerResourceEntriesRefresh } from '$lib/stores/resourceEntriesStore';
 	import ToastContainer from '$lib/components/ToastContainer.svelte';
 	import { resourceStore } from '$lib/stores/resourceStore';
 
 	onMount(() => {
-		migrateToProfiles();
+		// migrateToProfiles();
 		// eslint-disable-next-line no-undef
 		if (__TAURI__) {
 			// Nur wenn in Tauri
@@ -33,7 +33,7 @@
 						resourceStore.addAnimalEntry(resourceType, size, rareDrops);
 						console.log('Added entry:', resourceType, size, rareDrops);
 
-						triggerResourceEntriesRefresh();
+						// triggerResourceEntriesRefresh();
 
 						return;
 					}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { AnimalEntry, ResourceType } from '$lib/storage';
+	import type { AnimalEntry, ResourceType } from '$lib/storage/types';
 	import { resources } from '$lib/resources';
 	import { chartRender } from '$lib/actions/chartRender';
 	import { calculateStats } from '$lib/utils/statistics';

@@ -1,41 +1,5 @@
-import { getActiveProfile } from './profile';
-import { migrateData } from '$lib/utils/migration';
-
-export type ResourceSize = 'small' | 'medium' | 'large';
-
-export interface AnimalEntry {
-	id: string;
-	timestamp: string;
-	type: ResourceSize; // 'small' | 'medium' | 'large'
-	rareDrops: number;
-}
-
-export interface BugEntry {
-	id: string;
-	timestamp: string;
-	rareDrops: number;
-}
-
-// export interface ResourceEntry {
-// 	timestamp: string;
-// 	type: ResourceSize;
-// 	rareDrops: number;
-// }
-
-export type ResourceEntry = AnimalEntry | BugEntry;
-
-export type ResourceType =
-	| 'animal_chapaa'
-	| 'animal_sernuk'
-	| 'animal_muujin'
-	| 'animal_ogopuu'
-	| 'animal_shmole'
-	| 'bug_rtb'
-	| 'bug_ladybug'
-	| 'bug_snail'
-	| 'bug_lunar_fairy_moth'
-	| 'bug_proudhorn_beetle'
-	| 'bug_lanternbug';
+import repository from './storage/index';
+import type { ResourceSize } from './storage/types';
 
 export interface AnimalResource {
 	type: 'animal_chapaa' | 'animal_sernuk' | 'animal_muujin' | 'animal_ogopuu' | 'animal_shmole';
@@ -58,136 +22,9 @@ export interface BugResource {
 }
 
 export type Resource = AnimalResource | BugResource;
-// export interface Resource {
-// 	type: ResourceType;
-// 	name: string;
-// 	sizes: Record<string, number[]>; // z.B. { small: [0, 1], medium: [0, 1, 2] }
-// 	labels: Record<string, string>; // z.B. { small: 'S', medium: 'M' }
-// }
 
-export const STORAGE_KEYS: Record<ResourceType, string> = {
-	animal_chapaa: 'palia_tracker_animals_chapaa',
-	animal_sernuk: 'palia_tracker_animals_sernuk',
-	animal_muujin: 'palia_tracker_animals_muujin',
-	animal_ogopuu: 'palia_tracker_animals_ogopuu',
-	animal_shmole: 'palia_tracker_animals_shmole',
-	bug_rtb: 'palia_tracker_bugs_rtb',
-	bug_ladybug: 'palia_tracker_bugs_ladybug',
-	bug_snail: 'palia_tracker_bugs_snail',
-	bug_lunar_fairy_moth: 'palia_tracker_bugs_lunar_fairy_moth',
-	bug_proudhorn_beetle: 'palia_tracker_bugs_proudhorn_beetle',
-	bug_lanternbug: 'palia_tracker_bugs_lanternbug'
-};
-
-export const CURRENT_VERSION = 4;
-export interface StoredData {
-	version: number;
-	data: ResourceEntry[];
-}
-
-function getStorageKey(resourceType: ResourceType): string {
-	const activeProfile = getActiveProfile();
-	return `${activeProfile}_${STORAGE_KEYS[resourceType]}`;
-}
-
-export function getStorageKeyWithoutProfile(resourceType: ResourceType): string {
-	return `${STORAGE_KEYS[resourceType]}`;
-}
-
-export function loadDataWithoutProfile(resourceType: ResourceType): ResourceEntry[] {
-	if (typeof localStorage === 'undefined') return [];
-
-	const raw = localStorage.getItem(STORAGE_KEYS[resourceType]);
-	if (!raw) return [];
-
-	const parsed = JSON.parse(raw);
-
-	return parsed.data;
-
-	// if (parsed.version === CURRENT_VERSION) {
-	//     return parsed.data;
-	// } else {
-	//     console.warn(`Veraltete Version für ${resourceType}:`, parsed.version);
-	//     return []; // optional: automatische Migration ergänzen
-	// }
-}
-
-export function loadResourceEntries(resourceType: ResourceType): ResourceEntry[] {
-	if (typeof localStorage === 'undefined') return [];
-
-	const raw = localStorage.getItem(getStorageKey(resourceType));
-	// console.log('Roh:', raw);
-	// console.log(resourceType, getStorageKey(resourceType));
-	if (!raw) return [];
-
-	const parsed: StoredData = JSON.parse(raw);
-	// console.log('Rohdaten:', parsed);
-
-	if (parsed.version < CURRENT_VERSION) {
-		console.log(
-			`Outdated data found for ${resourceType} (v${parsed.version}). Migrating to v${CURRENT_VERSION}...`
-		);
-		parsed.data = migrateData(parsed);
-		saveData(resourceType, parsed.data);
-	}
-
-	return parsed.data;
-}
-
-export function saveData(resourceType: ResourceType, data: ResourceEntry[]) {
-	const storedData: StoredData = {
-		version: CURRENT_VERSION,
-		data
-	};
-	const key = getStorageKey(resourceType);
-	localStorage.setItem(key, JSON.stringify(storedData));
-}
-
-// export function addEntry(resourceType: ResourceType, size: ResourceSize, rareDrops: number) {
-// 	const data = loadResourceEntries(resourceType);
-// 	data.push({ timestamp: new Date().toISOString(), type: size, rareDrops });
-// 	saveData(resourceType, data);
-// }
-
-// export function addBugEntry(resourceType: ResourceType, rareDrops: number) {
-// 	const data = loadResourceEntries(resourceType);
-// 	data.push({ timestamp: new Date().toISOString(), rareDrops });
-// 	saveData(resourceType, data);
-// }
-
-export function exportCSV(resourceType: ResourceType): string {
-	const data = loadResourceEntries(resourceType);
-	const rows = [
-		'Zeitstempel,Größe,Rare Drops',
-		...data.map((e) => {
-			const size = 'type' in e ? e.type : '';
-			return `${e.timestamp},${size},${e.rareDrops}`;
-		})
-	];
-	return rows.join('\n');
-}
-
-/**
- * Utility to trigger a CSV file download from a string.
- * @param csv - The CSV string to download.
- * @param filename - The filename for the downloaded file.
- */
-export function downloadCSV(csv: string, filename: string) {
-	const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-	const url = URL.createObjectURL(blob);
-	const link = document.createElement('a');
-	link.href = url;
-	link.download = filename;
-	link.click();
-}
-
-export function exportCompleteStorage(): string {
-	const data = JSON.stringify(localStorage);
-	return data;
-}
-
-export function downloadLocalStorage() {
-	const data = exportCompleteStorage();
+export function downloadStorage() {
+	const data = repository.exportAll();
 	const blob = new Blob([data], { type: 'application/json' });
 	const url = URL.createObjectURL(blob);
 	const link = document.createElement('a');
@@ -196,14 +33,12 @@ export function downloadLocalStorage() {
 	link.click();
 }
 
-export function importLocalStorage(file: File) {
+export function importStorage(file: File) {
 	const reader = new FileReader();
 	reader.onload = (event) => {
 		if (event.target) {
-			const data = JSON.parse(event.target.result as string);
-			Object.keys(data).forEach((key) => {
-				localStorage.setItem(key, data[key]);
-			});
+			repository.importAll(event.target.result as string);
+
 		}
 	};
 	reader.readAsText(file);

@@ -8,7 +8,7 @@
 		setActiveProfile
 	} from '$lib/profile';
 
-	import { downloadLocalStorage, importLocalStorage } from '$lib/storage';
+	import { downloadStorage, importStorage } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { toasts } from '$lib/stores/toastStore';
 
@@ -103,7 +103,7 @@
 		const files = fileInput?.files;
 		if (files && files.length > 0) {
 			try {
-				importLocalStorage(files[0]);
+				importStorage(files[0]);
 				resourceStore.reset();
 				toasts.success('Import abgeschlossen! Die Seite wird neu geladen.');
 				// Delay to allow the user to see the success message
@@ -194,7 +194,7 @@
 					Klicke den "Daten exportieren" Button um die im Browser gespeicherten Daten
 					herunterzuladen.
 				</p>
-				<button class="btn btn-primary" id="lsDownBtn" on:click={downloadLocalStorage}
+				<button class="btn btn-primary" id="lsDownBtn" on:click={downloadStorage}
 					>Daten exportieren (JSON)</button
 				>
 			</div>

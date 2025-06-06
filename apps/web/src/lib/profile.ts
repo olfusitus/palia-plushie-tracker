@@ -1,23 +1,15 @@
-// import { type ResourceType, loadData, saveData } from './storage';
-import { STORAGE_KEYS } from './storage'; // Stelle sicher, dass STORAGE_KEYS importiert ist
-
-const PROFILE_KEY = 'palia_tracker_active_profile';
-const PROFILES_KEY = 'palia_tracker_profiles';
+import repository from '$lib/storage/index'; 
 
 export function getActiveProfile(): string {
-	if (typeof localStorage === 'undefined') return 'default';
-	const activeProfile = localStorage.getItem(PROFILE_KEY);
-	return activeProfile || 'default';
+	return repository.getActiveProfileName();
 }
 
 export function setActiveProfile(profile: string): void {
-	localStorage.setItem(PROFILE_KEY, profile);
+	repository.setActiveProfileName(profile);
 }
 
 export function getProfiles(): string[] {
-	if (typeof localStorage === 'undefined') return [];
-	const profiles = localStorage.getItem(PROFILES_KEY);
-	return profiles ? JSON.parse(profiles) : ['default'];
+	return repository.getProfiles();
 }
 
 export function addProfile(profile: string): void {
@@ -25,66 +17,53 @@ export function addProfile(profile: string): void {
 	if (profiles.includes(profile)) {
 		throw new Error(`Profil "${profile}" existiert bereits.`);
 	}
-
-	if (!profiles.includes(profile)) {
-		profiles.push(profile);
-		localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles));
-	}
+	profiles.push(profile);
+	repository.saveProfiles(profiles);
 }
 
-export function deleteProfile(profile: string): void {
-	let profiles = getProfiles();
-	profiles = profiles.filter((p) => p !== profile);
-	localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles));
+export function deleteProfile(profileToDelete: string): void {
+	const profiles = getProfiles();
 
-	// Entferne alle gespeicherten Daten des Profils
-	const resourceTypes = Object.keys(STORAGE_KEYS) as Array<keyof typeof STORAGE_KEYS>;
-	resourceTypes.forEach((resourceType) => {
-		const key = `${profile}_${STORAGE_KEYS[resourceType]}`;
-		localStorage.removeItem(key);
-	});
-
-	// Fallback auf 'default', falls das aktive Profil gelöscht wird
-	if (getActiveProfile() === profile) {
-		setActiveProfile('default');
+	if (!profiles.includes(profileToDelete)) {
+		throw new Error(`Profile "${profileToDelete}" does not exist.`);
 	}
-	if (getProfiles().length === 0) {
-		addProfile('default');
+	if (profiles.length === 1) {
+		throw new Error('Cannot delete the last remaining profile.');
+	}
+
+	repository.deleteProfileData(profileToDelete);
+
+	const updatedProfiles = getProfiles().filter((p) => p !== profileToDelete);
+	repository.saveProfiles(updatedProfiles);
+
+	// Handle active profile fallback.
+	if (getActiveProfile() === profileToDelete) {
+		setActiveProfile('default');
 	}
 }
 
 export function renameProfile(oldName: string, newName: string): void {
-	if (!newName.trim()) {
-		throw new Error('Der neue Profilname darf nicht leer sein.');
+	newName = newName.trim();
+	if (!newName) {
+		throw new Error('New profile name cannot be empty.');
+	}
+	if (oldName === newName) {
+		return; // Nothing to do.
 	}
 
 	const profiles = getProfiles();
 	if (!profiles.includes(oldName)) {
-		throw new Error(`Profil "${oldName}" existiert nicht.`);
+		throw new Error(`Profile "${oldName}" does not exist.`);
 	}
 	if (profiles.includes(newName)) {
-		throw new Error(`Profil "${newName}" existiert bereits.`);
+		throw new Error(`Profile "${newName}" already exists.`);
 	}
 
-	const resourceTypes = Object.keys(STORAGE_KEYS) as Array<keyof typeof STORAGE_KEYS>;
+	repository.renameProfileData(oldName, newName);
 
-	resourceTypes.forEach((resourceType) => {
-		const oldKey = `${oldName}_${STORAGE_KEYS[resourceType]}`;
-		const newKey = `${newName}_${STORAGE_KEYS[resourceType]}`;
-		const data = localStorage.getItem(oldKey);
-		console.log(`Renaming ${oldKey} to ${newKey}`);
-		console.log(`Data: ${data}`);
-		if (data) {
-			localStorage.setItem(newKey, data);
-			localStorage.removeItem(oldKey);
-		}
-	});
+	const updatedProfiles = getProfiles().map((p) => (p === oldName ? newName : p));
+	repository.saveProfiles(updatedProfiles);
 
-	// Aktualisiere die Profil-Liste
-	const updatedProfiles = profiles.map((profile) => (profile === oldName ? newName : profile));
-	localStorage.setItem('palia_tracker_profiles', JSON.stringify(updatedProfiles));
-
-	// Falls das aktive Profil umbenannt wird, aktualisiere es
 	if (getActiveProfile() === oldName) {
 		setActiveProfile(newName);
 	}
