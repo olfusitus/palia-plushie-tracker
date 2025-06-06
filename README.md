@@ -1,38 +1,32 @@
-# sv
+# Palia Hunting Tracker
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A hunting and plushie drop tracker for Palia, made up of three parts that work together:
 
-## Creating a project
+## Components
 
-If you're seeing this, you've probably already done this step. Congrats!
+### Web Application (SPA)
+- Progressive Web App for tracking hunting stats and plushie drops
+- Interactive charts and data visualization
+- Works on mobile and desktop browsers
+- Saves data locally for offline use
 
-```bash
-# create a new project in the current directory
-npx sv create
+### Desktop Application (Tauri)
+- Native desktop app built with Tauri
+- Local data storage and management
+- WebSocket server for Stream Deck integration
 
-# create a new project in my-app
-npx sv create my-app
-```
+### Stream Deck Plugin
+- Custom Stream Deck plugin for interfacing with the Desktop Application via WebSockets
 
-## Developing
+## Development
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+This project uses:
+- SvelteKit for the web app
+- Tauri for the desktop app
+- Stream Deck SDK for the plugin
 
-```bash
-npm run dev
+### Prerequisites
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- Node.js (v18 or later)
+- Rust (for Tauri development)
+- Stream Deck SDK (for plugin development)
