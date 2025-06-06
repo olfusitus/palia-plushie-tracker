@@ -1,14 +1,17 @@
 import { getActiveProfile } from './profile';
+import { migrateData } from '$lib/utils/migration';
 
 export type ResourceSize = 'small' | 'medium' | 'large';
 
 export interface AnimalEntry {
+	id: string;
 	timestamp: string;
 	type: ResourceSize; // 'small' | 'medium' | 'large'
 	rareDrops: number;
 }
 
 export interface BugEntry {
+	id: string;
 	timestamp: string;
 	rareDrops: number;
 }
@@ -76,8 +79,8 @@ export const STORAGE_KEYS: Record<ResourceType, string> = {
 	bug_lanternbug: 'palia_tracker_bugs_lanternbug'
 };
 
-const CURRENT_VERSION = 3;
-interface StoredData {
+export const CURRENT_VERSION = 4;
+export interface StoredData {
 	version: number;
 	data: ResourceEntry[];
 }
@@ -109,25 +112,6 @@ export function loadDataWithoutProfile(resourceType: ResourceType): ResourceEntr
 	// }
 }
 
-// export function loadResourceEntries(resourceType: ResourceType): ResourceEntry[] {
-// 	if (typeof localStorage === 'undefined') return [];
-
-// 	const raw = localStorage.getItem(getStorageKey(resourceType));
-// 	// console.log('Roh:', raw);
-// 	// console.log(resourceType, getStorageKey(resourceType));
-// 	if (!raw) return [];
-
-// 	const parsed = JSON.parse(raw);
-// 	// console.log('Rohdaten:', parsed);
-
-// 	if (parsed.version === CURRENT_VERSION) {
-// 		// console.log('Rohdaten:', parsed.data);
-// 		return parsed.data;
-// 	} else {
-// 		console.warn(`Veraltete Version für ${resourceType}:`, parsed.version);
-// 		return []; // optional: automatische Migration ergänzen
-// 	}
-// }
 export function loadResourceEntries(resourceType: ResourceType): ResourceEntry[] {
 	if (typeof localStorage === 'undefined') return [];
 
@@ -136,16 +120,18 @@ export function loadResourceEntries(resourceType: ResourceType): ResourceEntry[]
 	// console.log(resourceType, getStorageKey(resourceType));
 	if (!raw) return [];
 
-	const parsed = JSON.parse(raw);
+	const parsed: StoredData = JSON.parse(raw);
 	// console.log('Rohdaten:', parsed);
 
-	if (parsed.version === CURRENT_VERSION) {
-		// console.log('Rohdaten:', parsed.data);
-		return parsed.data;
-	} else {
-		console.warn(`Veraltete Version für ${resourceType}:`, parsed.version);
-		return []; // optional: automatische Migration ergänzen
+	if (parsed.version < CURRENT_VERSION) {
+		console.log(
+			`Outdated data found for ${resourceType} (v${parsed.version}). Migrating to v${CURRENT_VERSION}...`
+		);
+		parsed.data = migrateData(parsed);
+		saveData(resourceType, parsed.data);
 	}
+
+	return parsed.data;
 }
 
 export function saveData(resourceType: ResourceType, data: ResourceEntry[]) {
@@ -153,20 +139,21 @@ export function saveData(resourceType: ResourceType, data: ResourceEntry[]) {
 		version: CURRENT_VERSION,
 		data
 	};
-	localStorage.setItem(getStorageKey(resourceType), JSON.stringify(storedData));
+	const key = getStorageKey(resourceType);
+	localStorage.setItem(key, JSON.stringify(storedData));
 }
 
-export function addEntry(resourceType: ResourceType, size: ResourceSize, rareDrops: number) {
-	const data = loadResourceEntries(resourceType);
-	data.push({ timestamp: new Date().toISOString(), type: size, rareDrops });
-	saveData(resourceType, data);
-}
+// export function addEntry(resourceType: ResourceType, size: ResourceSize, rareDrops: number) {
+// 	const data = loadResourceEntries(resourceType);
+// 	data.push({ timestamp: new Date().toISOString(), type: size, rareDrops });
+// 	saveData(resourceType, data);
+// }
 
-export function addBugEntry(resourceType: ResourceType, rareDrops: number) {
-	const data = loadResourceEntries(resourceType);
-	data.push({ timestamp: new Date().toISOString(), rareDrops });
-	saveData(resourceType, data);
-}
+// export function addBugEntry(resourceType: ResourceType, rareDrops: number) {
+// 	const data = loadResourceEntries(resourceType);
+// 	data.push({ timestamp: new Date().toISOString(), rareDrops });
+// 	saveData(resourceType, data);
+// }
 
 export function exportCSV(resourceType: ResourceType): string {
 	const data = loadResourceEntries(resourceType);

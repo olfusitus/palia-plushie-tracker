@@ -1,6 +1,6 @@
-<script>
+<!-- <script>
 	import { chartRender } from '$lib/actions/chartRender';
-</script>
+</script> -->
 
 <!-- <div class="text-center">
  <div class="">

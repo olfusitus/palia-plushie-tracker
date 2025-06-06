@@ -1,28 +1,12 @@
 <script lang="ts">
 	import { resources } from '$lib/resources';
-	import {
-		addEntry,
-		type ResourceType,
-		type ResourceSize,
-		type BugResource,
-		addBugEntry
-	} from '$lib/storage';
+	import { type BugResource } from '$lib/storage';
 	import BugsTracker from '$lib/components/BugsTracker.svelte';
 
 	// Filtere nur die Ressourcen vom Typ "bug"
-	const resourcesList = resources.filter(
-		(resource): resource is BugResource =>
-			resource.type === 'bug_rtb' ||
-			resource.type === 'bug_ladybug' ||
-			resource.type === 'bug_snail' ||
-			resource.type === 'bug_lunar_fairy_moth' ||
-			resource.type === 'bug_proudhorn_beetle' ||
-			resource.type === 'bug_lanternbug'
+	const resourcesList = resources.filter((resource): resource is BugResource =>
+		resource.type.startsWith('bug_')
 	);
-
-	function handleAddEntry(resourceType: string, rareDrops: number) {
-		addBugEntry(resourceType as ResourceType, rareDrops);
-	}
 </script>
 
 <h1 class="mb-6 text-center text-3xl font-bold">🐞 Käferchen</h1>
@@ -31,7 +15,7 @@
 	<!-- {#each resourcesList as animal} -->
 	<!-- <div class="card bg-base-100 shadow-xl border border-base-200">
 			<div class="card-body p-4"> -->
-	<BugsTracker resources={resourcesList} addEntry={handleAddEntry} />
+	<BugsTracker resources={resourcesList} />
 	<!-- <BugTracker resource={animal} addEntry={handleAddEntry} /> -->
 	<!-- </div> -->
 	<!-- </div> -->

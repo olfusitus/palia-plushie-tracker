@@ -9,6 +9,7 @@
 	} from '$lib/profile';
 
 	import { downloadLocalStorage, importLocalStorage } from '$lib/storage';
+	import { resourceStore } from '$lib/stores/resourceStore';
 	import { toasts } from '$lib/stores/toastStore';
 
 	let profiles = getProfiles();
@@ -26,7 +27,11 @@
 
 	function confirmRename() {
 		try {
+			const oldActiveProfile = getActiveProfile();
 			renameProfile(profileToRename, newProfileName.trim());
+			if (oldActiveProfile === profileToRename) {
+				resourceStore.reset();
+			}
 			profiles = getProfiles();
 			activeProfile = getActiveProfile();
 			renameMode = false;
@@ -67,6 +72,7 @@
 
 	function switchProfile(profile: string) {
 		setActiveProfile(profile);
+		resourceStore.reset();
 		activeProfile = profile;
 		toasts.info(`Aktives Profil zu "${profile}" gewechselt.`);
 	}
@@ -77,7 +83,11 @@
 		);
 		if (confirmed) {
 			try {
+				const wasActive = getActiveProfile() === profile;
 				deleteProfile(profile);
+				if (wasActive) {
+					resourceStore.reset();
+				}
 				profiles = getProfiles();
 				activeProfile = getActiveProfile();
 				toasts.success(`Profil "${profile}" erfolgreich gelöscht.`);
@@ -94,6 +104,7 @@
 		if (files && files.length > 0) {
 			try {
 				importLocalStorage(files[0]);
+				resourceStore.reset();
 				toasts.success('Import abgeschlossen! Die Seite wird neu geladen.');
 				// Delay to allow the user to see the success message
 				setTimeout(() => {
@@ -113,7 +124,7 @@
 <div class="mx-auto flex w-full max-w-2xl flex-col gap-6 p-4">
 	<h2 class="text-primary mb-2 text-center text-3xl font-extrabold">Profile verwalten</h2>
 	<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-		{#each profiles as profile}
+		{#each profiles as profile (profile)}
 			<div
 				class={`card border shadow-lg transition ${activeProfile === profile ? 'border-primary' : 'border-base-200'}`}
 			>

@@ -3,18 +3,20 @@
 	let { children } = $props();
 
 	import { onMount } from 'svelte';
-	import { migratePaliaData } from '$lib/utils/migration';
+	import { migrateToProfiles } from '$lib/utils/migration';
 	import { writable } from 'svelte/store';
 	import { listen } from '@tauri-apps/api/event';
-	import { addEntry } from '$lib/storage';
+	// import { addAEntry } from '$lib/storage';
 	import { triggerResourceEntriesRefresh } from '$lib/stores/resourceEntriesStore';
 	import ToastContainer from '$lib/components/ToastContainer.svelte';
+	import { resourceStore } from '$lib/stores/resourceStore';
 
 	onMount(() => {
-		migratePaliaData();
-
+		migrateToProfiles();
+		// eslint-disable-next-line no-undef
 		if (__TAURI__) {
 			// Nur wenn in Tauri
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			listen('ws-to-webview', (event: any) => {
 				try {
 					console.log('Received WebSocket event:', event.payload);
@@ -26,8 +28,9 @@
 					// action: 'addEntry', resourceType: 'animal_chapaa', size: 'small', rareDrops: 0
 					if (data.action === 'addEntry') {
 						console.log('Received action:', data.action);
+						// eslint-disable-next-line @typescript-eslint/no-unused-vars
 						const { action, resourceType, size, rareDrops } = data;
-						addEntry(resourceType, size, rareDrops);
+						resourceStore.addAnimalEntry(resourceType, size, rareDrops);
 						console.log('Added entry:', resourceType, size, rareDrops);
 
 						triggerResourceEntriesRefresh();

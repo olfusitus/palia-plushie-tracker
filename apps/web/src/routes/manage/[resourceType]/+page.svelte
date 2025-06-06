@@ -1,26 +1,24 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import { loadResourceEntries, saveData } from '$lib/storage';
-	import type { ResourceType, ResourceEntry } from '$lib/storage';
+	// import { loadResourceEntries, saveData } from '$lib/storage';
+	import { resourceStore } from '$lib/stores/resourceStore';
+	import { type ResourceType, type ResourceEntry } from '$lib/storage';
 
 	let resourceType: ResourceType;
-	let daten: ResourceEntry[] = [];
+	// let daten: ResourceEntry[] = [];
 
 	resourceType = page.params.resourceType as ResourceType;
 
 	onMount(() => {
-		if (resourceType) {
-			console.log('resourceType', resourceType);
-			daten = loadResourceEntries(resourceType);
-		}
+		resourceStore.ensureLoaded(resourceType);
 	});
 
-	function deleteEntry(index: number) {
+	$: daten = $resourceStore[resourceType] || [];
+
+	function deleteEntry(entry: ResourceEntry) {
 		if (confirm('Diesen Eintrag wirklich löschen?')) {
-			daten.splice(index, 1);
-			daten = [...daten];
-			saveData(resourceType, daten);
+			resourceStore.deleteEntry(resourceType, entry.id);
 		}
 	}
 </script>
@@ -35,7 +33,7 @@
 	</div>
 {:else}
 	<ul class="mx-auto max-w-2xl space-y-4">
-		{#each daten.slice().reverse() as eintrag, i}
+		{#each daten.slice().reverse() as eintrag (eintrag.timestamp)}
 			<li class="card bg-base-100 border-base-200 border shadow">
 				<div class="card-body flex flex-row items-center justify-between p-4">
 					<div>
@@ -50,10 +48,7 @@
 							<span class="badge badge-outline badge-info">{eintrag.rareDrops} Rare Drops</span>
 						</p>
 					</div>
-					<button
-						on:click={() => deleteEntry(daten.length - 1 - i)}
-						class="btn btn-warning btn-sm btn-outline"
-					>
+					<button on:click={() => deleteEntry(eintrag)} class="btn btn-warning btn-sm btn-outline">
 						Löschen
 					</button>
 				</div>
@@ -63,5 +58,7 @@
 {/if}
 
 <div class="mt-8 text-center">
-	<a href="/animals" class="btn btn-link">Zurück zur Erfassung</a>
+	<a href={resourceType.startsWith('animal_') ? '/animals' : '/bugs2'} class="btn btn-link"
+		>Zurück zur Erfassung</a
+	>
 </div>

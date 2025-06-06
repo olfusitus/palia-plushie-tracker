@@ -2,13 +2,11 @@
 	import { onMount } from 'svelte';
 	import type { BugResource } from '$lib/storage';
 	import { exportCSV, downloadCSV } from '$lib/storage';
+	import { resourceStore } from '$lib/stores/resourceStore';
 
 	export let resource: BugResource;
-	export let addEntry: (type: string, rareDrops: number) => void;
 
 	let buttonStatus: boolean = false;
-	let showRareDropMenu = false; // Steuert die Sichtbarkeit des Untermenüs
-	let showMobileMenu = false; // Steuert die Sichtbarkeit des mobilen Menüs
 
 	// Initialisiere den Button-Status für jede Größe
 	onMount(() => {
@@ -17,25 +15,16 @@
 		// }
 	});
 
-	function handleClick(rareDrops: number) {
-		addEntry(resource.type, rareDrops);
+	function handleClick(plushie: boolean) {
+		resourceStore.addBugEntry(resource.type, plushie);
 		buttonStatus = true;
 		setTimeout(() => {
 			buttonStatus = false;
 		}, 500);
 	}
 
-	function toggleRareDropMenu() {
-		showRareDropMenu = !showRareDropMenu;
-	}
-
-	function toggleMobileMenu() {
-		showMobileMenu = !showMobileMenu;
-	}
-
 	function handleRareDrop() {
-		handleClick(1); // Fügt einen RareDrop hinzu
-		showRareDropMenu = false; // Schließt das Untermenü
+		handleClick(true); // Fügt einen RareDrop hinzu
 	}
 
 	function handleDownloadCSV() {
@@ -75,7 +64,7 @@
 		<!-- Buttons für die verschiedenen Größen -->
 		<div class="flex w-full flex-wrap justify-center gap-4">
 			<button
-				on:click={() => handleClick(0)}
+				on:click={() => handleClick(false)}
 				class="btn btn-soft btn-primary h-20 w-[45%] rounded-lg"
 				disabled={buttonStatus}
 			>

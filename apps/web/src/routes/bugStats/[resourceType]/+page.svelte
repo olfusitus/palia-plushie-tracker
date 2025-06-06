@@ -1,32 +1,28 @@
 <script lang="ts">
-	// import { onMount } from 'svelte';
-	import type { ResourceType } from '$lib/storage';
-	// import { loadResourceEntries } from '$lib/storage';
+	import type { BugEntry, ResourceType } from '$lib/storage';
 	import { resources } from '$lib/resources';
 	import { chartRender } from '$lib/actions/chartRender';
 	import { calculateBugStats } from '$lib/utils/statistics';
 	import { buildDistanceHistogramData } from '$lib/utils/chartData';
-	import { createResourceEntriesStore } from '$lib/stores/resourceEntriesStore';
-	import { writable } from 'svelte/store';
+	import { resourceStore } from '$lib/stores/resourceStore';
+	import { onMount } from 'svelte';
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let stats: any = {};
 
 	export let data; // kommt von load()
-	const resourceType = writable<ResourceType>();
-	// $: resourceType.set(data.resourceType as ResourceType);
+	const resourceType: ResourceType = data.resourceType as ResourceType;
 
-	const entriesStore = createResourceEntriesStore(resourceType);
-	resourceType.set(data.resourceType as ResourceType);
+	onMount(() => {
+		resourceStore.ensureLoaded(resourceType);
+	});
 
-	// $: $entriesStore;
-	$: if ($entriesStore) {
-		const rawStats = calculateBugStats($entriesStore);
-		// console.log('rawStats', rawStats);
-		stats = {
-			...rawStats,
-			barData: buildDistanceHistogramData(rawStats.allDistances)
-		};
-	}
+	$: entries = $resourceStore[resourceType] || ([] as BugEntry[]);
+
+	$: stats = {
+		...calculateBugStats(entries),
+		barData: buildDistanceHistogramData(calculateBugStats(entries).allDistances)
+	};
 
 	function getResourceName(resourceType: string): string {
 		const res = resources.find((r) => r.type === resourceType);
@@ -46,7 +42,7 @@
 <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 	<div class="card bg-base-100 border-base-200 border shadow-xl">
 		<div class="card-body items-center p-4 text-center">
-			<h2 class="card-title mb-2 capitalize">{getResourceName($resourceType)}</h2>
+			<h2 class="card-title mb-2 capitalize">{getResourceName(resourceType)}</h2>
 			<div class="mb-2 flex flex-wrap justify-center gap-2">
 				<span class="badge badge-primary">Einträge: {stats.count}</span>
 				<span class="badge badge-secondary">Plüschis: {stats.totalRareDrops}</span>

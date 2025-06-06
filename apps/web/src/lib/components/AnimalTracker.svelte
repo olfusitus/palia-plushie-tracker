@@ -2,13 +2,12 @@
 	import { onMount } from 'svelte';
 	import type { AnimalResource, ResourceSize } from '$lib/storage';
 	import { downloadCSV, exportCSV } from '$lib/storage';
+	import { resourceStore } from '$lib/stores/resourceStore';
 
 	export let resource: AnimalResource;
-	export let addEntry: (type: string, size: string, rareDrops: number) => void;
 
 	let buttonStatus: Record<string, boolean> = {};
 	let showRareDropMenu = false; // Steuert die Sichtbarkeit des Untermenüs
-	let showMobileMenu = false; // Steuert die Sichtbarkeit des mobilen Menüs
 
 	// Initialisiere den Button-Status für jede Größe
 	onMount(() => {
@@ -39,8 +38,9 @@
 		return active ? `${base} ${activeClass}` : `${base} ${colorByType[size]} ${hoverColors[size]}`;
 	}
 
-	function handleClick(size: string, rareDrops: number) {
-		addEntry(resource.type, size, rareDrops);
+	function handleClick(size: string, plushie: boolean) {
+		console.log('handleClick', resource.type, size, plushie);
+		resourceStore.addAnimalEntry(resource.type, size as ResourceSize, plushie);
 		buttonStatus[size] = true;
 		setTimeout(() => {
 			buttonStatus[size] = false;
@@ -51,12 +51,8 @@
 		showRareDropMenu = !showRareDropMenu;
 	}
 
-	function toggleMobileMenu() {
-		showMobileMenu = !showMobileMenu;
-	}
-
 	function handleRareDrop(size: string) {
-		handleClick(size, 1); // Fügt einen RareDrop hinzu
+		handleClick(size, true); // Fügt einen RareDrop hinzu
 		showRareDropMenu = false; // Schließt das Untermenü
 	}
 
@@ -96,9 +92,9 @@
 
 		<!-- Buttons für die verschiedenen Größen -->
 		<div class="flex w-full flex-wrap justify-center gap-4">
-			{#each resource.availableSizes as size}
+			{#each resource.availableSizes as size (size)}
 				<button
-					on:click={() => handleClick(size, 0)}
+					on:click={() => handleClick(size, false)}
 					class={buttonClass(size)}
 					disabled={buttonStatus[size]}
 				>
@@ -116,7 +112,7 @@
 				</button>
 				{#if showRareDropMenu}
 					<div class="absolute left-0 z-40 mt-2 w-48 rounded-lg bg-white shadow-lg">
-						{#each resource.availableSizes as size}
+						{#each resource.availableSizes as size (size)}
 							<button
 								on:click={() => handleRareDrop(size)}
 								class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"

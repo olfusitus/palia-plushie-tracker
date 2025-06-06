@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { BugResource, Resource } from '$lib/storage';
-	import { exportCSV } from '$lib/storage';
+	// import { exportCSV } from '$lib/storage';
+	import { resourceStore } from '$lib/stores/resourceStore';
 
 	export let resources: BugResource[]; // Array statt einzelner Resource
-	export let addEntry: (type: string, rareDrops: number) => void;
 
 	let buttonStatus: Record<string, boolean> = {};
 	let showRareDropMenu = false;
@@ -45,8 +45,8 @@
 		return active ? `${base} ${activeClass}` : `${base} ${color}`;
 	}
 
-	function handleClick(resource: Resource, rareDrops: number) {
-		addEntry(resource.type, rareDrops);
+	function handleClick(resource: Resource, plushie: boolean) {
+		resourceStore.addBugEntry(resource.type, plushie);
 		buttonStatus[resource.type] = true;
 		setTimeout(() => {
 			buttonStatus[resource.type] = false;
@@ -67,7 +67,7 @@
 	}
 
 	function handleRareDrop(resource: Resource) {
-		handleClick(resource, 1);
+		handleClick(resource, true);
 		showRareDropMenu = false;
 	}
 
@@ -103,7 +103,7 @@
 				<ul
 					class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
 				>
-					{#each resources as resource}
+					{#each resources as resource (resource.type)}
 						<!-- <li><button on:click={() => downloadCSV(resource)}>Daten exportieren ({resource.name})</button></li> -->
 						<li><a href={`/bugStats/${resource.type}`}>Statistik anzeigen ({resource.name})</a></li>
 						<li><a href={`/manage/${resource.type}`}>Einträge bearbeiten ({resource.name})</a></li>
@@ -114,9 +114,9 @@
 
 		<!-- Buttons für alle Bugs -->
 		<div class="flex w-full flex-wrap justify-center gap-4">
-			{#each resources as resource}
+			{#each resources as resource (resource.type)}
 				<button
-					on:click={() => handleClick(resource, 0)}
+					on:click={() => handleClick(resource, false)}
 					class={buttonClass(resource.type)}
 					disabled={buttonStatus[resource.type]}
 				>
@@ -140,7 +140,7 @@
 							? '100%'
 							: 'auto'}; bottom: {rareDropMenuDirection === 'up' ? '100%' : 'auto'};"
 					>
-						{#each resources as resource}
+						{#each resources as resource (resource.type)}
 							<button
 								on:click={() => handleRareDrop(resource)}
 								class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
@@ -154,7 +154,7 @@
 		</div>
 
 		<div class="mt-2 hidden flex-col items-center gap-2 sm:flex">
-			{#each resources as resource}
+			{#each resources as resource (resource.type)}
 				<!-- <button on:click={() => downloadCSV(resource)} class="btn btn-outline btn-success w-48">
 					Daten exportieren ({resource.name})
 				</button> -->
