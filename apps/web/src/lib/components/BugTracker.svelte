@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	// import { onMount } from 'svelte';
 	import type { BugResource } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { exportResourceAsCSV, downloadFile } from '$lib/utils/exporter';

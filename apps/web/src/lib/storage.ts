@@ -38,7 +38,6 @@ export function importStorage(file: File) {
 	reader.onload = (event) => {
 		if (event.target) {
 			repository.importAll(event.target.result as string);
-
 		}
 	};
 	reader.readAsText(file);

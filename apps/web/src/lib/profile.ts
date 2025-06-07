@@ -1,4 +1,4 @@
-import repository from '$lib/storage/index'; 
+import repository from '$lib/storage/index';
 
 export function getActiveProfile(): string {
 	return repository.getActiveProfileName();

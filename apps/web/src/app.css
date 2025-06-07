@@ -1,2 +1,9 @@
 @import 'tailwindcss';
 @plugin "daisyui";
+
+.card {
+	@apply transition-all duration-200 ease-in-out;
+}
+.card:hover {
+	@apply scale-[1.02] shadow-2xl;
+}

@@ -63,7 +63,7 @@
 
 <div class="drawer">
 	<input id="my-drawer-3" type="checkbox" class="drawer-toggle" bind:checked={$drawerOpen} />
-	<div class="drawer-content flex flex-col bg-base-200">
+	<div class="drawer-content bg-base-200 flex flex-col">
 		<!-- Navbar -->
 		<div class="navbar bg-base-300 w-full">
 			<div class="navbar-start">

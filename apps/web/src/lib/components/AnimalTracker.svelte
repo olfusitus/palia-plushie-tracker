@@ -46,7 +46,6 @@
 		}, 500);
 	}
 
-
 	function handleRareDrop(size: string) {
 		handleClick(size, true); // Fügt einen RareDrop hinzu
 	}
@@ -103,9 +102,13 @@
 				>
 					Plüschi
 				</button>
-				<ul class="dropdown-content z-[1] menu p-2 shadow-sm bg-base-100 rounded-box w-52">
+				<ul class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-sm">
 					{#each resource.availableSizes as size (size)}
-						<li><button on:click={() => handleRareDrop(size)}>{resource.labels[size as ResourceSize]}</button></li>
+						<li>
+							<button on:click={() => handleRareDrop(size)}
+								>{resource.labels[size as ResourceSize]}</button
+							>
+						</li>
 					{/each}
 				</ul>
 			</div>
