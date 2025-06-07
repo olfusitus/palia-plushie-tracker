@@ -32,6 +32,9 @@ jobs:
       #   with:
       #     name: web-build
       #     path: apps/web/build
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r web.zip apps/web/build/
 
       - name: Release
         uses: softprops/action-gh-release@v2
