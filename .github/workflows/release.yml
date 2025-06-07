@@ -53,7 +53,7 @@ jobs:
       - name: Package StreamDeck Plugin
         uses: neilenns/streamdeck-cli-pack@v1
         with:
-          plugin-directory: plugins/stream-deck-plushie-bridge/dist
+          plugin-directory: plugins/stream-deck-plushie-bridge
 
       - name: Upload StreamDeck Plugin
         uses: actions/upload-artifact@v4
