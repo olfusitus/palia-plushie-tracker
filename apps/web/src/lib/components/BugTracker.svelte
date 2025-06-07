@@ -8,15 +8,8 @@
 
 	let buttonStatus: boolean = false;
 
-	// Initialisiere den Button-Status für jede Größe
-	// onMount(() => {
-	// 	// for (const size in resource.sizes) {
-	// 	// 	buttonStatus[size] = false;
-	// 	// }
-	// });
-
 	function handleClick(plushie: boolean) {
-		resourceStore.addBugEntry(resource.type, plushie);
+		resourceStore.addEntry(resource.type, plushie);
 		buttonStatus = true;
 		setTimeout(() => {
 			buttonStatus = false;
@@ -33,7 +26,7 @@
 	}
 </script>
 
-<div class="card bg-base-100 border-base-300 mb-8 w-full max-w-md border shadow-xl">
+<div class="card bg-base-100 border-base-300 mb-8 w-full border shadow-xl">
 	<div class="card-body w-full px-4">
 		<div class="mb-4 flex w-full items-center gap-4">
 			<h2 class="card-title">{resource.name}</h2>
@@ -65,7 +58,7 @@
 		<div class="flex w-full flex-wrap justify-center gap-4">
 			<button
 				on:click={() => handleClick(false)}
-				class="btn btn-soft btn-primary h-20 w-[45%] rounded-lg"
+				class="btn btn-soft btn-primary flex h-20 w-[45%] rounded-lg"
 				disabled={buttonStatus}
 			>
 				{#if buttonStatus}Gespeichert ✓{:else}{resource.name}{/if}

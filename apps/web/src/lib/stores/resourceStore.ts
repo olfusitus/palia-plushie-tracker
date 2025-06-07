@@ -6,8 +6,8 @@
  */
 
 import {
-	type AnimalEntry,
-	type BugEntry,
+	// type AnimalEntry,
+	// type BugEntry,
 	type ResourceEntry,
 	type ResourceSize,
 	type ResourceType
@@ -50,40 +50,13 @@ function createResourceStore() {
 				loadAndCache(resourceType);
 			}
 		},
-		/**
-		 * Adds a new animal entry to the store
-		 * @param resourceType - The type of animal resource
-		 * @param size - The size of the animal
-		 * @param plushie - Whether the animal dropped a plushie
-		 */
-		addAnimalEntry: (resourceType: ResourceType, size: ResourceSize, plushie: boolean) => {
-			const entry: AnimalEntry = {
-				id: crypto.randomUUID(),
-				timestamp: new Date().toISOString(),
-				type: size,
-				rareDrops: plushie ? 1 : 0
-			};
 
-			update((state) => {
-				let currentEntries = state[resourceType];
-				if (currentEntries === undefined) {
-					currentEntries = loadAndCache(resourceType);
-				}
-				const newEntries = [...currentEntries, entry];
-				repository.saveEntries(resourceType, getActiveProfile(), newEntries);
-				return { ...state, [resourceType]: newEntries };
-			});
-		},
-		/**
-		 * Adds a new bug entry to the store
-		 * @param resourceType - The type of bug resource
-		 * @param plushie - Whether the bug dropped a plushie
-		 */
-		addBugEntry: (resourceType: ResourceType, plushie: boolean) => {
-			const entry: BugEntry = {
+		addEntry: (resourceType: ResourceType, plushie: boolean, resourceSize?: ResourceSize) => {
+			const entry: ResourceEntry = {
 				id: crypto.randomUUID(),
 				timestamp: new Date().toISOString(),
-				rareDrops: plushie ? 1 : 0
+				rareDrops: plushie ? 1 : 0,
+				...(resourceSize !== undefined && { type: resourceSize })
 			};
 			update((state) => {
 				let currentEntries = state[resourceType];
@@ -95,18 +68,24 @@ function createResourceStore() {
 				return { ...state, [resourceType]: newEntries };
 			});
 		},
-		addMultipleAnimalEntries: (
+
+		addMultipleEntries: (
 			resourceType: ResourceType,
-			entriesToAdd: Omit<AnimalEntry, 'id' | 'timestamp'>[]
+			plushie: boolean,
+			count: number,
+			resourceSize?: ResourceSize
 		) => {
-			const newEntries = entriesToAdd.map((e) => ({
-				...e,
-				id: crypto.randomUUID(),
-				timestamp: new Date().toISOString()
-			}));
+			const newEntries = Array(count)
+				.fill(null)
+				.map(() => ({
+					id: crypto.randomUUID(),
+					timestamp: new Date().toISOString(),
+					rareDrops: plushie ? 1 : 0,
+					...(resourceSize !== undefined && { type: resourceSize })
+				}));
 
 			update((state) => {
-				let currentEntries = state[resourceType] || [];
+				let currentEntries = state[resourceType];
 				if (currentEntries === undefined) {
 					currentEntries = loadAndCache(resourceType);
 				}

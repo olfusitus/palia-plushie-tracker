@@ -17,37 +17,41 @@
 
 	function buttonClass(size: string): string {
 		const base =
-			'btn w-[45%] h-20 sm:text-lg flex items-center justify-center rounded-lg shadow-md transition-all duration-200 ease-out active:scale-95 active:shadow-inner text-white';
+			'btn w-[45%] h-20 sm:text-lg rounded-lg shadow-md active:scale-95 active:shadow-inner text-white';
+		// 'btn btn-soft sm:text-lg h-20 w-[45%] rounded-lg';
+		// 'btn w-[45%] h-20 sm:text-lg flex items-center justify-center rounded-lg shadow-md transition-all duration-200 ease-out active:scale-95 active:shadow-inner text-white';
 
 		const activeClass = 'bg-green-600!';
 
 		const colorByType: Record<string, string> = {
-			small: 'bg-amber-400',
-			medium: 'bg-orange-400',
-			large: 'bg-rose-400'
+			small: 'bg-amber-400 hover:bg-amber-300',
+			medium: 'bg-orange-400 hover:bg-orange-300',
+			large: 'bg-rose-400 hover:bg-rose-300'
 		};
 
-		const hoverColors: Record<string, string> = {
-			small: 'hover:bg-amber-300',
-			medium: 'hover:bg-orange-300',
-			large: 'hover:bg-rose-300'
-		};
+		// const hoverColors: Record<string, string> = {
+		// 	small: 'hover:bg-amber-300',
+		// 	medium: 'hover:bg-orange-300',
+		// 	large: 'hover:bg-rose-300'
+		// };
 
 		const active = buttonStatus[size];
-		return active ? `${base} ${activeClass}` : `${base} ${colorByType[size]} ${hoverColors[size]}`;
+		return active ? `${base} ${activeClass}` : `${base} ${colorByType[size]}`;
 	}
 
 	function handleClick(size: string, plushie: boolean) {
 		console.log('handleClick', resource.type, size, plushie);
-		resourceStore.addAnimalEntry(resource.type, size as ResourceSize, plushie);
+		resourceStore.addEntry(resource.type, plushie, size as ResourceSize);
 		buttonStatus[size] = true;
 		setTimeout(() => {
 			buttonStatus[size] = false;
 		}, 500);
 	}
 
+	let openDropdown: boolean = false;
 	function handleRareDrop(size: string) {
 		handleClick(size, true); // Fügt einen RareDrop hinzu
+		openDropdown = false;
 	}
 
 	function handleDownloadCSV() {
@@ -56,7 +60,7 @@
 	}
 </script>
 
-<div class="card bg-base-100 border-base-300 mb-8 w-full max-w-md border shadow-xl">
+<div class="card bg-base-100 border-base-300 mb-8 w-full border shadow-xl">
 	<div class="card-body w-full px-4">
 		<div class="mb-4 flex w-full items-center gap-4">
 			<h2 class="card-title">{resource.name}</h2>
@@ -95,14 +99,13 @@
 					{#if buttonStatus[size]}Gespeichert ✓{:else}{resource.labels[size as ResourceSize]}{/if}
 				</button>
 			{/each}
-			<div class="dropdown w-[45%]">
-				<button
-					tabindex="0"
-					class="flex h-20 w-full items-center justify-center rounded-lg bg-purple-500 text-base text-white shadow-md transition-all duration-200 hover:bg-purple-400 active:scale-95 sm:text-lg"
+			<details class="dropdown w-[45%]">
+				<summary
+					class="btn flex h-20 w-full items-center justify-center rounded-lg bg-purple-500 text-base text-white shadow-md transition-all duration-200 hover:bg-purple-400 active:scale-95 sm:text-lg"
 				>
 					Plüschi
-				</button>
-				<ul class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-sm">
+				</summary>
+				<ul class="menu dropdown-content bg-base-300 rounded-box z-[1] w-52 p-2 shadow-sm">
 					{#each resource.availableSizes as size (size)}
 						<li>
 							<button on:click={() => handleRareDrop(size)}
@@ -111,7 +114,7 @@
 						</li>
 					{/each}
 				</ul>
-			</div>
+			</details>
 		</div>
 
 		<!-- <div class="divider my-2 hidden sm:block">Aktionen</div> -->

@@ -29,9 +29,9 @@
 					if (data.action === 'addEntry') {
 						console.log('Received action:', data.action);
 						// eslint-disable-next-line @typescript-eslint/no-unused-vars
-						const { action, resourceType, size, rareDrops } = data;
-						resourceStore.addAnimalEntry(resourceType, size, rareDrops);
-						console.log('Added entry:', resourceType, size, rareDrops);
+						const { action, resourceType, size, plushie } = data;
+						resourceStore.addEntry(resourceType, plushie, size);
+						console.log('Added entry:', resourceType, plushie, size);
 
 						// triggerResourceEntriesRefresh();
 
@@ -125,7 +125,9 @@
 				</a>
 			</div>
 		</div>
-		<main class="flex w-full flex-1 flex-col items-center justify-start px-2 py-6 md:px-4">
+		<main
+			class="container mx-auto flex w-full flex-1 flex-col items-center justify-start px-2 py-6 md:px-4"
+		>
 			{@render children()}
 		</main>
 		<footer class="footer footer-center bg-base-300 text-base-content mt-8 rounded-t-xl p-4">

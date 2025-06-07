@@ -46,7 +46,7 @@
 	}
 
 	function handleClick(resource: Resource, plushie: boolean) {
-		resourceStore.addBugEntry(resource.type, plushie);
+		resourceStore.addEntry(resource.type, plushie);
 		buttonStatus[resource.type] = true;
 		setTimeout(() => {
 			buttonStatus[resource.type] = false;

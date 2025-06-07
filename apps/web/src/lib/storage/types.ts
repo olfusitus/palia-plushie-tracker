@@ -1,21 +1,26 @@
+export interface BaseResourceEntry {
+	id: string;
+	timestamp: string;
+	rareDrops: number;
+}
+
 export type ResourceSize = 'small' | 'medium' | 'large';
-
-export interface AnimalEntry {
-	id: string;
-	timestamp: string;
-	type: ResourceSize; // 'small' | 'medium' | 'large'
-	rareDrops: number;
+export interface AnimalEntry extends BaseResourceEntry {
+	type: ResourceSize;
 }
 
-export interface BugEntry {
-	id: string;
-	timestamp: string;
-	rareDrops: number;
-}
+export type BugEntry = BaseResourceEntry;
 
-// export interface ResourceEntry {
+// export interface AnimalEntry {
+// 	id: string;
 // 	timestamp: string;
-// 	type: ResourceSize;
+// 	type: ResourceSize; // 'small' | 'medium' | 'large'
+// 	rareDrops: number;
+// }
+
+// export interface BugEntry {
+// 	id: string;
+// 	timestamp: string;
 // 	rareDrops: number;
 // }
 

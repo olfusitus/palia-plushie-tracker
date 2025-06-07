@@ -11,7 +11,7 @@
 
 <h1 class="mb-6 text-center text-3xl font-bold">🐞 Käferchen</h1>
 
-<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+<div class="">
 	<!-- {#each resourcesList as animal} -->
 	<!-- <div class="card bg-base-100 shadow-xl border border-base-200">
 			<div class="card-body p-4"> -->

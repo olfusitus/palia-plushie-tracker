@@ -1,6 +1,10 @@
 @import 'tailwindcss';
 @plugin "daisyui";
 
+@theme {
+	--font-sans: 'Poppins', sans-serif;
+}
+
 .card {
 	@apply transition-all duration-200 ease-in-out;
 }
