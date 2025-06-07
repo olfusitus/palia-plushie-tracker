@@ -126,7 +126,7 @@
 	<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
 		{#each profiles as profile (profile)}
 			<div
-				class={`card border shadow-lg transition ${activeProfile === profile ? 'border-primary' : 'border-base-200'}`}
+				class={`card bg-base-100 border shadow-lg transition ${activeProfile === profile ? 'border-primary' : 'border-base-300'}`}
 			>
 				<div class="card-body flex flex-col gap-3 p-4">
 					{#if renameMode && profileToRename === profile}
@@ -166,7 +166,7 @@
 			</div>
 		{/each}
 		<!-- Neue Profil Card -->
-		<div class="card bg-base-200 border-base-200 flex flex-col justify-center border shadow-lg">
+		<div class="card bg-base-200 border-base-300 flex flex-col justify-center border shadow-lg">
 			<div class="card-body flex flex-col gap-3 p-4">
 				<label for="new-profile-input" class="label text-base font-semibold"
 					>Neues Profil anlegen</label
@@ -185,7 +185,7 @@
 		</div>
 	</div>
 	<h2 class="text-primary mb-2 text-center text-3xl font-extrabold">Daten verwalten</h2>
-	<div class="card card-border bg-base-100 border-base-200 shadow-lg">
+	<div class="card card-border bg-base-100 border-base-300 shadow-lg">
 		<div class="card-body">
 			<h2 class="card-title">Backup</h2>
 			<!-- <label class="text-base-content/60 text-sm" for="lsDownBtn">Backup herunterladen: </label> -->

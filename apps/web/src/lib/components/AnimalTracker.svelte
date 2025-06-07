@@ -2,13 +2,11 @@
 	import { onMount } from 'svelte';
 	import type { AnimalResource } from '$lib/storage';
 	import type { ResourceSize } from '$lib/storage/types';
-	// import { downloadCSV, exportCSV } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { exportResourceAsCSV, downloadFile } from '$lib/utils/exporter';
 	export let resource: AnimalResource;
 
 	let buttonStatus: Record<string, boolean> = {};
-	let showRareDropMenu = false; // Steuert die Sichtbarkeit des Untermenüs
 
 	// Initialisiere den Button-Status für jede Größe
 	onMount(() => {
@@ -48,13 +46,9 @@
 		}, 500);
 	}
 
-	function toggleRareDropMenu() {
-		showRareDropMenu = !showRareDropMenu;
-	}
 
 	function handleRareDrop(size: string) {
 		handleClick(size, true); // Fügt einen RareDrop hinzu
-		showRareDropMenu = false; // Schließt das Untermenü
 	}
 
 	function handleDownloadCSV() {
@@ -63,7 +57,7 @@
 	}
 </script>
 
-<div class="card bg-base-100 border-base-200 mb-8 w-full max-w-md border shadow-xl">
+<div class="card bg-base-100 border-base-300 mb-8 w-full max-w-md border shadow-xl">
 	<div class="card-body w-full px-4">
 		<div class="mb-4 flex w-full items-center gap-4">
 			<h2 class="card-title">{resource.name}</h2>
@@ -102,27 +96,18 @@
 					{#if buttonStatus[size]}Gespeichert ✓{:else}{resource.labels[size as ResourceSize]}{/if}
 				</button>
 			{/each}
-
-			<!-- Button für RareDrop mit Untermenü -->
-			<div class="relative w-[45%]">
+			<div class="dropdown w-[45%]">
 				<button
-					on:click={toggleRareDropMenu}
+					tabindex="0"
 					class="flex h-20 w-full items-center justify-center rounded-lg bg-purple-500 text-base text-white shadow-md transition-all duration-200 hover:bg-purple-400 active:scale-95 sm:text-lg"
 				>
 					Plüschi
 				</button>
-				{#if showRareDropMenu}
-					<div class="absolute left-0 z-40 mt-2 w-48 rounded-lg bg-white shadow-lg">
-						{#each resource.availableSizes as size (size)}
-							<button
-								on:click={() => handleRareDrop(size)}
-								class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
-							>
-								{resource.labels[size as ResourceSize]}
-							</button>
-						{/each}
-					</div>
-				{/if}
+				<ul class="dropdown-content z-[1] menu p-2 shadow-sm bg-base-100 rounded-box w-52">
+					{#each resource.availableSizes as size (size)}
+						<li><button on:click={() => handleRareDrop(size)}>{resource.labels[size as ResourceSize]}</button></li>
+					{/each}
+				</ul>
 			</div>
 		</div>
 

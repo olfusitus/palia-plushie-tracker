@@ -63,7 +63,7 @@
 
 <div class="drawer">
 	<input id="my-drawer-3" type="checkbox" class="drawer-toggle" bind:checked={$drawerOpen} />
-	<div class="drawer-content flex flex-col">
+	<div class="drawer-content flex flex-col bg-base-200">
 		<!-- Navbar -->
 		<div class="navbar bg-base-300 w-full">
 			<div class="navbar-start">
@@ -128,7 +128,7 @@
 		<main class="flex w-full flex-1 flex-col items-center justify-start px-2 py-6 md:px-4">
 			{@render children()}
 		</main>
-		<footer class="footer footer-center bg-base-100 text-base-content mt-8 rounded-t-xl p-4">
+		<footer class="footer footer-center bg-base-300 text-base-content mt-8 rounded-t-xl p-4">
 			<div>
 				<p class="text-sm opacity-70">&copy; {new Date().getFullYear()} Palia Hunting Tracker</p>
 			</div>

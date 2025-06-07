@@ -82,7 +82,7 @@
 	// }
 </script>
 
-<div class="card bg-base-100 border-base-200 mb-8 w-full max-w-md border shadow-xl">
+<div class="card bg-base-100 border-base-300 mb-8 w-full max-w-md border shadow-xl">
 	<div class="card-body w-full px-4">
 		<div class="mb-4 flex w-full items-center gap-4">
 			<h2 class="card-title">Krabbelviechs</h2>
