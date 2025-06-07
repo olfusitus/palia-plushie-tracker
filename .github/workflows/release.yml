@@ -105,6 +105,10 @@ jobs:
       - name: Install Frontend Dependencies
         run: npm ci
 
+      - name: Install Web Dependencies
+        working-directory: apps/web
+        run: npm ci
+
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
