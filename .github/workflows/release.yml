@@ -25,11 +25,17 @@ jobs:
       - name: Build Web
         run: npm run build
 
-      - name: Upload Web Build
-        uses: actions/upload-artifact@v4
+      # - name: Upload Web Build
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: web-build
+      #     path: apps/web/build
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: web-build
-          path: apps/web/build
+          files: |
+            apps/web/build/**
 
   build-streamdeck:
     runs-on: ubuntu-latest
@@ -57,15 +63,19 @@ jobs:
         uses: neilenns/streamdeck-cli-pack@v1
         with:
           path: plugins/stream-deck-plushie-bridge/com.olfusitus.stream-deck-plushie-bridge.sdPlugin
-
-      - name: Upload StreamDeck Plugin
-        uses: actions/upload-artifact@v4
+      
+      - name: Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: streamdeck-plugin
-          path: plugins/stream-deck-plushie-bridge/*.streamDeckPlugin
+          files: com.olfusitus.stream-deck-plushie-bridge.streamDeckPlugin
+      # - name: Upload StreamDeck Plugin
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: streamdeck-plugin
+      #     path: com.olfusitus.stream-deck-plushie-bridge.streamDeckPlugin
 
   publish-tauri:
-    needs: [build-web, build-streamdeck]
+    # needs: [build-web, build-streamdeck]
     permissions:
       contents: write
     strategy:
@@ -117,29 +127,48 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectPath: apps/desktop
-          tagName: plushie-v__VERSION__
-          releaseName: "Plushie v__VERSION__"
+          tagName: plushie-desktop-v__VERSION__
+          releaseName: "Plushie Tracker Desktop v__VERSION__"
           releaseBody: "See the assets to download this version and install."
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
 
-  attach-other-assets:
-    name: "Attach Web & Plugin"
-    needs: [publish-tauri]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: "*"
-          path: artifacts
+  # publish-web:
+  #   name: "Publish Web"
+  #   needs: [build-web, build-streamdeck]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         pattern: "*"
+  #         path: artifacts
+  #     - name: Upload extra assets to GitHub Release
+  #       uses: softprops/action-gh-release@v2
+  #       with:
+  #         tag_name: plushie-web-v${{ github.run_number }}
+  #         files: |
+  #           artifacts/web-build/**
+  #           artifacts/streamdeck-plugin/*.streamDeckPlugin
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload extra assets to GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: plushie-v${{ github.run_number }}
-          files: |
-            artifacts/web-build/**
-            artifacts/streamdeck-plugin/*.streamDeckPlugin
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # attach-other-assets:
+  #   name: "Attach Web & Plugin"
+  #   needs: [publish-tauri]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         pattern: "*"
+  #         path: artifacts
+
+  #     - name: Upload extra assets to GitHub Release
+  #       uses: softprops/action-gh-release@v2
+  #       with:
+  #         tag_name: plushie-v${{ github.run_number }}
+  #         files: |
+  #           artifacts/web-build/**
+  #           artifacts/streamdeck-plugin/*.streamDeckPlugin
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
