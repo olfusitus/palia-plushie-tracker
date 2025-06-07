@@ -31,37 +31,6 @@ jobs:
           name: web-build
           path: apps/web/build
 
-  build-tauri:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: apps/desktop
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Install Tauri Dependencies
-        run: npm ci
-
-      - name: Build Tauri App
-        run: npm run tauri build
-
-      - name: Upload Tauri Build
-        uses: actions/upload-artifact@v4
-        with:
-          name: tauri-build-${{ matrix.os }}
-          path: apps/desktop/src-tauri/target/release/bundle
-
   build-streamdeck:
     runs-on: ubuntu-latest
     defaults:
@@ -92,8 +61,62 @@ jobs:
           name: streamdeck-plugin
           path: plugins/stream-deck-plushie-bridge/*.streamDeckPlugin
 
-  release:
-    needs: [build-web, build-tauri, build-streamdeck]
+  publish-tauri:
+    needs: [build-web, build-streamdeck]
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'ubuntu-22.04'
+            args: ''
+          - platform: 'windows-latest'
+            args: ''
+    runs-on: ${{ matrix.platform }}
+    defaults:
+      run:
+        working-directory: apps/desktop
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.0-dev \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf
+
+      - name: Install Frontend Dependencies
+        run: npm ci
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: apps/desktop
+          tagName: plushie-v__VERSION__
+          releaseName: "Plushie v__VERSION__"
+          releaseBody: "See the assets to download this version and install."
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}
+
+  attach-other-assets:
+    name: "Attach Web & Plugin"
+    needs: [publish-tauri]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -101,15 +124,12 @@ jobs:
           pattern: "*"
           path: artifacts
 
-      - name: Create GitHub Release
+      - name: Upload extra assets to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: Release ${{ github.ref_name }}
-          tag_name: ${{ github.ref }}
+          tag_name: plushie-v${{ github.run_number }}
           files: |
             artifacts/web-build/**
-            artifacts/tauri-build-ubuntu-latest/**/*.AppImage
-            artifacts/tauri-build-windows-latest/**/*.msi
             artifacts/streamdeck-plugin/*.streamDeckPlugin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
