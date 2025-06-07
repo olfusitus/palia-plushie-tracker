@@ -50,9 +50,13 @@ jobs:
       - name: Build Plugin (optional)
         run: npm run build
 
+      - name: Show working dir contents (debug)
+        run: ls -R .
+
       - name: Package StreamDeck Plugin
         uses: neilenns/streamdeck-cli-pack@v1
-
+        with:
+          path: com.olfusitus.stream-deck-plushie-bridge.sdPlugin
 
       - name: Upload StreamDeck Plugin
         uses: actions/upload-artifact@v4
