@@ -11,6 +11,8 @@ jobs:
     defaults:
       run:
         working-directory: apps/web
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -42,6 +44,8 @@ jobs:
     defaults:
       run:
         working-directory: plugins/stream-deck-plushie-bridge
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
