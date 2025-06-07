@@ -56,7 +56,7 @@ jobs:
       - name: Package StreamDeck Plugin
         uses: neilenns/streamdeck-cli-pack@v1
         with:
-          path: com.olfusitus.stream-deck-plushie-bridge.sdPlugin
+          path: plugins/stream-deck-plushie-bridge/com.olfusitus.stream-deck-plushie-bridge.sdPlugin
 
       - name: Upload StreamDeck Plugin
         uses: actions/upload-artifact@v4
