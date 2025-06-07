@@ -1,0 +1,115 @@
+name: Build and Release on Tag
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Web Dependencies
+        run: npm ci
+
+      - name: Build Web
+        run: npm run build
+
+      - name: Upload Web Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: apps/web/build
+
+  build-tauri:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: apps/desktop
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Tauri Dependencies
+        run: npm ci
+
+      - name: Build Tauri App
+        run: npm run tauri build
+
+      - name: Upload Tauri Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-build-${{ matrix.os }}
+          path: apps/desktop/src-tauri/target/release/bundle
+
+  build-streamdeck:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: plugins/stream-deck-plushie-bridge
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Plugin Dependencies
+        run: npm ci
+
+      - name: Build Plugin (optional)
+        run: npm run build
+
+      - name: Package StreamDeck Plugin
+        uses: neilenns/streamdeck-cli-pack@v1
+        with:
+          plugin-directory: plugins/stream-deck-plushie-bridge/dist
+
+      - name: Upload StreamDeck Plugin
+        uses: actions/upload-artifact@v4
+        with:
+          name: streamdeck-plugin
+          path: plugins/stream-deck-plushie-bridge/*.streamDeckPlugin
+
+  release:
+    needs: [build-web, build-tauri, build-streamdeck]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: "*"
+          path: artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.ref }}
+          files: |
+            artifacts/web-build/**
+            artifacts/tauri-build-ubuntu-latest/**/*.AppImage
+            artifacts/tauri-build-windows-latest/**/*.msi
+            artifacts/streamdeck-plugin/*.streamDeckPlugin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
