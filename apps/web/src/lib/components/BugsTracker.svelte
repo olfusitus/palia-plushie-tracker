@@ -4,25 +4,23 @@
 	// import { exportCSV } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
 
-	export let resources: BugResource[]; // Array statt einzelner Resource
+	const { resources } = $props<{ resources: BugResource[] }>();
 
-	let buttonStatus: Record<string, boolean> = {};
-	let showRareDropMenu = false;
-	// let showMobileMenu = false;
+	let buttonStatus = $state<Record<string, boolean>>({});
+	let showRareDropMenu = $state(false);
 
-	let rareDropMenuDirection: 'down' | 'up' = 'down';
+	let rareDropMenuDirection = $state<'down' | 'up'>('down');
+
 	let plushieButtonRef: HTMLButtonElement | null = null;
 
 	// Initialisiere den Button-Status für jede Resource
 	onMount(() => {
 		for (const resource of resources) {
-			// const size = Object.keys(resource.sizes)[0];
 			buttonStatus[resource.type] = false;
 		}
 	});
 
 	function buttonClass(resourceType: string): string {
-		// DaisyUI Button-Basis
 		const base =
 			'btn w-[45%] h-20 sm:text-lg flex items-center justify-center rounded-lg shadow-md transition-all duration-200 ease-out active:scale-95 active:shadow-inner text-white';
 
@@ -70,16 +68,6 @@
 		handleClick(resource, true);
 		showRareDropMenu = false;
 	}
-
-	// function downloadCSV(resource: Resource) {
-	// 	const csv = exportCSV(resource.type);
-	// 	const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-	// 	const url = URL.createObjectURL(blob);
-	// 	const link = document.createElement('a');
-	// 	link.href = url;
-	// 	link.download = `${resource.type}_data.csv`;
-	// 	link.click();
-	// }
 </script>
 
 <div class="card bg-base-100 border-base-300 mb-8 w-full max-w-md border shadow-xl">
@@ -116,7 +104,7 @@
 		<div class="flex w-full flex-wrap justify-center gap-4">
 			{#each resources as resource (resource.type)}
 				<button
-					on:click={() => handleClick(resource, false)}
+					onclick={() => handleClick(resource, false)}
 					class={buttonClass(resource.type)}
 					disabled={buttonStatus[resource.type]}
 				>
@@ -128,7 +116,7 @@
 			<div class="relative w-[45%]">
 				<button
 					bind:this={plushieButtonRef}
-					on:click={toggleRareDropMenu}
+					onclick={toggleRareDropMenu}
 					class="flex h-20 w-full items-center justify-center rounded-lg bg-purple-500 text-base text-white shadow-md transition-all duration-200 hover:bg-purple-400 active:scale-95 sm:text-lg"
 				>
 					Plüschi
@@ -142,7 +130,7 @@
 					>
 						{#each resources as resource (resource.type)}
 							<button
-								on:click={() => handleRareDrop(resource)}
+								onclick={() => handleRareDrop(resource)}
 								class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
 							>
 								{resource.name}

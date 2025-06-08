@@ -1,4 +1,3 @@
-// src/lib/storage/index.ts
 import { LocalStorageRepository } from './localStorageRepository';
 import type { IStorageRepository } from './repository';
 

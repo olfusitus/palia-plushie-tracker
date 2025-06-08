@@ -1,4 +1,3 @@
-// src/lib/storage/localStorageRepository.ts
 import { migrateData } from '$lib/utils/migration';
 import type { IStorageRepository } from './repository';
 import {

@@ -1,4 +1,5 @@
 <script lang="ts">
+	// fixme: When deleting the active profile and now "default" exists, there is no active profile anymore.
 	import {
 		getProfiles,
 		renameProfile,
@@ -12,12 +13,12 @@
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { toasts } from '$lib/stores/toastStore';
 
-	let profiles = getProfiles();
-	let newProfile = '';
-	let activeProfile = getActiveProfile();
-	let renameMode = false;
-	let profileToRename = '';
-	let newProfileName = '';
+	let profiles = $state(getProfiles());
+	let newProfile = $state('');
+	let activeProfile = $state(getActiveProfile());
+	let renameMode = $state(false);
+	let profileToRename = $state('');
+	let newProfileName = $state('');
 
 	function startRename(profile: string) {
 		renameMode = true;
@@ -132,8 +133,8 @@
 					{#if renameMode && profileToRename === profile}
 						<input type="text" bind:value={newProfileName} class="input input-bordered w-full" />
 						<div class="flex justify-end gap-2">
-							<button on:click={confirmRename} class="btn btn-success btn-sm">Speichern</button>
-							<button on:click={cancelRename} class="btn btn-ghost btn-sm">Abbrechen</button>
+							<button onclick={confirmRename} class="btn btn-success btn-sm">Speichern</button>
+							<button onclick={cancelRename} class="btn btn-ghost btn-sm">Abbrechen</button>
 						</div>
 					{:else}
 						<div class="flex items-center gap-2">
@@ -148,16 +149,16 @@
 						</div>
 						<div class="flex flex-wrap justify-end gap-2">
 							<button
-								on:click={() => switchProfile(profile)}
+								onclick={() => switchProfile(profile)}
 								disabled={activeProfile === profile}
 								class="btn btn-primary btn-sm {activeProfile === profile ? 'btn-disabled' : ''}"
 								>{activeProfile === profile ? 'Aktiv' : 'Wechseln'}</button
 							>
-							<button on:click={() => startRename(profile)} class="btn btn-info btn-sm btn-outline"
+							<button onclick={() => startRename(profile)} class="btn btn-info btn-sm btn-outline"
 								>Umbenennen</button
 							>
 							<button
-								on:click={() => confirmDelete(profile)}
+								onclick={() => confirmDelete(profile)}
 								class="btn btn-error btn-sm btn-outline">Löschen</button
 							>
 						</div>
@@ -179,7 +180,7 @@
 						placeholder="Profilname"
 						class="input input-bordered flex-1"
 					/>
-					<button on:click={createProfile} class="btn btn-success">Erstellen</button>
+					<button onclick={createProfile} class="btn btn-success">Erstellen</button>
 				</div>
 			</div>
 		</div>
@@ -194,7 +195,7 @@
 					Klicke den "Daten exportieren" Button um die im Browser gespeicherten Daten
 					herunterzuladen.
 				</p>
-				<button class="btn btn-primary" id="lsDownBtn" on:click={downloadStorage}
+				<button class="btn btn-primary" id="lsDownBtn" onclick={downloadStorage}
 					>Daten exportieren (JSON)</button
 				>
 			</div>
@@ -205,7 +206,7 @@
 
 			<div class="card-actions justify-end">
 				<input type="file" class="file-input join-item" bind:this={fileInput} />
-				<button class="btn btn-primary join-item" id="lsDownBtn" on:click={handleImport}
+				<button class="btn btn-primary join-item" id="lsDownBtn" onclick={handleImport}
 					>Daten importieren</button
 				>
 			</div>

@@ -4,9 +4,9 @@
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { exportResourceAsCSV, downloadFile } from '$lib/utils/exporter';
 
-	export let resource: BugResource;
+	const { resource } = $props<{ resource: BugResource }>();
 
-	let buttonStatus: boolean = false;
+	let buttonStatus = $state(false);
 
 	function handleClick(plushie: boolean) {
 		resourceStore.addEntry(resource.type, plushie);
@@ -47,7 +47,7 @@
 				<ul
 					class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
 				>
-					<li><button on:click={handleDownloadCSV}>Daten exportieren (CSV)</button></li>
+					<li><button onclick={handleDownloadCSV}>Daten exportieren (CSV)</button></li>
 					<li><a href={`/bugStats/${resource.type}`}>Statistik anzeigen</a></li>
 					<li><a href={`/manage/${resource.type}`}>Einträge bearbeiten</a></li>
 				</ul>
@@ -57,7 +57,7 @@
 		<!-- Buttons für die verschiedenen Größen -->
 		<div class="flex w-full flex-wrap justify-center gap-4">
 			<button
-				on:click={() => handleClick(false)}
+				onclick={() => handleClick(false)}
 				class="btn btn-soft btn-primary flex h-20 w-[45%] rounded-lg"
 				disabled={buttonStatus}
 			>
@@ -67,7 +67,7 @@
 			<!-- Button für RareDrop mit Untermenü -->
 			<div class="relative w-[45%]">
 				<button
-					on:click={() => handleRareDrop()}
+					onclick={() => handleRareDrop()}
 					class="btn btn-soft btn-secondary flex h-20 w-full items-center justify-center rounded-lg shadow-md transition-all duration-200 hover:bg-purple-400 active:scale-95 sm:text-lg"
 				>
 					Plüschi
@@ -77,7 +77,7 @@
 
 		<!-- <div class="divider my-2 hidden sm:block">Aktionen</div> -->
 		<div class="mt-2 hidden flex-col items-center gap-2 sm:flex">
-			<button on:click={handleDownloadCSV} class="btn btn-outline btn-success w-48">
+			<button onclick={handleDownloadCSV} class="btn btn-outline btn-success w-48">
 				Daten exportieren (CSV)
 			</button>
 			<a href={`/bugStats/${resource.type}`} class="btn btn-link">Statistik anzeigen</a>

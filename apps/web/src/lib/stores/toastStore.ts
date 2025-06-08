@@ -1,4 +1,3 @@
-// src/lib/stores/toastStore.ts
 import { writable } from 'svelte/store';
 
 export interface ToastMessage {

@@ -4,9 +4,10 @@
 	import type { ResourceSize } from '$lib/storage/types';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { exportResourceAsCSV, downloadFile } from '$lib/utils/exporter';
-	export let resource: AnimalResource;
 
-	let buttonStatus: Record<string, boolean> = {};
+	const { resource } = $props<{ resource: AnimalResource }>();
+
+	let buttonStatus = $state<Record<string, boolean>>({});
 
 	// Initialisiere den Button-Status für jede Größe
 	onMount(() => {
@@ -18,25 +19,17 @@
 	function buttonClass(size: string): string {
 		const base =
 			'btn w-[45%] h-20 sm:text-lg rounded-lg shadow-md active:scale-95 active:shadow-inner text-white';
-		// 'btn btn-soft sm:text-lg h-20 w-[45%] rounded-lg';
-		// 'btn w-[45%] h-20 sm:text-lg flex items-center justify-center rounded-lg shadow-md transition-all duration-200 ease-out active:scale-95 active:shadow-inner text-white';
 
 		const activeClass = 'bg-green-600!';
 
-		const colorByType: Record<string, string> = {
+		const styleByType: Record<string, string> = {
 			small: 'bg-amber-400 hover:bg-amber-300',
 			medium: 'bg-orange-400 hover:bg-orange-300',
 			large: 'bg-rose-400 hover:bg-rose-300'
 		};
 
-		// const hoverColors: Record<string, string> = {
-		// 	small: 'hover:bg-amber-300',
-		// 	medium: 'hover:bg-orange-300',
-		// 	large: 'hover:bg-rose-300'
-		// };
-
 		const active = buttonStatus[size];
-		return active ? `${base} ${activeClass}` : `${base} ${colorByType[size]}`;
+		return active ? `${base} ${activeClass}` : `${base} ${styleByType[size]}`;
 	}
 
 	function handleClick(size: string, plushie: boolean) {
@@ -81,7 +74,7 @@
 				<ul
 					class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
 				>
-					<li><button on:click={handleDownloadCSV}>Daten exportieren (CSV)</button></li>
+					<li><button onclick={handleDownloadCSV}>Daten exportieren (CSV)</button></li>
 					<li><a href={`/huntingStats/${resource.type}`}>Statistik anzeigen</a></li>
 					<li><a href={`/manage/${resource.type}`}>Einträge bearbeiten</a></li>
 				</ul>
@@ -92,7 +85,7 @@
 		<div class="flex w-full flex-wrap justify-center gap-4">
 			{#each resource.availableSizes as size (size)}
 				<button
-					on:click={() => handleClick(size, false)}
+					onclick={() => handleClick(size, false)}
 					class={buttonClass(size)}
 					disabled={buttonStatus[size]}
 				>
@@ -108,7 +101,7 @@
 				<ul class="menu dropdown-content bg-base-300 rounded-box z-[1] w-52 p-2 shadow-sm">
 					{#each resource.availableSizes as size (size)}
 						<li>
-							<button on:click={() => handleRareDrop(size)}
+							<button onclick={() => handleRareDrop(size)}
 								>{resource.labels[size as ResourceSize]}</button
 							>
 						</li>
@@ -119,7 +112,7 @@
 
 		<!-- <div class="divider my-2 hidden sm:block">Aktionen</div> -->
 		<div class="mt-2 hidden flex-col items-center gap-2 sm:flex">
-			<button on:click={handleDownloadCSV} class="btn btn-outline btn-success w-48">
+			<button onclick={handleDownloadCSV} class="btn btn-outline btn-success w-48">
 				Daten exportieren (CSV)
 			</button>
 			<a href={`/huntingStats/${resource.type}`} class="btn btn-link">Statistik anzeigen</a>

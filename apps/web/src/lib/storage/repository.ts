@@ -1,4 +1,3 @@
-// src/lib/storage/repository.ts
 import type { ResourceEntry, ResourceType } from '$lib/storage/types';
 
 /**

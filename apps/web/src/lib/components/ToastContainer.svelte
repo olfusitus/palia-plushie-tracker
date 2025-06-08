@@ -1,7 +1,6 @@
-<!-- src/lib/components/ToastContainer.svelte -->
 <script lang="ts">
 	import { toasts, type ToastMessage } from '$lib/stores/toastStore';
-	import { fly } from 'svelte/transition'; // Optional: for a nice animation
+	import { fly } from 'svelte/transition';
 
 	// Function to map toast type to DaisyUI alert class
 	function getAlertClass(type: ToastMessage['type']): string {
