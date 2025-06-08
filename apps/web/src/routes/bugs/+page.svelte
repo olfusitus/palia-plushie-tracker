@@ -1,20 +1,20 @@
 <script lang="ts">
 	import { resources } from '$lib/resources';
 	import { type BugResource } from '$lib/storage';
-	import BugTracker from '$lib/components/BugTracker.svelte';
+	import ResourceTracker from '$lib/components/ResourceTracker.svelte';
+	import BugButtons from '$lib/components/trackers/BugButtons.svelte';
 
-	// Filtere nur die Ressourcen vom Typ "bug"
-	const resourcesList = resources.filter((resource) => resource.type.startsWith('bug_'));
+	const bugResource: BugResource[] = resources.filter((resource): resource is BugResource =>
+		resource.type.startsWith('bug_')
+	);
 </script>
 
-<h1 class="mb-6 text-center text-3xl font-bold">🐞 Käferchen</h1>
+<h1 class="mb-6 text-center text-3xl font-bold">🐾 Tierchen</h1>
 
 <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-	{#each resourcesList as bug (bug.type)}
-		<!-- <div class="card bg-base-100 shadow-xl border border-base-200">
-			<div class="card-body p-4"> -->
-		<BugTracker resource={bug as BugResource} />
-		<!-- </div> -->
-		<!-- </div> -->
+	{#each bugResource as bug (bug.type)}
+		<ResourceTracker title={bug.name} resourceType={bug.type}>
+			<BugButtons resource={bug} />
+		</ResourceTracker>
 	{/each}
 </div>
