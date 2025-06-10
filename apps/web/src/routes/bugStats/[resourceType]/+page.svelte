@@ -37,7 +37,7 @@
 	}
 </script>
 
-<h1 class="mb-6 text-center text-3xl font-bold">Hunting Stats</h1>
+<h1 class="mb-6 text-center text-3xl font-bold">Bug Catching Stats</h1>
 
 <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 	<div class="card bg-base-100 border-base-200 border shadow-xl">
