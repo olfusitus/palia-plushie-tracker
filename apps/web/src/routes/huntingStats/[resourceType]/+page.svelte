@@ -63,6 +63,18 @@
 					<div
 						class="border-base-content bg-base-200 flex w-full items-start justify-between rounded border px-3 py-1 text-sm"
 					>
+						<span>Geringster Abstand</span>
+						<span>{data.lowestDistance}</span>
+					</div>
+					<div
+						class="border-base-content bg-base-200 flex w-full items-start justify-between rounded border px-3 py-1 text-sm"
+					>
+						<span>Höchster Abstand</span>
+						<span>{data.highestDistance}</span>
+					</div>
+					<div
+						class="border-base-content bg-base-200 flex w-full items-start justify-between rounded border px-3 py-1 text-sm"
+					>
 						<span>Letzte 10 Abstände</span>
 						<span
 							>{data.allDistances.length ? data.allDistances.slice(-10).join(' → ') : 'keine'}</span

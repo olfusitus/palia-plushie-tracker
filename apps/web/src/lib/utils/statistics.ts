@@ -1,9 +1,11 @@
-import type { AnimalEntry, BugEntry, ResourceEntry } from '$lib/storage/types';
+import type { AnimalEntry, BugEntry } from '$lib/storage/types';
 
 export interface StatResult {
 	count: number;
 	share: string;
 	totalRareDrops: number;
+	lowestDistance: number;
+	highestDistance: number;
 	avgDistance: number;
 	allDistances: number[];
 	timeSinceLast: number;
@@ -25,14 +27,19 @@ function calcStats(werte: number[]): StatResult {
 	let avgDistance = 0;
 	let allDistances: number[] = [];
 	let timeSinceLast = 0;
+	let lowestDistance = 0;
+	let highestDistance = 0;
+	
 	if (rareDropIndices.length > 0) {
 		timeSinceLast = count - (rareDropIndices[rareDropIndices.length - 1] + 1);
 	}
 	if (rareDropIndices.length >= 2) {
 		allDistances = rareDropIndices.slice(1).map((val, i) => val - rareDropIndices[i]);
 		avgDistance = allDistances.reduce((a, b) => a + b, 0) / allDistances.length;
+		lowestDistance = Math.min(...allDistances);
+		highestDistance = Math.max(...allDistances);
 	}
-	return { count, share, totalRareDrops, avgDistance, allDistances, timeSinceLast };
+	return { count, share, totalRareDrops, lowestDistance, highestDistance, avgDistance, allDistances, timeSinceLast };
 }
 
 /**
