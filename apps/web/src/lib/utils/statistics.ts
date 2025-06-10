@@ -8,6 +8,11 @@ export interface StatResult {
 	allDistances: number[];
 }
 
+/**
+ * Calculates statistics for animal entries.
+ * @param entries - The array of animal entries to process.
+ * @returns An object containing the calculated statistics.
+ */
 export function calculateStats(entries: AnimalEntry[]) {
 	const grouped: Record<string, number[]> = { small: [], medium: [], large: [] };
 	entries.forEach((e: AnimalEntry) => {
@@ -48,6 +53,11 @@ export function calculateStats(entries: AnimalEntry[]) {
 	);
 }
 
+/**
+ * Calculates statistics for bug entries.
+ * @param entries - The array of bug entries to process.
+ * @returns An object containing the calculated statistics.
+ */
 export function calculateBugStats(entries: BugEntry[]) {
 	const werte = entries.map((e) => e.rareDrops);
 	const count = werte.length;

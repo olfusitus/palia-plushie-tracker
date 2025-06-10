@@ -23,11 +23,13 @@ export interface IStorageRepository {
 
 	/**
 	 * Retrieves all profiles.
+	 * @returns An array of profile names.
 	 */
 	getProfiles(): string[];
 
 	/**
 	 * Saves the list of profiles.
+	 * @param profiles The list of profile names to save.
 	 */
 	saveProfiles(profiles: string[]): void;
 
@@ -46,22 +48,26 @@ export interface IStorageRepository {
 
 	/**
 	 * Gets the currently active profile name.
+	 * @returns The name of the currently active profile.
 	 */
 	getActiveProfileName(): string;
 
 	/**
 	 * Sets the new active profile name.
+	 * @param profile The name of the profile to set as active.
 	 */
 	setActiveProfileName(profile: string): void;
 
 	// We can also add methods for import/export to keep all storage logic together.
 	/**
 	 * Exports the entire storage content as a string.
+	 * @returns A string representation of the entire storage content.
 	 */
 	exportAll(): string;
 
 	/**
 	 * Imports storage content from a string.
+	 * @param data The string representation of the storage content to import.
 	 */
 	importAll(data: string): void;
 }
