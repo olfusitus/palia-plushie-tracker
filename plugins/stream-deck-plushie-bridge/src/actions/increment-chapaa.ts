@@ -98,4 +98,5 @@ type CounterSettings = {
 	animal?: string;
 	animal_size?: string;
 	is_plushie?: boolean;
+	incrementBy?: number;
 };

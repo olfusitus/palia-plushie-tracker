@@ -1,27 +1,6 @@
 <!DOCTYPE html>
  <script>
-    const resetBtn = document.getElementById("resetBtn");
-
-    resetBtn.addEventListener("click", () => {
-        document.getElementById("count").value = "0";
-        // count = 0;
-    //   const payload = {
-    //     action: "reset-settings",
-    //   };
-
-    //   // Sende eine Nachricht an das Plugin
-    //   sendToPlugin(pi_context, payload);
-    });
-
-    // function sendToPlugin(context, payload) {
-    //   const json = {
-    //     event: "sendToPlugin",
-    //     context: context,
-    //     payload: payload
-    //   };
-    //   websocket.send(JSON.stringify(json));
-    // }
-  </script>
+ </script>
 
 <html>
 
@@ -57,9 +36,26 @@
         <sdpi-checkbox setting="is_plushie" label="Is it a plushie?"></sdpi-checkbox>
     </sdpi-item>
 
+    <sdpi-item label="Increment By">
+        <sdpi-range id="incrementBy" setting="incrementBy" min="1" max="50" step="1" default="1" showlabels></sdpi-range>
+    </sdpi-item>
+
+    <sdpi-item label="Increment Value">
+        <div id="incrementValueDisplay">1</div>
+    </sdpi-item>
+
+    <script type="text/javascript">
+        document.querySelector("sdpi-range").addEventListener('valuechange', function (ev) {
+            console.log(ev.target.value); // 1, 2, or 3
+            const incrementValueDisplay = document.getElementById("incrementValueDisplay");
+            incrementValueDisplay.textContent = ev.target.value;
+        });
+    </script>
+    
     <sdpi-item label="Count">
         <sdpi-textfield setting="count" id="count"></sdpi-textfield>
     </sdpi-item>
+
     <!-- <sdpi-item>
     <sdpi-button class="sdpi-item" id="resetBtn">Count zurücksetzen</sdpi-button>
     </sdpi-item> -->
