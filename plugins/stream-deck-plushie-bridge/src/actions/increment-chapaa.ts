@@ -66,7 +66,7 @@ export class ChapaaCounter extends SingletonAction<CounterSettings> {
 
 		const { settings } = ev.payload;
 
-		settings.count = (isNaN(Number(settings.count)) ? 0 : Number(settings.count) + 1).toString();
+		settings.count = (isNaN(Number(settings.count)) ? 0 : Number(settings.count) + (settings.incrementBy ?? 1)).toString();
 
 		const displayName = lookupAnimalName(settings.animal ?? "", settings.animal_size ?? "") ?? "Unbekannt";
 
@@ -81,7 +81,7 @@ export class ChapaaCounter extends SingletonAction<CounterSettings> {
 			streamDeck.logger.info(`Websocket connected!`);
 
 			socket.send(
-				JSON.stringify({ action: 'addEntry', resourceType: settings.animal, size: settings.animal_size, rareDrops: settings.is_plushie ? 1 : 0 }));
+				JSON.stringify({ action: 'addEntry', resourceType: settings.animal, size: settings.animal_size, rareDrops: settings.is_plushie ? 1 : 0, incrementBy: settings.incrementBy }));
 			socket.close();
 		});
 

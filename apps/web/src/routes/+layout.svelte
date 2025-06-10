@@ -29,9 +29,13 @@
 					if (data.action === 'addEntry') {
 						console.log('Received action:', data.action);
 						// eslint-disable-next-line @typescript-eslint/no-unused-vars
-						const { action, resourceType, size, plushie } = data;
-						resourceStore.addEntry(resourceType, plushie, size);
-						console.log('Added entry:', resourceType, plushie, size);
+						const { action, resourceType, size, rareDrops, incrementBy } = data;
+						if(incrementBy == 1) {
+							resourceStore.addEntry(resourceType, rareDrops, size);
+						} else {
+							resourceStore.addMultipleEntries(resourceType, rareDrops, incrementBy, size);
+						}
+						console.log('Added entry:', resourceType, rareDrops, size, incrementBy);
 
 						// triggerResourceEntriesRefresh();
 
