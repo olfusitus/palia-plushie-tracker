@@ -3,7 +3,7 @@
 	import type { AnimalEntry, ResourceType } from '$lib/storage/types';
 	import { resources } from '$lib/resources';
 	import { chartRender } from '$lib/actions/chartRender';
-	import { calculateStats } from '$lib/utils/statistics';
+	import { calculateAnimalStats } from '$lib/utils/statistics';
 	import { buildDistanceHistogramData } from '$lib/utils/chartData';
 	import { resourceStore } from '$lib/stores/resourceStore';
 
@@ -21,7 +21,7 @@
 	$: entries = $resourceStore[resourceType] || ([] as AnimalEntry[]);
 
 	$: stats = Object.fromEntries(
-		Object.entries(calculateStats(entries as AnimalEntry[])).map(([typ, data]) => [
+		Object.entries(calculateAnimalStats(entries as AnimalEntry[])).map(([typ, data]) => [
 			typ,
 			{ ...data, barData: buildDistanceHistogramData(data.allDistances) }
 		])
