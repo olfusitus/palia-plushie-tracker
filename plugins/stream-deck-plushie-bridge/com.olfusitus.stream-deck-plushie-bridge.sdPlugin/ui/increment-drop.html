@@ -46,12 +46,11 @@
 
     <script type="text/javascript">
         document.querySelector("sdpi-range").addEventListener('valuechange', function (ev) {
-            console.log(ev.target.value); // 1, 2, or 3
             const incrementValueDisplay = document.getElementById("incrementValueDisplay");
             incrementValueDisplay.textContent = ev.target.value;
         });
     </script>
-    
+
     <sdpi-item label="Count">
         <sdpi-textfield setting="count" id="count"></sdpi-textfield>
     </sdpi-item>
