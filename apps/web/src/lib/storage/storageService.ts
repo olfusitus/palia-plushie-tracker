@@ -20,7 +20,9 @@ export class StorageService {
             allData[profile] = {} as Record<ResourceType, ResourceEntry[]>;
             for(const resourceType of resourceTypes) {
                 const entries = this.repository.getEntries(resourceType, profile);
-                allData[profile][resourceType] = entries;
+                if(entries.length > 0) {
+                    allData[profile][resourceType] = entries;
+                }
             }
         }
         return this.serializer.serialize({
