@@ -1,17 +1,7 @@
-// src/lib/utils/exporter.ts
-
 import { get } from 'svelte/store';
 import { resourceStore } from '$lib/stores/resourceStore';
 import type { ResourceType } from '$lib/storage/types';
-// import type { ResourceType, ResourceEntry } from '$lib/storage';
 
-/**
- * Generates a CSV string from the entries of a specific resource type.
- * It fetches the current state from the resourceStore.
- *
- * @param resourceType The resource type to export.
- * @returns A string formatted as a CSV file.
- */
 export function exportResourceAsCSV(resourceType: ResourceType): string {
 	// 1. Ensure the data is loaded into the store.
 	// This makes the function self-sufficient.
