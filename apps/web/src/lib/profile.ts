@@ -1,15 +1,15 @@
-import repository from '$lib/storage/index';
+import { storageService } from '$lib/storage/index';
 
 export function getActiveProfile(): string {
-	return repository.getActiveProfileName();
+	return storageService.repository.getActiveProfileName();
 }
 
 export function setActiveProfile(profile: string): void {
-	repository.setActiveProfileName(profile);
+	storageService.repository.setActiveProfileName(profile);
 }
 
 export function getProfiles(): string[] {
-	return repository.getProfiles();
+	return storageService.repository.getProfiles();
 }
 
 export function addProfile(profile: string): void {
@@ -18,7 +18,7 @@ export function addProfile(profile: string): void {
 		throw new Error(`Profil "${profile}" existiert bereits.`);
 	}
 	profiles.push(profile);
-	repository.saveProfiles(profiles);
+	storageService.repository.saveProfiles(profiles);
 }
 
 export function deleteProfile(profileToDelete: string): void {
@@ -31,10 +31,10 @@ export function deleteProfile(profileToDelete: string): void {
 		throw new Error('Cannot delete the last remaining profile.');
 	}
 
-	repository.deleteProfileData(profileToDelete);
+	storageService.repository.deleteProfileData(profileToDelete);
 
 	const updatedProfiles = getProfiles().filter((p) => p !== profileToDelete);
-	repository.saveProfiles(updatedProfiles);
+	storageService.repository.saveProfiles(updatedProfiles);
 
 	// Handle active profile fallback.
 	if (getActiveProfile() === profileToDelete) {
@@ -59,10 +59,10 @@ export function renameProfile(oldName: string, newName: string): void {
 		throw new Error(`Profile "${newName}" already exists.`);
 	}
 
-	repository.renameProfileData(oldName, newName);
+	storageService.repository.renameProfileData(oldName, newName);
 
 	const updatedProfiles = getProfiles().map((p) => (p === oldName ? newName : p));
-	repository.saveProfiles(updatedProfiles);
+	storageService.repository.saveProfiles(updatedProfiles);
 
 	if (getActiveProfile() === oldName) {
 		setActiveProfile(newName);

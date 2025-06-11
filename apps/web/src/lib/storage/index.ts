@@ -1,5 +1,5 @@
 import { LocalStorageRepository } from './localStorageRepository';
-import type { IStorageRepository } from './repository';
+import { StorageService } from './storageService';
 
 // This is where you could swap implementations in the future.
 // For example:
@@ -9,8 +9,7 @@ import type { IStorageRepository } from './repository';
 // } else {
 //   repository = new LocalStorageRepository();
 // }
+const storageService = new StorageService(new LocalStorageRepository());
 
-const repository: IStorageRepository = new LocalStorageRepository();
-
-export default repository;
+export {storageService };
 // export * from './types'; // Re-export all types for easy access

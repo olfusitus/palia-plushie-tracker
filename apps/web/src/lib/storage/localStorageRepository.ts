@@ -134,18 +134,18 @@ export class LocalStorageRepository implements IStorageRepository {
 		localStorage.setItem(PROFILE_KEY, profile);
 	}
 
-	exportAll(): string {
-		if (typeof localStorage === 'undefined') return '{}';
-		return JSON.stringify(localStorage);
-	}
+	// exportAll(): string {
+	// 	if (typeof localStorage === 'undefined') return '{}';
+	// 	return JSON.stringify(localStorage);
+	// }
 
-	importAll(data: string): void {
-		if (typeof localStorage === 'undefined') return;
-		const parsedData = JSON.parse(data);
-		// Clear existing storage before import to avoid merging issues
-		localStorage.clear();
-		Object.keys(parsedData).forEach((key) => {
-			localStorage.setItem(key, parsedData[key]);
-		});
-	}
+	// importAll(data: string): void {
+	// 	if (typeof localStorage === 'undefined') return;
+	// 	const parsedData = JSON.parse(data);
+	// 	// Clear existing storage before import to avoid merging issues
+	// 	localStorage.clear();
+	// 	Object.keys(parsedData).forEach((key) => {
+	// 		localStorage.setItem(key, parsedData[key]);
+	// 	});
+	// }
 }

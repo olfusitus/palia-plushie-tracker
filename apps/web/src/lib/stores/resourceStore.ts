@@ -12,7 +12,7 @@ import {
 	type ResourceSize,
 	type ResourceType
 } from '$lib/storage/types';
-import repository from '$lib/storage/index';
+import { storageService } from '$lib/storage/index';
 import { get, writable } from 'svelte/store';
 import { getActiveProfile } from '$lib/profile';
 
@@ -27,7 +27,7 @@ type ResourceStoreState = Record<ResourceType, ResourceEntry[] | undefined>;
 function createResourceStore() {
 	const { subscribe, set, update } = writable<ResourceStoreState>({} as ResourceStoreState);
 	const loadAndCache = (resourceType: ResourceType): ResourceEntry[] => {
-		const entries = repository.getEntries(resourceType, getActiveProfile());
+		const entries = storageService.repository.getEntries(resourceType, getActiveProfile());
 		update((state) => ({
 			...state,
 			[resourceType]: entries
@@ -64,7 +64,7 @@ function createResourceStore() {
 					currentEntries = loadAndCache(resourceType);
 				}
 				const newEntries = [...currentEntries, entry];
-				repository.saveEntries(resourceType, getActiveProfile(), newEntries);
+				storageService.repository.saveEntries(resourceType, getActiveProfile(), newEntries);
 				return { ...state, [resourceType]: newEntries };
 			});
 		},
@@ -90,7 +90,7 @@ function createResourceStore() {
 					currentEntries = loadAndCache(resourceType);
 				}
 				const updatedEntries = [...currentEntries, ...newEntries];
-				repository.saveEntries(resourceType, getActiveProfile(), updatedEntries);
+				storageService.repository.saveEntries(resourceType, getActiveProfile(), updatedEntries);
 				return { ...state, [resourceType]: updatedEntries };
 			});
 		},
@@ -109,7 +109,7 @@ function createResourceStore() {
 				}
 				const newEntries = currentEntries.filter((e) => e.id !== id);
 
-				repository.saveEntries(resourceType, getActiveProfile(), newEntries);
+				storageService.repository.saveEntries(resourceType, getActiveProfile(), newEntries);
 				return { ...state, [resourceType]: newEntries };
 			});
 		}

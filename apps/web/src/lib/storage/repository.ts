@@ -58,16 +58,16 @@ export interface IStorageRepository {
 	 */
 	setActiveProfileName(profile: string): void;
 
-	// We can also add methods for import/export to keep all storage logic together.
-	/**
-	 * Exports the entire storage content as a string.
-	 * @returns A string representation of the entire storage content.
-	 */
-	exportAll(): string;
+	// // We can also add methods for import/export to keep all storage logic together.
+	// /**
+	//  * Exports the entire storage content as a string.
+	//  * @returns A string representation of the entire storage content.
+	//  */
+	// exportAll(): string;
 
-	/**
-	 * Imports storage content from a string.
-	 * @param data The string representation of the storage content to import.
-	 */
-	importAll(data: string): void;
+	// /**
+	//  * Imports storage content from a string.
+	//  * @param data The string representation of the storage content to import.
+	//  */
+	// importAll(data: string): void;
 }

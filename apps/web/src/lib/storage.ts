@@ -1,4 +1,4 @@
-import repository from './storage/index';
+import { storageService } from './storage/index';
 import type { ResourceSize } from './storage/types';
 
 export interface AnimalResource {
@@ -24,7 +24,7 @@ export interface BugResource {
 export type Resource = AnimalResource | BugResource;
 
 export function downloadStorage() {
-	const data = repository.exportAll();
+	const data = storageService.exportData();
 	const blob = new Blob([data], { type: 'application/json' });
 	const url = URL.createObjectURL(blob);
 	const link = document.createElement('a');
@@ -37,7 +37,7 @@ export function importStorage(file: File) {
 	const reader = new FileReader();
 	reader.onload = (event) => {
 		if (event.target) {
-			repository.importAll(event.target.result as string);
+			storageService.importData(event.target.result as string);
 		}
 	};
 	reader.readAsText(file);
