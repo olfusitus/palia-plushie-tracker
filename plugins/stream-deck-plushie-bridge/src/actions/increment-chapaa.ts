@@ -1,7 +1,6 @@
 import { streamDeck, action, KeyDownEvent, SingletonAction, WillAppearEvent, DidReceiveSettingsEvent } from "@elgato/streamdeck";
 import WebSocket from 'ws';
 
-
 const animalNames = [
     { animal: "animal_chapaa", size: "small", name: "Kleiner\nChapaa" },
     { animal: "animal_chapaa", size: "medium", name: "Mittlerer\nChapaa" },
@@ -18,8 +17,6 @@ const animalNames = [
     { animal: "animal_muujin", size: "small", name: "Kleiner\nMuujin" },
     { animal: "animal_muujin", size: "medium", name: "Mittlerer\nMuujin" },
     { animal: "animal_muujin", size: "large", name: "Großer\nMuujin" },
-
-    // ...weitere Einträge...
 ];
 
 // Lookup-Funktion
@@ -41,7 +38,17 @@ export class AnimalCounter extends SingletonAction<CounterSettings> {
 	 * we're setting the title to the "count" that is incremented in {@link IncrementCounter.onKeyDown}.
 	 */
 	override onWillAppear(ev: WillAppearEvent<CounterSettings>): void | Promise<void> {
-		return ev.action.setTitle(`${ev.payload.settings.animal} \n ${ev.payload.settings.count ?? 0}`);
+		const { settings } = ev.payload;
+		const displayName = lookupAnimalName(settings.animal ?? '', settings.animal_size ?? '') ?? 'Unbekannt';
+
+		let title = '';
+		if (settings.show_name !== false) {
+			title += displayName;
+		}
+		if (settings.show_counter !== false) {
+			title += (title ? ` \n ` : '') + (settings.count ?? 0);
+		}
+		return ev.action.setTitle(title);
 	}
 
 	override async onDidReceiveSettings(ev: DidReceiveSettingsEvent<CounterSettings>): Promise<void> {
@@ -49,11 +56,19 @@ export class AnimalCounter extends SingletonAction<CounterSettings> {
 		const { settings } = ev.payload;
 
 		settings.count = (isNaN(Number(settings.count)) ? 0 : Number(settings.count)).toString();
-		const displayName = lookupAnimalName(settings.animal ?? "", settings.animal_size ?? "") ?? "Unbekannt";
+		const displayName = lookupAnimalName(settings.animal ?? '', settings.animal_size ?? '') ?? 'Unbekannt';
 		await ev.action.setSettings(settings);
-		await ev.action.setTitle(`${displayName} \n ${settings.count}`);
 
-
+		let title = '';
+		if (settings.show_name !== false) {
+			// default to true
+			title += displayName;
+		}
+		if (settings.show_counter !== false) {
+			// default to true
+			title += (title ? ` \n ` : '') + (settings.count ?? 0);
+		}
+		await ev.action.setTitle(title);
 	}
 	/**
 	 * Listens for the {@link SingletonAction.onKeyDown} event which is emitted by Stream Deck when an action is pressed. Stream Deck provides various events for tracking interaction
@@ -68,20 +83,28 @@ export class AnimalCounter extends SingletonAction<CounterSettings> {
 
 		settings.count = (isNaN(Number(settings.count)) ? 0 : Number(settings.count) + (settings.incrementBy ?? 1)).toString();
 
-		const displayName = lookupAnimalName(settings.animal ?? "", settings.animal_size ?? "") ?? "Unbekannt";
+		const displayName = lookupAnimalName(settings.animal ?? '', settings.animal_size ?? '') ?? 'Unbekannt';
 
 		// Update the current count in the action's settings, and change the title.
 		await ev.action.setSettings(settings);
-		await ev.action.setTitle(`${displayName} \n ${settings.count}`);
+		
+		let title = '';
+		if (settings.show_name !== false) {
+			title += displayName;
+		}
+		if (settings.show_counter !== false) {
+			title += (title ? ` \n ` : '') + (settings.count ?? 0);
+		}
+		await ev.action.setTitle(title);
 
 
 		const socket = new WebSocket('ws://localhost:8422');
-		streamDeck.logger.info(`Connecting to websocket...`);
+		// streamDeck.logger.info(`Connecting to websocket...`);
 		socket.on('open', () => {
-			streamDeck.logger.info(`Websocket connected!`);
+			// streamDeck.logger.info(`Websocket connected!`);
 
 			socket.send(
-				JSON.stringify({ action: 'addEntry', resourceType: settings.animal, size: settings.animal_size, rareDrops: settings.is_plushie ? 1 : 0, incrementBy: settings.incrementBy }));
+				JSON.stringify({ action: 'addEntry', resourceType: settings.animal, size: settings.animal_size? settings.animal_size : 'small', rareDrops: settings.is_plushie ? 1 : 0, incrementBy: settings.incrementBy }));
 			socket.close();
 		});
 
@@ -99,4 +122,6 @@ type CounterSettings = {
 	animal_size?: string;
 	is_plushie?: boolean;
 	incrementBy?: number;
+	show_name?: boolean;
+	show_counter?: boolean;
 };
