@@ -24,20 +24,28 @@
 						throw new Error('Payload is not a string');
 					}
 					const data = JSON.parse(event.payload);
-					// const
 					// action: 'addEntry', resourceType: 'animal_chapaa', size: 'small', rareDrops: 0
 					if (data.action === 'addEntry') {
 						console.log('Received action:', data.action);
 						// eslint-disable-next-line @typescript-eslint/no-unused-vars
 						const { action, resourceType, size, rareDrops, incrementBy } = data;
+
 						if (incrementBy == 1) {
-							resourceStore.addEntry(resourceType, rareDrops, size);
+							if (typeof size !== 'undefined') {
+								resourceStore.addEntry(resourceType, rareDrops, size);
+							} else {
+								resourceStore.addEntry(resourceType, rareDrops);
+							}
 						} else {
-							resourceStore.addMultipleEntries(resourceType, rareDrops, incrementBy, size);
+							if (typeof size !== 'undefined') {
+								resourceStore.addMultipleEntries(resourceType, rareDrops, incrementBy, size);
+							} else {
+								resourceStore.addMultipleEntries(resourceType, rareDrops, incrementBy);
+							}
 						}
 						console.log('Added entry:', resourceType, rareDrops, size, incrementBy);
 
-						// triggerResourceEntriesRefresh();
+
 
 						return;
 					}
