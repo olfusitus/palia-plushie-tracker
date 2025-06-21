@@ -29,7 +29,7 @@ function calcStats(werte: number[]): StatResult {
 	let timeSinceLast = 0;
 	let lowestDistance = 0;
 	let highestDistance = 0;
-	
+
 	if (rareDropIndices.length > 0) {
 		timeSinceLast = count - (rareDropIndices[rareDropIndices.length - 1] + 1);
 	}
@@ -39,7 +39,16 @@ function calcStats(werte: number[]): StatResult {
 		lowestDistance = Math.min(...allDistances);
 		highestDistance = Math.max(...allDistances);
 	}
-	return { count, share, totalRareDrops, lowestDistance, highestDistance, avgDistance, allDistances, timeSinceLast };
+	return {
+		count,
+		share,
+		totalRareDrops,
+		lowestDistance,
+		highestDistance,
+		avgDistance,
+		allDistances,
+		timeSinceLast
+	};
 }
 
 /**
@@ -56,10 +65,7 @@ export function calculateAnimalStats(entries: AnimalEntry[]) {
 	return Object.fromEntries(
 		Object.entries(grouped).map(([typ, werte]) => {
 			// const { count, share, totalRareDrops, avgDistance, allDistances, timeSinceLast }: StatResult = calcStats(werte);
-			return [
-				typ,
-				calcStats(werte)
-			];
+			return [typ, calcStats(werte)];
 		})
 	);
 }

@@ -30,7 +30,7 @@
 						console.log('Received action:', data.action);
 						// eslint-disable-next-line @typescript-eslint/no-unused-vars
 						const { action, resourceType, size, rareDrops, incrementBy } = data;
-						if(incrementBy == 1) {
+						if (incrementBy == 1) {
 							resourceStore.addEntry(resourceType, rareDrops, size);
 						} else {
 							resourceStore.addMultipleEntries(resourceType, rareDrops, incrementBy, size);

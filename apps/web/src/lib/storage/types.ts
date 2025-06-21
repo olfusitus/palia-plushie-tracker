@@ -24,10 +24,10 @@ export const resourceTypes = [
 	'bug_snail',
 	'bug_lunar_fairy_moth',
 	'bug_proudhorn_beetle',
-	'bug_lanternbug',
-  ] as const;
+	'bug_lanternbug'
+] as const;
 
-export type ResourceType = typeof resourceTypes[number];
+export type ResourceType = (typeof resourceTypes)[number];
 // export type ResourceType =
 // 	| 'animal_chapaa'
 // 	| 'animal_sernuk'

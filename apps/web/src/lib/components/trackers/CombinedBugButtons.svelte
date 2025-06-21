@@ -9,8 +9,8 @@
 		buttonStatuses[resource.type] = false;
 	}
 
-	let showRareDropMenu = $state(false);
-	let rareDropMenuDirection = $state<'down' | 'up'>('down');
+	// let showRareDropMenu = $state(false);
+	// let rareDropMenuDirection = $state<'down' | 'up'>('down');
 
 	function handleClick(resourceType: string, plushie: boolean) {
 		resourceStore.addEntry(resourceType as ResourceType, plushie);
@@ -25,7 +25,7 @@
 
 	function handleRareDrop(resourceType: string) {
 		handleClick(resourceType, true);
-		showRareDropMenu = false;
+		// showRareDropMenu = false;
 	}
 
 	function buttonClass(resourceType: string): string {
@@ -67,7 +67,7 @@
 	>
 		Plüschi
 	</summary>
-	<ul class="menu dropdown-right dropdown-content bg-base-300 rounded-box z-[1] w-52 p-2 shadow-sm">
+	<ul class="menu dropdown-content bg-base-300 rounded-box z-[1] w-52 p-2 shadow-sm">
 		{#each resources as resource (resource.type)}
 			<li>
 				<button onclick={() => handleRareDrop(resource.type)}>{resource.name}</button>

@@ -32,10 +32,10 @@
 		}, 500);
 	}
 
-	let openDropdown: boolean = false;
+	// let openDropdown: boolean = false;
 	function handleRareDrop(size: string) {
 		handleClick(size, true);
-		openDropdown = false;
+		// openDropdown = false;
 	}
 </script>
 
@@ -54,11 +54,12 @@
 	>
 		Plüschi
 	</summary>
-	<ul class="menu dropdown-content bg-base-300 rounded-box z-[1] w-52 p-2 shadow-sm">
+	<ul class="menu dropdown-content bg-base-300 rounded-box w-52 p-2 shadow-sm">
 		{#each resource.availableSizes as size (size)}
 			<li>
-				<button onclick={() => handleRareDrop(size)}>{resource.labels[size as ResourceSize]}</button
-				>
+				<button onclick={() => handleRareDrop(size)}>
+					{resource.labels[size as ResourceSize]}
+				</button>
 			</li>
 		{/each}
 	</ul>

@@ -11,5 +11,5 @@ import { StorageService } from './storageService';
 // }
 const storageService = new StorageService(new LocalStorageRepository());
 
-export {storageService };
+export { storageService };
 // export * from './types'; // Re-export all types for easy access

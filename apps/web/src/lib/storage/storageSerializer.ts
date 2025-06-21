@@ -1,4 +1,4 @@
-import type { ExportData } from "./types";
+import type { ExportData } from './types';
 
 const CURRENT_EXPORT_VERSION = 1;
 
@@ -19,7 +19,9 @@ export class StorageSerializer {
 			throw new Error('Invalid import data: Not an object.');
 		}
 		if (data.version !== CURRENT_EXPORT_VERSION) {
-			throw new Error(`Unsupported export version: ${data.version}. Expected ${CURRENT_EXPORT_VERSION}.`);
+			throw new Error(
+				`Unsupported export version: ${data.version}. Expected ${CURRENT_EXPORT_VERSION}.`
+			);
 		}
 		if (
 			!data.activeProfile ||
