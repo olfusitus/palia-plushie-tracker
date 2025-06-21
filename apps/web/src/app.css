@@ -11,3 +11,7 @@
 .card:hover {
 	@apply scale-[1.02] shadow-2xl;
 }
+
+.card:has(details[open]) {
+	@apply z-20;
+}
