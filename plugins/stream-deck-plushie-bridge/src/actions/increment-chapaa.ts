@@ -33,8 +33,8 @@ function lookupAnimalName(animal: string, size: string): string | undefined {
 /**
  * An example action class that displays a count that increments by one each time the button is pressed.
  */
-@action({ UUID: "com.olfusitus.stream-deck-plushie-bridge.chapaaincrement" })
-export class ChapaaCounter extends SingletonAction<CounterSettings> {
+@action({ UUID: "com.olfusitus.stream-deck-plushie-bridge.animalincrement" })
+export class AnimalCounter extends SingletonAction<CounterSettings> {
 	/**
 	 * The {@link SingletonAction.onWillAppear} event is useful for setting the visual representation of an action when it becomes visible. This could be due to the Stream Deck first
 	 * starting up, or the user navigating between pages / folders etc.. There is also an inverse of this event in the form of {@link streamDeck.client.onWillDisappear}. In this example,
@@ -91,7 +91,7 @@ export class ChapaaCounter extends SingletonAction<CounterSettings> {
 }
 
 /**
- * Settings for {@link IncrementCounter}.
+ * Settings for {@link AnimalCounter}.
  */
 type CounterSettings = {
 	count?: string;

@@ -5,9 +5,9 @@
 	"Actions": [
 		{
 			"Name": "Animal",
-			"UUID": "com.olfusitus.stream-deck-plushie-bridge.chapaaincrement",
+			"UUID": "com.olfusitus.stream-deck-plushie-bridge.animalincrement",
 			"Icon": "imgs/actions/counter/icon",
-			"Tooltip": "Displays a count, which increments by one on press.",
+			"Tooltip": "Displays a count, which increments on press.",
 			"PropertyInspectorPath": "ui/increment-drop.html",
 			"Controllers": [
 				"Keypad"
