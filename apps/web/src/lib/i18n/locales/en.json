@@ -1,3 +1,31 @@
 {
-	"title": "Palia Ore Tracker"
+	"title": "Palia Ore Tracker",
+	"animals": {
+		"title": "Animals"
+	},
+	"bugs": {
+		"title": "Bugs"
+	},
+	"stats": {
+		"title_animal": "Animal Stats",
+		"title_bug": "Bug Stats",
+		"entries": "Entries",
+		"plushies": "Plushies",
+		"share": "Share",
+		"distances": "Distances",
+		"avg_distance": "Avg. Distance",
+		"lowest_distance": "Lowest Distance",
+		"highest_distance": "Highest Distance",
+		"last_10_distances": "Last 10 Distances",
+		"last_drop_distance": "Last Drop Distance",
+		"back_to_capture": "Back to Capture",
+		"no_distances": "none"
+	},
+	"manageResource": {
+		"title": "Manage Entries",
+		"no_entries": "No entries found.",
+		"delete": "Delete",
+		"back_to_capture": "Back to Capture",
+		"plushies": "Plushie(s)"
+	}
 }

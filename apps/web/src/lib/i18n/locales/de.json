@@ -1,3 +1,31 @@
 {
-	"title": "Palia Erztracker"
+	"title": "Palia Erztracker",
+	"animals": {
+		"title": "Tierchen"
+	},
+	"bugs": {
+		"title": "Käferchen"
+	},
+	"stats": {
+		"title_animal": "Tierchen Stats",
+		"title_bug": "Käferchen Stats",
+		"entries": "Einträge",
+		"plushies": "Plüschis",
+		"share": "Anteil",
+		"distances": "Abstände",
+		"avg_distance": "Durchschnittlich",
+		"lowest_distance": "Geringster",
+		"highest_distance": "Höchster",
+		"last_10_distances": "Letzte 10",
+		"last_drop_distance": "Letzter",
+		"back_to_capture": "Zurück zur Erfassung",
+		"no_distances": "keine"
+	},
+	"manageResource": {
+		"title": "Einträge verwalten",
+		"no_entries": "Keine Einträge vorhanden.",
+		"delete": "Löschen",
+		"back_to_capture": "Zurück zur Erfassung",
+		"plushies": "Plüschi(s)"
+	}
 }

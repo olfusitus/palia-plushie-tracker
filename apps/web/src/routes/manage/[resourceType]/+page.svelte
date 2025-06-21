@@ -4,7 +4,7 @@
 	// import { loadResourceEntries, saveData } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { type ResourceType, type ResourceEntry } from '$lib/storage/types';
-
+	import { _ } from 'svelte-i18n';
 	let resourceType: ResourceType;
 	// let daten: ResourceEntry[] = [];
 
@@ -24,12 +24,12 @@
 </script>
 
 <h1 class="mb-6 text-center text-3xl font-bold">
-	Einträge verwalten – <span class="badge badge-info badge-lg align-middle">{resourceType}</span>
+	{$_(`manageResource.title`)} – <span class="badge badge-info badge-lg align-middle">{resourceType}</span>
 </h1>
 
 {#if daten.length === 0}
 	<div class="text-base-content/60 py-8 text-center">
-		<p class="text-lg">Keine Einträge vorhanden.</p>
+		<p class="text-lg">{$_(`manageResource.no_entries`)}</p>
 	</div>
 {:else}
 	<ul class="mx-auto max-w-2xl space-y-4">
@@ -45,11 +45,11 @@
 								<span class="badge badge-outline badge-info mr-2">{eintrag.type.toUpperCase()}</span
 								>
 							{/if}
-							<span class="badge badge-outline badge-info">{eintrag.rareDrops} Rare Drops</span>
+							<span class="badge badge-outline badge-info">{eintrag.rareDrops} {$_(`manageResource.plushies`)}</span>
 						</p>
 					</div>
 					<button on:click={() => deleteEntry(eintrag)} class="btn btn-warning btn-sm btn-outline">
-						Löschen
+						{$_(`manageResource.delete`)}
 					</button>
 				</div>
 			</li>
@@ -59,6 +59,6 @@
 
 <div class="mt-8 text-center">
 	<a href={resourceType.startsWith('animal_') ? '/animals' : '/bugs2'} class="btn btn-link"
-		>Zurück zur Erfassung</a
+		>{$_(`manageResource.back_to_capture`)}</a
 	>
 </div>
