@@ -28,12 +28,12 @@
 	class="btn btn-soft btn-primary flex h-20 w-[45%] rounded-lg"
 	disabled={buttonStatus}
 >
-	{#if buttonStatus}Gespeichert ✓{:else}{$_(`resources.${resource.type}.name`)}{/if}
+	{#if buttonStatus}{$_('ui.saved')}{:else}{$_(`resources.${resource.type}.name`)}{/if}
 </button>
 
 <button
 	onclick={handleRareDrop}
 	class="btn btn-soft btn-secondary flex h-20 w-[45%] items-center justify-center rounded-lg shadow-md transition-all duration-200 hover:bg-purple-400 active:scale-95 sm:text-lg"
 >
-	Plüschi
+	{$_('ui.saved')}
 </button>

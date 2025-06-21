@@ -87,5 +87,9 @@
 		"bug_lanternbug": {
 			"name": "Paper Lanternbug"
 		}
+	},
+	"ui": {
+		"plushie": "Plushie",
+		"saved": "Saved ✓"
 	}
 }

@@ -87,5 +87,9 @@
 		"bug_lanternbug": {
 			"name": "Papier-Lampionwürmchen"
 		}
+	},
+	"ui": {
+		"plushie": "Plüschi",
+		"saved": "Gespeichert ✓"
 	}
 }

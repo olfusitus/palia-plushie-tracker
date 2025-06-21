@@ -46,14 +46,14 @@
 		class={buttonClass(size)}
 		disabled={buttonStatus[size]}
 	>
-		{#if buttonStatus[size]}Gespeichert ✓{:else}{$_(`resources.${resource.type}.labels.${size}`)}{/if}
+		{#if buttonStatus[size]}{$_('ui.saved')}{:else}{$_(`resources.${resource.type}.labels.${size}`)}{/if}
 	</button>
 {/each}
 <details class="dropdown w-[45%]">
 	<summary
 		class="btn flex h-20 w-full items-center justify-center rounded-lg bg-purple-500 text-base text-white shadow-md transition-all duration-200 hover:bg-purple-400 active:scale-95 sm:text-lg"
 	>
-		Plüschi
+		{$_('ui.plushie')}
 	</summary>
 	<ul class="menu dropdown-content bg-base-300 rounded-box w-52 p-2 shadow-sm">
 		{#each resource.availableSizes as size (size)}
