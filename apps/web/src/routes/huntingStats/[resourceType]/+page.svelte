@@ -3,12 +3,12 @@
 	import type { AnimalEntry, ResourceType } from '$lib/storage/types';
 	import { resources } from '$lib/resources';
 	import { chartRender } from '$lib/actions/chartRender';
-	import { calculateAnimalStats } from '$lib/utils/statistics';
+	import { calculateAnimalStats, type StatResult } from '$lib/utils/statistics';
 	import { buildDistanceHistogramData } from '$lib/utils/chartData';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { _ } from 'svelte-i18n';
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	let stats: Record<string, any> = {};
+	let stats: Record<string, StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> }> = {};
 
 	export let data; // kommt von load()
 	const resourceType: ResourceType = data.resourceType as ResourceType;
@@ -59,7 +59,7 @@
 						class="border-base-content bg-base-200 flex w-full items-start justify-between rounded border px-3 py-1 text-sm"
 					>
 						<span>{$_(`stats.avg_distance`)}</span>
-						<span>{data.avgDistance}</span>
+						<span>{data.avgDistance?.toFixed(2)}</span>
 					</div>
 					<div class="flex w-full gap-1">
 						<div
@@ -70,7 +70,6 @@
 								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
 									<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 5.25 7.5 7.5 7.5-7.5m-15 6 7.5 7.5 7.5-7.5" />
 							  	</svg>
-								
 							</span>
 							<span>{data.lowestDistance}</span>
 						</div>
@@ -82,14 +81,13 @@
 								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
 									<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 18.75 7.5-7.5 7.5 7.5" />
 									<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 7.5-7.5 7.5 7.5" />
-								</svg>
-								  
+								</svg> 
 							</span>
-							<span
-								>{data.highestDistance > data.timeSinceLast
+							<span>
+								{data.highestDistance > data.timeSinceLast
 									? data.highestDistance
-									: data.timeSinceLast}</span
-							>
+									: data.timeSinceLast}
+							</span>
 						</div>
 					</div>
 					<div
