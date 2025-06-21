@@ -65,13 +65,26 @@
 						<div
 							class="border-base-content bg-base-200 flex flex-1 items-start justify-between rounded border px-3 py-1 text-sm"
 						>
-							<span>{$_(`stats.lowest_distance`)}</span>
+							<!-- <span>{$_(`stats.lowest_distance`)}</span> -->
+							<span>
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+									<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 5.25 7.5 7.5 7.5-7.5m-15 6 7.5 7.5 7.5-7.5" />
+							  	</svg>
+								
+							</span>
 							<span>{data.lowestDistance}</span>
 						</div>
 						<div
 							class="border-base-content bg-base-200 flex flex-1 items-start justify-between rounded border px-3 py-1 text-sm"
 						>
-							<span>{$_(`stats.highest_distance`)}</span>
+							<!-- <span>{$_(`stats.highest_distance`)}</span> -->
+							<span>
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+									<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 18.75 7.5-7.5 7.5 7.5" />
+									<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 7.5-7.5 7.5 7.5" />
+								</svg>
+								  
+							</span>
 							<span
 								>{data.highestDistance > data.timeSinceLast
 									? data.highestDistance
