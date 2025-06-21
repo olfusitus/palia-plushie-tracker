@@ -32,7 +32,8 @@
 		if (!res) return typ;
 		// typ entspricht "small", "medium", "large" → labels[typ] oder fallback
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return res.name + ' ' + ((res as any)?.labels?.[typ] ?? typ);
+		return $_(`resources.${res.type}.name`) + ' ' + $_(`resources.${res.type}.labels.${typ}`);
+		// ((res as any)?.labels?.[typ] ?? typ);
 	}
 </script>
 

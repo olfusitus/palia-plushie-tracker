@@ -13,7 +13,7 @@
 
 <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 	{#each bugResource as bug (bug.type)}
-		<ResourceTracker title={bug.name} resourceType={bug.type}>
+		<ResourceTracker title={$_(`resources.${bug.type}.name`)} resourceType={bug.type}>
 			<BugButtons resource={bug} />
 		</ResourceTracker>
 	{/each}

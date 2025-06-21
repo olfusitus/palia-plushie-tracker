@@ -2,7 +2,12 @@
 	import type { BugResource } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import type { ResourceType } from '$lib/storage/types';
-	let { resources } = $props<{ resources: BugResource[] }>();
+	import { _ } from 'svelte-i18n'
+
+	let {resources}: {
+		resources : BugResource[]
+	} = $props< { resources: BugResource[] } >();
+	// let { resources } = $props<{ resources: BugResource[] }>();
 
 	let buttonStatuses = $state<Record<string, boolean>>({});
 	for (const resource of resources) {
@@ -56,7 +61,7 @@
 		class={buttonClass(resource.type)}
 		disabled={buttonStatuses[resource.type]}
 	>
-		{#if buttonStatuses[resource.type]}Gespeichert ✓{:else}{resource.name}{/if}
+		{#if buttonStatuses[resource.type]}Gespeichert ✓{:else}{$_(`resources.${resource.type}.name`)}{/if}
 	</button>
 {/each}
 
@@ -70,7 +75,7 @@
 	<ul class="menu dropdown-content bg-base-300 rounded-box z-[1] w-52 p-2 shadow-sm">
 		{#each resources as resource (resource.type)}
 			<li>
-				<button onclick={() => handleRareDrop(resource.type)}>{resource.name}</button>
+				<button onclick={() => handleRareDrop(resource.type)}>{$_(`resources.${resource.type}.name`)}</button>
 			</li>
 		{/each}
 	</ul>

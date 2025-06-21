@@ -3,9 +3,9 @@ import type { ResourceSize } from './storage/types';
 
 export interface AnimalResource {
 	type: 'animal_chapaa' | 'animal_sernuk' | 'animal_muujin' | 'animal_ogopuu' | 'animal_shmole';
-	name: string;
+	// name: string;
 	availableSizes: ResourceSize[];
-	labels: Record<ResourceSize, string>;
+	// labels: Record<ResourceSize, string>;
 }
 
 export interface BugResource {
@@ -16,7 +16,7 @@ export interface BugResource {
 		| 'bug_lunar_fairy_moth'
 		| 'bug_proudhorn_beetle'
 		| 'bug_lanternbug';
-	name: string;
+	// name: string;
 	// Bugs haben keine sizes, nur ein Label
 	// label: string;
 }

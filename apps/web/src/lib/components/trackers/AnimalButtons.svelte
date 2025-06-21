@@ -2,6 +2,7 @@
 	import type { AnimalResource } from '$lib/storage';
 	import type { ResourceSize } from '$lib/storage/types';
 	import { resourceStore } from '$lib/stores/resourceStore';
+	import { _ } from 'svelte-i18n'
 
 	let { resource } = $props<{ resource: AnimalResource }>();
 
@@ -45,7 +46,7 @@
 		class={buttonClass(size)}
 		disabled={buttonStatus[size]}
 	>
-		{#if buttonStatus[size]}Gespeichert ✓{:else}{resource.labels[size as ResourceSize]}{/if}
+		{#if buttonStatus[size]}Gespeichert ✓{:else}{$_(`resources.${resource.type}.labels.${size}`)}{/if}
 	</button>
 {/each}
 <details class="dropdown w-[45%]">
@@ -58,7 +59,7 @@
 		{#each resource.availableSizes as size (size)}
 			<li>
 				<button onclick={() => handleRareDrop(size)}>
-					{resource.labels[size as ResourceSize]}
+					{$_(`resources.${resource.type}.labels.${size}`)}
 				</button>
 			</li>
 		{/each}

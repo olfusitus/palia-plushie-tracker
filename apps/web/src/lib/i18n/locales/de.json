@@ -27,5 +27,65 @@
 		"delete": "Löschen",
 		"back_to_capture": "Zurück zur Erfassung",
 		"plushies": "Plüschi(s)"
+	},
+	"resources": {
+		"animal_chapaa": {
+			"name": "Chapaa",
+			"labels": {
+				"small": "Gefleckt",
+				"medium": "Gestreift",
+				"large": "Azur"
+			}
+		},
+		"animal_sernuk": {
+			"name": "Sernuk",
+			"labels": {
+				"small": "Sernuk",
+				"medium": "Älter",
+				"large": "Stolzgehörnt"
+			}
+		},
+		"animal_muujin": {
+			"name": "Muujin",
+			"labels": {
+				"small": "Muujin",
+				"medium": "Gebändert",
+				"large": "Blaugeborstet"
+			}
+		},
+		"animal_ogopuu": {
+			"name": "Ogopuu",
+			"labels": {
+				"small": "Ogopuu",
+				"medium": "Smaragd",
+				"large": "Wellenrücken"
+			}
+		},
+		"animal_shmole": {
+			"name": "Shmole",
+			"labels": {
+				"small": "Shmole",
+				"medium": "Holunder",
+				"large": "Piksii"
+			}
+		},
+		"bug_rtb": {
+			"name": "Regenbogenfalter"
+		},
+		"bug_ladybug": {
+			"name": "Garten-Marienkäfer"
+		},
+		"bug_snail": {
+			"name": "Garten-Schnecke"
+		},
+		"bug_lunar_fairy_moth": {
+			"name": "Mondfee-Motte"
+		},
+		"bug_proudhorn_beetle": {
+			"name": "Stolzgehörnter Hirschkäfer"
+		},
+		"bug_lanternbug": {
+			"name": "Papier-Lampionwürmchen"
+		}
 	}
 }

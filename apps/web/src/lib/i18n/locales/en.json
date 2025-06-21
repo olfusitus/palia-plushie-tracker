@@ -27,5 +27,65 @@
 		"delete": "Delete",
 		"back_to_capture": "Back to Capture",
 		"plushies": "Plushie(s)"
+	},
+	"resources": {
+		"animal_chapaa": {
+			"name": "Chapaa",
+			"labels": {
+				"small": "Spotted",
+				"medium": "Striped",
+				"large": "Azure"
+			}
+		},
+		"animal_sernuk": {
+			"name": "Sernuk",
+			"labels": {
+				"small": "Sernuk",
+				"medium": "Elder",
+				"large": "Proud-horned"
+			}
+		},
+		"animal_muujin": {
+			"name": "Muujin",
+			"labels": {
+				"small": "Muujin",
+				"medium": "Banded",
+				"large": "Blue-bristled"
+			}
+		},
+		"animal_ogopuu": {
+			"name": "Ogopuu",
+			"labels": {
+				"small": "Ogopuu",
+				"medium": "Emerald",
+				"large": "Waveback"
+			}
+		},
+		"animal_shmole": {
+			"name": "Shmole",
+			"labels": {
+				"small": "Shmole",
+				"medium": "Elder",
+				"large": "Piksii"
+			}
+		},
+		"bug_rtb": {
+			"name": "Rainbow-tipped Butterfly"
+		},
+		"bug_ladybug": {
+			"name": "Garden Ladybug"
+		},
+		"bug_snail": {
+			"name": "Garden Snail"
+		},
+		"bug_lunar_fairy_moth": {
+			"name": "Lunar Fairy Moth"
+		},
+		"bug_proudhorn_beetle": {
+			"name": "Proud-horned Stag Beetle"
+		},
+		"bug_lanternbug": {
+			"name": "Paper Lanternbug"
+		}
 	}
 }

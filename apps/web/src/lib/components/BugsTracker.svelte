@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { BugResource, Resource } from '$lib/storage';
+	import { _ } from 'svelte-i18n'
 	// import { exportCSV } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
 
-	const { resources } = $props<{ resources: BugResource[] }>();
+	const { resources } : {
+		resources : BugResource[]
+	} = $props<{ resources: BugResource[] }>();
+	// const { resources } = $props<{ resources: BugResource[] }>();
 
 	let buttonStatus = $state<Record<string, boolean>>({});
 	let showRareDropMenu = $state(false);
@@ -19,6 +23,11 @@
 			buttonStatus[resource.type] = false;
 		}
 	});
+
+	// Helper to DRY up translation key for resource name
+	function resourceName(resource: Resource) {
+		return $_(`resources.${resource.type}.name`);
+	}
 
 	function buttonClass(resourceType: string): string {
 		const base =
@@ -93,8 +102,8 @@
 				>
 					{#each resources as resource (resource.type)}
 						<!-- <li><button on:click={() => downloadCSV(resource)}>Daten exportieren ({resource.name})</button></li> -->
-						<li><a href={`/bugStats/${resource.type}`}>Statistik anzeigen ({resource.name})</a></li>
-						<li><a href={`/manage/${resource.type}`}>Einträge bearbeiten ({resource.name})</a></li>
+						<li><a href={`/bugStats/${resource.type}`}>Statistik anzeigen ({resourceName(resource)})</a></li>
+						<li><a href={`/manage/${resource.type}`}>Einträge bearbeiten ({resourceName(resource)})</a></li>
 					{/each}
 				</ul>
 			</div>
@@ -108,7 +117,7 @@
 					class={buttonClass(resource.type)}
 					disabled={buttonStatus[resource.type]}
 				>
-					{#if buttonStatus[resource.type]}Gespeichert ✓{:else}{resource.name}{/if}
+					{#if buttonStatus[resource.type]}Gespeichert ✓{:else}{resourceName(resource)}{/if}
 				</button>
 			{/each}
 
@@ -133,7 +142,7 @@
 								onclick={() => handleRareDrop(resource)}
 								class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
 							>
-								{resource.name}
+							{resourceName(resource)}
 							</button>
 						{/each}
 					</div>
@@ -147,10 +156,10 @@
 					Daten exportieren ({resource.name})
 				</button> -->
 				<a href={`/bugStats/${resource.type}`} class="btn btn-link"
-					>Statistik anzeigen ({resource.name})</a
+					>Statistik anzeigen ({resourceName(resource)})</a
 				>
 				<a href={`/manage/${resource.type}`} class="btn btn-link"
-					>Einträge bearbeiten ({resource.name})</a
+					>Einträge bearbeiten ({resourceName(resource)})</a
 				>
 			{/each}
 		</div>

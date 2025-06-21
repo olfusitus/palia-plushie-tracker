@@ -29,9 +29,9 @@
 		if (!res) return 'Typ nicht gefunden';
 		// Für Bugs gibt es keine Typen/Labels
 		if (resourceType.startsWith('bug_')) {
-			return res.name;
+			return $_(`resources.${res.type}.name`);
 		}
-		return res.name;
+		return $_(`resources.${res.type}.name`);
 		// // typ entspricht "small", "medium", "large" → labels[typ] oder fallback
 		// return res.name + ' ' + ((res as any)?.labels?.[typ] ?? typ);
 	}

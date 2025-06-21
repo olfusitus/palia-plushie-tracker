@@ -1,8 +1,12 @@
 <script lang="ts">
 	import type { BugResource } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
+	import { _ } from 'svelte-i18n'
 
-	let { resource } = $props<{ resource: BugResource }>();
+	let {resource}: {
+		resource : BugResource
+	} = $props< { resource: BugResource } >();
+	// let { resource } = $props<{ resource: BugResource }>();
 
 	let buttonStatus = $state(false);
 
@@ -24,7 +28,7 @@
 	class="btn btn-soft btn-primary flex h-20 w-[45%] rounded-lg"
 	disabled={buttonStatus}
 >
-	{#if buttonStatus}Gespeichert ✓{:else}{resource.name}{/if}
+	{#if buttonStatus}Gespeichert ✓{:else}{$_(`resources.${resource.type}.name`)}{/if}
 </button>
 
 <button
