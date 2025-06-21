@@ -38,10 +38,10 @@
 					<li><button onclick={handleDownloadCSV}>Daten exportieren (CSV)</button></li>
 					<li>
 						{#if resourceType.startsWith('animal_')}
-							<a href={`/huntingStats/${resourceType}`} class="btn btn-link">Statistik anzeigen</a>
+							<a href={`/huntingStats/${resourceType}`}>Statistik anzeigen</a>
 						{/if}
 						{#if resourceType.startsWith('bug_')}
-							<a href={`/bugStats/${resourceType}`} class="btn btn-link">Statistik anzeigen</a>
+							<a href={`/bugStats/${resourceType}`}>Statistik anzeigen</a>
 						{/if}
 					</li>
 					<li><a href={`/manage/${resourceType}`}>Einträge bearbeiten</a></li>
