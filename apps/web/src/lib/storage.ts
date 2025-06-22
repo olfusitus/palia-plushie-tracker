@@ -23,8 +23,8 @@ export interface BugResource {
 
 export type Resource = AnimalResource | BugResource;
 
-export function downloadStorage() {
-	const data = storageService.exportData();
+export async function downloadStorage() {
+	const data = await storageService.exportData();
 	const blob = new Blob([data], { type: 'application/json' });
 	const url = URL.createObjectURL(blob);
 	const link = document.createElement('a');

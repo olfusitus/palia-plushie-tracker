@@ -13,12 +13,19 @@
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { toasts } from '$lib/stores/toastStore';
 
-	let profiles = $state(getProfiles());
-	let newProfile = $state('');
-	let activeProfile = $state(getActiveProfile());
-	let renameMode = $state(false);
-	let profileToRename = $state('');
-	let newProfileName = $state('');
+	let profiles: string[] = [];
+	let newProfile = '';
+	let activeProfile = '';
+	let renameMode = false;
+	let profileToRename = '';
+	let newProfileName = '';
+
+	async function loadProfilesAndActive() {
+		profiles = await getProfiles();
+		activeProfile = await getActiveProfile();
+	}
+
+	loadProfilesAndActive();
 
 	function startRename(profile: string) {
 		renameMode = true;
@@ -26,15 +33,14 @@
 		newProfileName = profile;
 	}
 
-	function confirmRename() {
+	async function confirmRename() {
 		try {
-			const oldActiveProfile = getActiveProfile();
-			renameProfile(profileToRename, newProfileName.trim());
+			const oldActiveProfile = await getActiveProfile();
+			await renameProfile(profileToRename, newProfileName.trim());
 			if (oldActiveProfile === profileToRename) {
 				resourceStore.reset();
 			}
-			profiles = getProfiles();
-			activeProfile = getActiveProfile();
+			await loadProfilesAndActive();
 			renameMode = false;
 			toasts.success(
 				`Profil "${profileToRename}" erfolgreich in "${newProfileName.trim()}" umbenannt.`
@@ -54,11 +60,11 @@
 		newProfileName = '';
 	}
 
-	function createProfile() {
+	async function createProfile() {
 		try {
 			if (newProfile.trim()) {
-				addProfile(newProfile.trim());
-				profiles = getProfiles();
+				await addProfile(newProfile.trim());
+				await loadProfilesAndActive();
 				toasts.success(`Profil "${newProfile.trim()}" erfolgreich erstellt.`);
 				newProfile = '';
 			} else {
@@ -71,26 +77,25 @@
 		}
 	}
 
-	function switchProfile(profile: string) {
-		setActiveProfile(profile);
+	async function switchProfile(profile: string) {
+		await setActiveProfile(profile);
 		resourceStore.reset();
 		activeProfile = profile;
 		toasts.info(`Aktives Profil zu "${profile}" gewechselt.`);
 	}
 
-	function confirmDelete(profile: string) {
+	async function confirmDelete(profile: string) {
 		const confirmed = confirm(
 			`Möchtest du das Profil "${profile}" wirklich löschen? Alle zugehörigen Daten gehen verloren!`
 		);
 		if (confirmed) {
 			try {
-				const wasActive = getActiveProfile() === profile;
-				deleteProfile(profile);
+				const wasActive = (await getActiveProfile()) === profile;
+				await deleteProfile(profile);
 				if (wasActive) {
 					resourceStore.reset();
 				}
-				profiles = getProfiles();
-				activeProfile = getActiveProfile();
+				await loadProfilesAndActive();
 				toasts.success(`Profil "${profile}" erfolgreich gelöscht.`);
 			} catch (error) {
 				toasts.error(error instanceof Error ? error.message : 'Fehler beim Löschen des Profils.');

@@ -11,15 +11,15 @@ export class StorageService {
 		this.serializer = new StorageSerializer();
 	}
 
-	exportData(): string {
-		const profiles = this.repository.getProfiles();
-		const activeProfile = this.repository.getActiveProfileName();
+	async exportData(): Promise<string> {
+		const profiles = await this.repository.getProfiles();
+		const activeProfile = await this.repository.getActiveProfileName();
 		const allData: ExportData['data'] = {};
 
 		for (const profile of profiles) {
 			allData[profile] = {} as Record<ResourceType, ResourceEntry[]>;
 			for (const resourceType of resourceTypes) {
-				const entries = this.repository.getEntries(resourceType, profile);
+				const entries = await this.repository.getEntries(resourceType, profile);
 				if (entries.length > 0) {
 					allData[profile][resourceType] = entries;
 				}
@@ -32,16 +32,16 @@ export class StorageService {
 		});
 	}
 
-	importData(jsonString: string): void {
+	async importData(jsonString: string): Promise<void> {
 		const importData = this.serializer.deserialize(jsonString);
 
-		const oldProfiles = this.repository.getProfiles();
+		const oldProfiles = await this.repository.getProfiles();
 		for (const profile of oldProfiles) {
-			this.repository.deleteProfileData(profile);
+			await this.repository.deleteProfileData(profile);
 		}
 
-		this.repository.saveProfiles(importData.profiles);
-		this.repository.setActiveProfileName(importData.activeProfile);
+		await this.repository.saveProfiles(importData.profiles);
+		await this.repository.setActiveProfileName(importData.activeProfile);
 
 		for (const profile of importData.profiles) {
 			const profileData = importData.data[profile];
@@ -49,7 +49,7 @@ export class StorageService {
 				for (const resourceType of resourceTypes) {
 					const entries = profileData[resourceType];
 					if (entries) {
-						this.repository.saveEntries(resourceType, profile, entries);
+						await this.repository.saveEntries(resourceType, profile, entries);
 					}
 				}
 			}

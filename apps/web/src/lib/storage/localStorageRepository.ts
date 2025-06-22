@@ -30,7 +30,7 @@ const PROFILE_KEY = 'palia_tracker_active_profile';
 const PROFILES_KEY = 'palia_tracker_profiles';
 
 export class LocalStorageRepository implements IStorageRepository {
-	deleteProfileData(profile: string): void {
+	async deleteProfileData(profile: string): Promise<void> {
 		if (typeof localStorage === 'undefined') return;
 
 		// Remove all stored data for this profile
@@ -41,18 +41,18 @@ export class LocalStorageRepository implements IStorageRepository {
 		});
 
 		// If this was the active profile, switch to default
-		if (this.getActiveProfileName() === profile) {
-			this.setActiveProfileName('default');
+		if ((await this.getActiveProfileName()) === profile) {
+			await this.setActiveProfileName('default');
 		}
 
 		// Ensure default profile exists
-		const profiles = this.getProfiles();
+		const profiles = await this.getProfiles();
 		if (profiles.length === 0) {
-			this.saveProfiles(['default']);
+			await this.saveProfiles(['default']);
 		}
 	}
 
-	renameProfileData(oldName: string, newName: string): void {
+	async renameProfileData(oldName: string, newName: string): Promise<void> {
 		if (typeof localStorage === 'undefined') return;
 
 		// Get all resource types
@@ -71,13 +71,13 @@ export class LocalStorageRepository implements IStorageRepository {
 		});
 
 		// Update profiles list
-		const profiles = this.getProfiles();
+		const profiles = await this.getProfiles();
 		const updatedProfiles = profiles.map((profile) => (profile === oldName ? newName : profile));
-		this.saveProfiles(updatedProfiles);
+		await this.saveProfiles(updatedProfiles);
 
 		// If the renamed profile was active, update active profile
-		if (this.getActiveProfileName() === oldName) {
-			this.setActiveProfileName(newName);
+		if ((await this.getActiveProfileName()) === oldName) {
+			await this.setActiveProfileName(newName);
 		}
 	}
 
@@ -85,7 +85,7 @@ export class LocalStorageRepository implements IStorageRepository {
 		return `${profile}_${STORAGE_KEYS[resourceType]}`;
 	}
 
-	getEntries(resourceType: ResourceType, profile: string): ResourceEntry[] {
+	async getEntries(resourceType: ResourceType, profile: string): Promise<ResourceEntry[]> {
 		if (typeof localStorage === 'undefined') return [];
 		const raw = localStorage.getItem(this.getStorageKey(resourceType, profile));
 		if (!raw) return [];
@@ -98,13 +98,13 @@ export class LocalStorageRepository implements IStorageRepository {
 			);
 			parsed.data = migrateData(parsed);
 			// After migration, immediately save back to prevent re-migrating.
-			this.saveEntries(resourceType, profile, parsed.data);
+			await this.saveEntries(resourceType, profile, parsed.data);
 		}
 
 		return parsed.data;
 	}
 
-	saveEntries(resourceType: ResourceType, profile: string, entries: ResourceEntry[]): void {
+	async saveEntries(resourceType: ResourceType, profile: string, entries: ResourceEntry[]): Promise<void> {
 		if (typeof localStorage === 'undefined') return;
 		const storedData: StoredData = {
 			version: CURRENT_VERSION,
@@ -113,23 +113,23 @@ export class LocalStorageRepository implements IStorageRepository {
 		localStorage.setItem(this.getStorageKey(resourceType, profile), JSON.stringify(storedData));
 	}
 
-	getProfiles(): string[] {
+	async getProfiles(): Promise<string[]> {
 		if (typeof localStorage === 'undefined') return ['default'];
 		const profiles = localStorage.getItem(PROFILES_KEY);
 		return profiles ? JSON.parse(profiles) : ['default'];
 	}
 
-	saveProfiles(profiles: string[]): void {
+	async saveProfiles(profiles: string[]): Promise<void> {
 		if (typeof localStorage === 'undefined') return;
 		localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles));
 	}
 
-	getActiveProfileName(): string {
+	async getActiveProfileName(): Promise<string> {
 		if (typeof localStorage === 'undefined') return 'default';
 		return localStorage.getItem(PROFILE_KEY) || 'default';
 	}
 
-	setActiveProfileName(profile: string): void {
+	async setActiveProfileName(profile: string): Promise<void> {
 		if (typeof localStorage === 'undefined') return;
 		localStorage.setItem(PROFILE_KEY, profile);
 	}

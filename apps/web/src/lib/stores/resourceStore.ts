@@ -26,8 +26,8 @@ type ResourceStoreState = Record<ResourceType, ResourceEntry[] | undefined>;
  */
 function createResourceStore() {
 	const { subscribe, set, update } = writable<ResourceStoreState>({} as ResourceStoreState);
-	const loadAndCache = (resourceType: ResourceType): ResourceEntry[] => {
-		const entries = storageService.repository.getEntries(resourceType, getActiveProfile());
+	const loadAndCache = async (resourceType: ResourceType): Promise<ResourceEntry[]> => {
+		const entries = await storageService.repository.getEntries(resourceType, await getActiveProfile());
 		update((state) => ({
 			...state,
 			[resourceType]: entries
@@ -44,32 +44,27 @@ function createResourceStore() {
 		 * Ensures that entries for a specific resource type are loaded into the store
 		 * @param resourceType - The type of resource to load
 		 */
-		ensureLoaded: (resourceType: ResourceType) => {
+		ensureLoaded: async (resourceType: ResourceType) => {
 			const currentState = get({ subscribe });
 			if (currentState[resourceType] === undefined) {
-				loadAndCache(resourceType);
+				await loadAndCache(resourceType);
 			}
 		},
 
-		addEntry: (resourceType: ResourceType, plushie: boolean, resourceSize?: ResourceSize) => {
+		addEntry: async (resourceType: ResourceType, plushie: boolean, resourceSize?: ResourceSize) => {
 			const entry: ResourceEntry = {
 				id: crypto.randomUUID(),
 				timestamp: new Date().toISOString(),
 				rareDrops: plushie ? 1 : 0,
 				...(resourceSize !== undefined && { type: resourceSize })
 			};
-			update((state) => {
-				let currentEntries = state[resourceType];
-				if (currentEntries === undefined) {
-					currentEntries = loadAndCache(resourceType);
-				}
-				const newEntries = [...currentEntries, entry];
-				storageService.repository.saveEntries(resourceType, getActiveProfile(), newEntries);
-				return { ...state, [resourceType]: newEntries };
-			});
+			const currentEntries = get({ subscribe })[resourceType] ?? await loadAndCache(resourceType);
+			const newEntries = [...currentEntries, entry];
+			await storageService.repository.saveEntries(resourceType, await getActiveProfile(), newEntries);
+			update((state) => ({ ...state, [resourceType]: newEntries }));
 		},
 
-		addMultipleEntries: (
+		addMultipleEntries: async (
 			resourceType: ResourceType,
 			plushie: boolean,
 			count: number,
@@ -84,34 +79,25 @@ function createResourceStore() {
 					...(resourceSize !== undefined && { type: resourceSize })
 				}));
 
-			update((state) => {
-				let currentEntries = state[resourceType];
-				if (currentEntries === undefined) {
-					currentEntries = loadAndCache(resourceType);
-				}
-				const updatedEntries = [...currentEntries, ...newEntries];
-				storageService.repository.saveEntries(resourceType, getActiveProfile(), updatedEntries);
-				return { ...state, [resourceType]: updatedEntries };
-			});
+			const currentEntries = get({ subscribe })[resourceType] ?? await loadAndCache(resourceType);
+			const updatedEntries = [...currentEntries, ...newEntries];
+			await storageService.repository.saveEntries(resourceType, await getActiveProfile(), updatedEntries);
+			update((state) => ({ ...state, [resourceType]: updatedEntries }));
 		},
 		/**
 		 * Deletes a resource entry by its timestamp
 		 * @param resourceType - The type of resource
 		 * @param timestamp - The timestamp of the entry to delete
 		 */
-		deleteEntry: (resourceType: ResourceType, id: string) => {
-			update((state) => {
-				const currentEntries = state[resourceType];
-				if (currentEntries === undefined) {
-					// We don't need to delete anything if the resource type is not loaded?? Or do we?
-					return state;
-					// currentEntries = loadAndCache(resourceType);
-				}
-				const newEntries = currentEntries.filter((e) => e.id !== id);
-
-				storageService.repository.saveEntries(resourceType, getActiveProfile(), newEntries);
-				return { ...state, [resourceType]: newEntries };
-			});
+		deleteEntry: async (resourceType: ResourceType, id: string) => {
+			const currentEntries = get({ subscribe })[resourceType];
+			if (currentEntries === undefined) {
+				// We don't need to delete anything if the resource type is not loaded?? Or do we?
+				return;
+			}
+			const newEntries = currentEntries.filter((e) => e.id !== id);
+			await storageService.repository.saveEntries(resourceType, await getActiveProfile(), newEntries);
+			update((state) => ({ ...state, [resourceType]: newEntries }));
 		}
 	};
 }
