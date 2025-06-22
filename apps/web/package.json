@@ -43,6 +43,7 @@
 	"dependencies": {
 		"@tauri-apps/api": "^2.5.0",
 		"daisyui": "^5.0.35",
+		"idb": "^8.0.3",
 		"svelte-i18n": "^4.0.1"
 	}
 }
