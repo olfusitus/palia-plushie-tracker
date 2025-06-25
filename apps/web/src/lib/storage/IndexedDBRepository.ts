@@ -5,11 +5,12 @@ import {
 	CURRENT_VERSION,
 	type ResourceEntry,
 	type ResourceType,
-	type StoredData
+	type StoredData,
+	type Profile
 } from './types';
 
 const DB_NAME = 'palia_tracker_db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 const RESOURCE_TYPES: ResourceType[] = [
 	'animal_chapaa',
@@ -40,17 +41,73 @@ export class IndexedDBRepository implements IStorageRepository {
 		}
 		if (!this.dbPromise) {
 			this.dbPromise = openDB(DB_NAME, DB_VERSION, {
-				upgrade(db) {
-					// Für jedes ResourceType eine eigene ObjectStore anlegen
-					for (const type of RESOURCE_TYPES) {
-						if (!db.objectStoreNames.contains(type)) {
-							db.createObjectStore(type, { keyPath: 'profile' });
-						}
-					}
+				async upgrade(db, oldVersion, newVersion, transaction) {
+					console.log(`Upgrading database from version ${oldVersion} to ${newVersion}...`);
 
-					// Extra Store für Profile + ActiveProfile
-					if (!db.objectStoreNames.contains('profiles')) {
-						db.createObjectStore('profiles', { keyPath: 'id' });
+					if (oldVersion < 2) {
+						// --- MIGRATION VON v1 ZU v2 ---
+						
+						// 1. Lese alle Daten aus den alten Stores, bevor sie gelöscht werden.
+						const oldData: { profile: string; resourceType: ResourceType; entries: ResourceEntry[] }[] = [];
+						const oldProfilesList = (await transaction.objectStore('profiles').get('list'))?.value || ['default'];
+						const oldActiveProfileName = (await transaction.objectStore('profiles').get('active'))?.value || 'default';
+
+						for (const resourceType of RESOURCE_TYPES) {
+							for (const profileName of oldProfilesList) {
+								const record = await transaction.objectStore(resourceType).get(profileName);
+								if (record && record.data && record.data.data.length > 0) {
+									oldData.push({
+										profile: profileName,
+										resourceType: resourceType,
+										entries: record.data.data // Greife auf die tatsächlichen Einträge zu
+									});
+								}
+							}
+						}
+						
+						// 2. Lösche die alten Object Stores.
+						for (const type of RESOURCE_TYPES) {
+							if (db.objectStoreNames.contains(type)) {
+								db.deleteObjectStore(type);
+							}
+						}
+						if (db.objectStoreNames.contains('profiles')) {
+							db.deleteObjectStore('profiles');
+						}
+						
+						// 3. Erstelle die neuen Object Stores.
+						const entriesStore = db.createObjectStore('entries', { keyPath: 'id' });
+						entriesStore.createIndex('by_profile_resource', ['profileId', 'resourceType']);
+
+						const profilesStore = db.createObjectStore('profiles', { keyPath: 'id' });
+						
+						const settingsStore = db.createObjectStore('settings', { keyPath: 'key' });
+
+						// 4. Transformiere und schreibe die Daten in die neuen Stores.
+						// Erstelle neue Profile mit IDs.
+						const newProfiles: Profile[] = oldProfilesList.map((name: string) => ({ id: crypto.randomUUID(), name }));
+						const activeProfile = newProfiles.find(p => p.name === oldActiveProfileName) || newProfiles.find(p => p.name === 'default');
+
+						// Speichere die neuen Profile.
+						for (const profile of newProfiles) {
+							await profilesStore.add(profile);
+						}
+
+						// Speichere das aktive Profil.
+						if (activeProfile) {
+							await settingsStore.add({ key: 'activeProfileId', value: activeProfile.id });
+						}
+
+						// Speichere die Einträge mit der neuen profileId.
+						for (const data of oldData) {
+							const profileId = newProfiles.find(p => p.name === data.profile)?.id;
+							if (profileId) {
+								for (const entry of data.entries) {
+									await entriesStore.add({ ...entry, profileId, resourceType: data.resourceType });
+								}
+							}
+						}
+						console.log('Database migration to v2 completed.');
 					}
 				}
 			}); // Pass the detected indexedDB implementation as the 4th argument is not valid
