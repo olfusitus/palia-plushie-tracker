@@ -1,6 +1,6 @@
 import type { ExportData } from './types';
 
-const CURRENT_EXPORT_VERSION = 1;
+const CURRENT_EXPORT_VERSION = 2;
 
 export class StorageSerializer {
 	public serialize(data: Omit<ExportData, 'version'>): string {
@@ -24,7 +24,7 @@ export class StorageSerializer {
 			);
 		}
 		if (
-			!data.activeProfile ||
+			!data.activeProfileId ||
 			!Array.isArray(data.profiles) ||
 			!data.data ||
 			typeof data.data !== 'object'

@@ -12,12 +12,13 @@
 	import { downloadStorage, importStorage } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { toasts } from '$lib/stores/toastStore';
+	import type { Profile } from '$lib/storage/types';
 
-	let profiles: string[] = [];
+	let profiles: Profile[] = [];
 	let newProfile = '';
-	let activeProfile = '';
+	let activeProfile: Profile | null = null;
 	let renameMode = false;
-	let profileToRename = '';
+	let profileToRename: Profile | null = null;
 	let newProfileName = '';
 
 	async function loadProfilesAndActive() {
@@ -27,25 +28,27 @@
 
 	loadProfilesAndActive();
 
-	function startRename(profile: string) {
+	function startRename(profile: Profile) {
 		renameMode = true;
 		profileToRename = profile;
-		newProfileName = profile;
+		newProfileName = profile.name;
 	}
 
 	async function confirmRename() {
+		if (!profileToRename) return;
+		
 		try {
 			const oldActiveProfile = await getActiveProfile();
-			await renameProfile(profileToRename, newProfileName.trim());
-			if (oldActiveProfile === profileToRename) {
+			await renameProfile(profileToRename.id, newProfileName.trim());
+			if (oldActiveProfile?.id === profileToRename.id) {
 				resourceStore.reset();
 			}
 			await loadProfilesAndActive();
 			renameMode = false;
 			toasts.success(
-				`Profil "${profileToRename}" erfolgreich in "${newProfileName.trim()}" umbenannt.`
+				`Profil "${profileToRename.name}" erfolgreich in "${newProfileName.trim()}" umbenannt.`
 			);
-			profileToRename = '';
+			profileToRename = null;
 			newProfileName = '';
 		} catch (error) {
 			toasts.error(
@@ -56,7 +59,7 @@
 
 	function cancelRename() {
 		renameMode = false;
-		profileToRename = '';
+		profileToRename = null;
 		newProfileName = '';
 	}
 
@@ -77,26 +80,26 @@
 		}
 	}
 
-	async function switchProfile(profile: string) {
+	async function switchProfile(profile: Profile) {
 		await setActiveProfile(profile);
 		resourceStore.reset();
 		activeProfile = profile;
-		toasts.info(`Aktives Profil zu "${profile}" gewechselt.`);
+		toasts.info(`Aktives Profil zu "${profile.name}" gewechselt.`);
 	}
 
-	async function confirmDelete(profile: string) {
+	async function confirmDelete(profile: Profile) {
 		const confirmed = confirm(
-			`Möchtest du das Profil "${profile}" wirklich löschen? Alle zugehörigen Daten gehen verloren!`
+			`Möchtest du das Profil "${profile.name}" wirklich löschen? Alle zugehörigen Daten gehen verloren!`
 		);
 		if (confirmed) {
 			try {
-				const wasActive = (await getActiveProfile()) === profile;
-				await deleteProfile(profile);
+				const wasActive = activeProfile?.id === profile.id;
+				await deleteProfile(profile.id);
 				if (wasActive) {
 					resourceStore.reset();
 				}
 				await loadProfilesAndActive();
-				toasts.success(`Profil "${profile}" erfolgreich gelöscht.`);
+				toasts.success(`Profil "${profile.name}" erfolgreich gelöscht.`);
 			} catch (error) {
 				toasts.error(error instanceof Error ? error.message : 'Fehler beim Löschen des Profils.');
 			}
@@ -130,12 +133,12 @@
 <div class="mx-auto flex w-full max-w-2xl flex-col gap-6 p-4">
 	<h2 class="text-primary mb-2 text-center text-3xl font-extrabold">Profile verwalten</h2>
 	<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-		{#each profiles as profile (profile)}
+		{#each profiles as profile (profile.id)}
 			<div
-				class={`card bg-base-100 border shadow-lg transition ${activeProfile === profile ? 'border-primary' : 'border-base-300'}`}
+				class={`card bg-base-100 border shadow-lg transition ${activeProfile?.id === profile.id ? 'border-primary' : 'border-base-300'}`}
 			>
 				<div class="card-body flex flex-col gap-3 p-4">
-					{#if renameMode && profileToRename === profile}
+					{#if renameMode && profileToRename?.id === profile.id}
 						<input type="text" bind:value={newProfileName} class="input input-bordered w-full" />
 						<div class="flex justify-end gap-2">
 							<button onclick={confirmRename} class="btn btn-success btn-sm">Speichern</button>
@@ -144,20 +147,20 @@
 					{:else}
 						<div class="flex items-center gap-2">
 							<span
-								class="flex-1 truncate text-lg font-semibold {activeProfile === profile
+								class="flex-1 truncate text-lg font-semibold {activeProfile?.id === profile.id
 									? 'text-primary'
-									: ''}">{profile}</span
+									: ''}">{profile.name}</span
 							>
-							{#if activeProfile === profile}
+							{#if activeProfile?.id === profile.id}
 								<span class="badge badge-primary badge-outline">Aktiv</span>
 							{/if}
 						</div>
 						<div class="flex flex-wrap justify-end gap-2">
 							<button
 								onclick={() => switchProfile(profile)}
-								disabled={activeProfile === profile}
-								class="btn btn-primary btn-sm {activeProfile === profile ? 'btn-disabled' : ''}"
-								>{activeProfile === profile ? 'Aktiv' : 'Wechseln'}</button
+								disabled={activeProfile?.id === profile.id}
+								class="btn btn-primary btn-sm {activeProfile?.id === profile.id ? 'btn-disabled' : ''}"
+								>{activeProfile?.id === profile.id ? 'Aktiv' : 'Wechseln'}</button
 							>
 							<button onclick={() => startRename(profile)} class="btn btn-info btn-sm btn-outline"
 								>Umbenennen</button

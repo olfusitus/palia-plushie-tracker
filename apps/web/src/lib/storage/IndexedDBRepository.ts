@@ -1,11 +1,8 @@
-import { migrateData } from '$lib/utils/migration';
 import { openDB, type IDBPDatabase } from 'idb';
 import type { IStorageRepository } from './repository';
 import {
-	CURRENT_VERSION,
 	type ResourceEntry,
 	type ResourceType,
-	type StoredData,
 	type Profile
 } from './types';
 
@@ -115,91 +112,108 @@ export class IndexedDBRepository implements IStorageRepository {
 		return await this.dbPromise;
 	}
 
-	async getEntries(resourceType: ResourceType, profile: string): Promise<ResourceEntry[]> {
+	async getEntries(resourceType: ResourceType, profileId: string): Promise<ResourceEntry[]> {
 		const db = await this.getDB();
-		const record = await db.get(resourceType, profile);
-		if (!record) return [];
-
-		const parsed: StoredData = record.data;
-
-		if (parsed.version < CURRENT_VERSION) {
-			console.log(`Outdated data found for ${resourceType}. Migrating...`);
-			parsed.data = migrateData(parsed);
-			await this.saveEntries(resourceType, profile, parsed.data);
-		}
-
-		return parsed.data;
+		const entries = await db.getAllFromIndex('entries', 'by_profile_resource', [profileId, resourceType]);
+		return entries.map(entry => ({
+			id: entry.id,
+			timestamp: entry.timestamp,
+			rareDrops: entry.rareDrops,
+			...(entry.type && { type: entry.type }) // Only include type if it exists (for AnimalEntry)
+		}));
 	}
 
-	async saveEntries(resourceType: ResourceType, profile: string, entries: ResourceEntry[]): Promise<void> {
+	async addEntry(resourceType: ResourceType, profileId: string, entry: ResourceEntry): Promise<void> {
 		const db = await this.getDB();
-		const storedData: StoredData = {
-			version: CURRENT_VERSION,
-			data: entries
+		const enrichedEntry = {
+			...entry,
+			profileId,
+			resourceType
 		};
-
-		await db.put(resourceType, { profile, data: storedData });
+		await db.add('entries', enrichedEntry);
 	}
 
-	async getProfiles(): Promise<string[]> {
+	async deleteEntry(entryId: string): Promise<void> {
 		const db = await this.getDB();
-		const profilesRecord = await db.get('profiles', 'list');
-		return profilesRecord?.value || ['default'];
+		await db.delete('entries', entryId);
 	}
 
-	async saveProfiles(profiles: string[]): Promise<void> {
+	async getProfiles(): Promise<Profile[]> {
 		const db = await this.getDB();
-		await db.put('profiles', { id: 'list', value: profiles });
+		return await db.getAll('profiles');
 	}
 
-	async getActiveProfileName(): Promise<string> {
+	async addProfile(name: string): Promise<Profile> {
 		const db = await this.getDB();
-		const activeProfile = await db.get('profiles', 'active');
-		return activeProfile?.value || 'default';
+		const profile: Profile = {
+			id: crypto.randomUUID(),
+			name
+		};
+		await db.add('profiles', profile);
+		return profile;
 	}
 
-	async setActiveProfileName(profile: string): Promise<void> {
+	async deleteProfile(profileId: string): Promise<void> {
 		const db = await this.getDB();
-		await db.put('profiles', { id: 'active', value: profile });
-	}
-
-	async deleteProfileData(profile: string): Promise<void> {
-		const db = await this.getDB();
-
-		for (const type of RESOURCE_TYPES) {
-			await db.delete(type, profile);
+		
+		// Delete all entries for this profile
+		const entries = await db.getAllFromIndex('entries', 'by_profile_resource');
+		const profileEntries = entries.filter(entry => entry.profileId === profileId);
+		
+		for (const entry of profileEntries) {
+			await db.delete('entries', entry.id);
 		}
-
-		const profiles = await this.getProfiles();
-		const updatedProfiles = profiles.filter((p) => p !== profile);
-		await this.saveProfiles(updatedProfiles);
-
-		if ((await this.getActiveProfileName()) === profile) {
-			await this.setActiveProfileName('default');
-		}
-
-		if (updatedProfiles.length === 0) {
-			await this.saveProfiles(['default']);
+		
+		// Delete the profile
+		await db.delete('profiles', profileId);
+		
+		// If this was the active profile, clear the active profile setting
+		const activeProfileId = await this.getActiveProfileId();
+		if (activeProfileId === profileId) {
+			await db.delete('settings', 'activeProfileId');
 		}
 	}
 
-	async renameProfileData(oldName: string, newName: string): Promise<void> {
+	async renameProfile(profileId: string, newName: string): Promise<void> {
 		const db = await this.getDB();
+		const profile = await db.get('profiles', profileId);
+		if (profile) {
+			await db.put('profiles', { ...profile, name: newName });
+		}
+	}
 
-		for (const type of RESOURCE_TYPES) {
-			const record = await db.get(type, oldName);
-			if (record) {
-				await db.put(type, { profile: newName, data: record.data });
-				await db.delete(type, oldName);
+	async getActiveProfileId(): Promise<string | null> {
+		const db = await this.getDB();
+		const setting = await db.get('settings', 'activeProfileId');
+		return setting?.value || null;
+	}
+
+	async setActiveProfileId(profileId: string): Promise<void> {
+		const db = await this.getDB();
+		await db.put('settings', { key: 'activeProfileId', value: profileId });
+	}
+
+	async importProfileData(profileId: string, data: Record<ResourceType, ResourceEntry[]>): Promise<void> {
+		const db = await this.getDB();
+		
+		// Delete existing entries for this profile
+		const existingEntries = await db.getAllFromIndex('entries', 'by_profile_resource');
+		const profileEntries = existingEntries.filter(entry => entry.profileId === profileId);
+		
+		for (const entry of profileEntries) {
+			await db.delete('entries', entry.id);
+		}
+		
+		// Add new entries
+		for (const [resourceType, entries] of Object.entries(data)) {
+			for (const entry of entries) {
+				const enrichedEntry = {
+					...entry,
+					profileId,
+					resourceType: resourceType as ResourceType
+				};
+				await db.add('entries', enrichedEntry);
 			}
-		}
-
-		const profiles = await this.getProfiles();
-		const updatedProfiles = profiles.map((p) => (p === oldName ? newName : p));
-		await this.saveProfiles(updatedProfiles);
-
-		if ((await this.getActiveProfileName()) === oldName) {
-			await this.setActiveProfileName(newName);
 		}
 	}
 }

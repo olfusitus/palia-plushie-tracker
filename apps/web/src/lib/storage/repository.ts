@@ -1,4 +1,4 @@
-import type { ResourceEntry, ResourceType } from '$lib/storage/types';
+import type { Profile, ResourceEntry, ResourceType } from '$lib/storage/types';
 
 /**
  * Defines the contract for any storage implementation.
@@ -8,68 +8,69 @@ export interface IStorageRepository {
 	/**
 	 * Retrieves all entries for a given resource type and profile.
 	 * @param resourceType The type of resource to load.
-	 * @param profile The active profile name.
+	 * @param profileId The profile ID.
 	 * @returns An array of resource entries.
 	 */
-	getEntries(resourceType: ResourceType, profile: string): Promise<ResourceEntry[]>;
+	getEntries(resourceType: ResourceType, profileId: string): Promise<ResourceEntry[]>;
 
 	/**
-	 * Saves all entries for a given resource type and profile.
-	 * @param resourceType The type of resource to save.
-	 * @param profile The active profile name.
-	 * @param entries The complete array of entries to save.
+	 * Adds a single entry for a given resource type and profile.
+	 * @param resourceType The type of resource.
+	 * @param profileId The profile ID.
+	 * @param entry The entry to add.
 	 */
-	saveEntries(resourceType: ResourceType, profile: string, entries: ResourceEntry[]): Promise<void>;
+	addEntry(resourceType: ResourceType, profileId: string, entry: ResourceEntry): Promise<void>;
+
+	/**
+	 * Deletes a single entry by its ID.
+	 * @param entryId The unique ID of the entry to delete.
+	 */
+	deleteEntry(entryId: string): Promise<void>;
 
 	/**
 	 * Retrieves all profiles.
-	 * @returns An array of profile names.
+	 * @returns An array of Profile objects.
 	 */
-	getProfiles(): Promise<string[]>;
+	getProfiles(): Promise<Profile[]>;
 
 	/**
-	 * Saves the list of profiles.
-	 * @param profiles The list of profile names to save.
+	 * Adds a new profile.
+	 * @param name The name for the new profile.
+	 * @returns The created Profile object.
 	 */
-	saveProfiles(profiles: string[]): Promise<void>;
+	addProfile(name: string): Promise<Profile>;
 
 	/**
-	 * Deletes all data associated with a specific profile.
-	 * @param profile The name of the profile to delete.
+	 * Deletes a profile and all its associated data.
+	 * @param profileId The ID of the profile to delete.
 	 */
-	deleteProfileData(profile: string): Promise<void>;
+	deleteProfile(profileId: string): Promise<void>;
 
 	/**
-	 * Renames all data from an old profile name to a new one.
-	 * @param oldName The current name of the profile.
+	 * Renames a profile.
+	 * @param profileId The ID of the profile to rename.
 	 * @param newName The new name for the profile.
 	 */
-	renameProfileData(oldName: string, newName: string): Promise<void>;
+	renameProfile(profileId: string, newName: string): Promise<void>;
 
 	/**
-	 * Gets the currently active profile name.
-	 * @returns The name of the currently active profile.
+	 * Gets the currently active profile ID.
+	 * @returns The ID of the currently active profile, or null if none is set.
 	 */
-	getActiveProfileName(): Promise<string>;
+	getActiveProfileId(): Promise<string | null>;
 
 	/**
-	 * Sets the new active profile name.
-	 * @param profile The name of the profile to set as active.
+	 * Sets the new active profile ID.
+	 * @param profileId The ID of the profile to set as active.
 	 */
-	setActiveProfileName(profile: string): Promise<void>;
+	setActiveProfileId(profileId: string): Promise<void>;
 
-	// // We can also add methods for import/export to keep all storage logic together.
-	// /**
-	//  * Exports the entire storage content as a string.
-	//  * @returns A string representation of the entire storage content.
-	//  */
-	// exportAll(): string;
-
-	// /**
-	//  * Imports storage content from a string.
-	//  * @param data The string representation of the storage content to import.
-	//  */
-	// importAll(data: string): void;
+	/**
+	 * Imports data for a specific profile.
+	 * @param profileId The ID of the profile to import data for.
+	 * @param data The data to import, organized by resource type.
+	 */
+	importProfileData(profileId: string, data: Record<ResourceType, ResourceEntry[]>): Promise<void>;
 }
 
 // DummyRepository für SSR oder Umgebungen ohne IndexedDB
@@ -77,15 +78,19 @@ export class DummyRepository implements IStorageRepository {
 	async getEntries(): Promise<ResourceEntry[]> {
 		return [];
 	}
-	async saveEntries(): Promise<void> {}
-	async getProfiles(): Promise<string[]> {
-		return ['default'];
+	async addEntry(): Promise<void> {}
+	async deleteEntry(): Promise<void> {}
+	async getProfiles(): Promise<Profile[]> {
+		return [{ id: 'default', name: 'default' }];
 	}
-	async saveProfiles(): Promise<void> {}
-	async getActiveProfileName(): Promise<string> {
+	async addProfile(name: string): Promise<Profile> {
+		return { id: 'dummy', name };
+	}
+	async deleteProfile(): Promise<void> {}
+	async renameProfile(): Promise<void> {}
+	async getActiveProfileId(): Promise<string | null> {
 		return 'default';
 	}
-	async setActiveProfileName(): Promise<void> {}
-	async deleteProfileData(): Promise<void> {}
-	async renameProfileData(): Promise<void> {}
+	async setActiveProfileId(): Promise<void> {}
+	async importProfileData(): Promise<void> {}
 }

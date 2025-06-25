@@ -13,20 +13,20 @@ export class StorageService {
 
 	async exportData(): Promise<string> {
 		const profiles = await this.repository.getProfiles();
-		const activeProfile = await this.repository.getActiveProfileName();
+		const activeProfileId = await this.repository.getActiveProfileId();
 		const allData: ExportData['data'] = {};
 
 		for (const profile of profiles) {
-			allData[profile] = {} as Record<ResourceType, ResourceEntry[]>;
+			allData[profile.id] = {} as Record<ResourceType, ResourceEntry[]>;
 			for (const resourceType of resourceTypes) {
-				const entries = await this.repository.getEntries(resourceType, profile);
+				const entries = await this.repository.getEntries(resourceType, profile.id);
 				if (entries.length > 0) {
-					allData[profile][resourceType] = entries;
+					allData[profile.id][resourceType] = entries;
 				}
 			}
 		}
 		return this.serializer.serialize({
-			activeProfile,
+			activeProfileId: activeProfileId || '',
 			profiles,
 			data: allData
 		});
@@ -35,22 +35,30 @@ export class StorageService {
 	async importData(jsonString: string): Promise<void> {
 		const importData = this.serializer.deserialize(jsonString);
 
+		// Delete all existing profiles and their data
 		const oldProfiles = await this.repository.getProfiles();
 		for (const profile of oldProfiles) {
-			await this.repository.deleteProfileData(profile);
+			await this.repository.deleteProfile(profile.id);
 		}
 
-		await this.repository.saveProfiles(importData.profiles);
-		await this.repository.setActiveProfileName(importData.activeProfile);
-
+		// Import profiles and create a mapping from original IDs to new IDs
+		const profileIdMapping: Record<string, string> = {};
 		for (const profile of importData.profiles) {
-			const profileData = importData.data[profile];
+			const newProfile = await this.repository.addProfile(profile.name);
+			profileIdMapping[profile.id] = newProfile.id;
+		}
+
+		// Set active profile using the mapped ID
+		if (importData.activeProfileId && profileIdMapping[importData.activeProfileId]) {
+			await this.repository.setActiveProfileId(profileIdMapping[importData.activeProfileId]);
+		}
+
+		// Import data for each profile using importProfileData
+		for (const [originalProfileId, profileData] of Object.entries(importData.data)) {
 			if (profileData) {
-				for (const resourceType of resourceTypes) {
-					const entries = profileData[resourceType];
-					if (entries) {
-						await this.repository.saveEntries(resourceType, profile, entries);
-					}
+				const newProfileId = profileIdMapping[originalProfileId];
+				if (newProfileId) {
+					await this.repository.importProfileData(newProfileId, profileData);
 				}
 			}
 		}
