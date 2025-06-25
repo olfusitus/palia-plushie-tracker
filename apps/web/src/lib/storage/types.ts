@@ -13,6 +13,11 @@ export type BugEntry = BaseResourceEntry;
 
 export type ResourceEntry = AnimalEntry | BugEntry;
 
+export interface Profile {
+	id: string; 
+	name: string; 
+}
+
 export const resourceTypes = [
 	'animal_chapaa',
 	'animal_sernuk',
@@ -41,15 +46,15 @@ export type ResourceType = (typeof resourceTypes)[number];
 // 	| 'bug_proudhorn_beetle'
 // 	| 'bug_lanternbug';
 
-export const CURRENT_VERSION = 4;
+export const CURRENT_VERSION = 5;
 export interface StoredData {
 	version: number;
 	data: ResourceEntry[];
 }
 
 export interface ExportData {
-	version: number;
-	activeProfile: string;
-	profiles: string[];
-	data: Record<string, Record<ResourceType, ResourceEntry[]>>;
+	version: number; 
+	activeProfileId: string;
+	profiles: Profile[]; 
+	data: Record<string, Record<ResourceType, ResourceEntry[]>>; 
 }
