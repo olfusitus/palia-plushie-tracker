@@ -31,7 +31,11 @@ export class IndexedDBRepository implements IStorageRepository {
 	constructor() {}
 
 	private async getDB() {
-		if (typeof window === 'undefined' || !window.indexedDB) {
+		// Use globalThis.indexedDB to support fake-indexeddb in test environments
+		const idb = (typeof globalThis !== 'undefined' && globalThis.indexedDB)
+			? globalThis.indexedDB
+			: undefined;
+		if (!idb) {
 			throw new Error('IndexedDB is not available in this environment.');
 		}
 		if (!this.dbPromise) {
@@ -49,7 +53,7 @@ export class IndexedDBRepository implements IStorageRepository {
 						db.createObjectStore('profiles', { keyPath: 'id' });
 					}
 				}
-			});
+			}); // Pass the detected indexedDB implementation as the 4th argument is not valid
 		}
 		return await this.dbPromise;
 	}

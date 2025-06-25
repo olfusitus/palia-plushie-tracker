@@ -6,5 +6,10 @@ export default defineConfig({
 	plugins: [sveltekit(), tailwindcss()],
 	define: {
 		__TAURI__: process.env.TAURI === 'true'
-	}
+	},
+	resolve: process.env.VITEST
+	? {
+			conditions: ['browser']
+		}
+	: undefined
 });
