@@ -36,7 +36,7 @@
 
 	async function confirmRename() {
 		if (!profileToRename) return;
-		
+
 		try {
 			const oldActiveProfile = await getActiveProfile();
 			await renameProfile(profileToRename.id, newProfileName.trim());
@@ -160,8 +160,9 @@
 							<button
 								onclick={() => switchProfile(profile)}
 								disabled={activeProfile?.id === profile.id}
-								class="btn btn-primary btn-sm {activeProfile?.id === profile.id ? 'btn-disabled' : ''}"
-								>{activeProfile?.id === profile.id ? 'Aktiv' : 'Wechseln'}</button
+								class="btn btn-primary btn-sm {activeProfile?.id === profile.id
+									? 'btn-disabled'
+									: ''}">{activeProfile?.id === profile.id ? 'Aktiv' : 'Wechseln'}</button
 							>
 							<button onclick={() => startRename(profile)} class="btn btn-info btn-sm btn-outline"
 								>Umbenennen</button

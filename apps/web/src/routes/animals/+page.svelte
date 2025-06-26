@@ -14,7 +14,7 @@
 
 <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 	{#each animalResources as animal (animal.type)}
-		<ResourceTracker title={$_( `resources.${animal.type}.name`)} resourceType={animal.type}>
+		<ResourceTracker title={$_(`resources.${animal.type}.name`)} resourceType={animal.type}>
 			<AnimalButtons resource={animal} />
 		</ResourceTracker>
 	{/each}

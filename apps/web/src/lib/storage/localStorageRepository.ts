@@ -104,7 +104,11 @@ export class LocalStorageRepository implements IStorageRepository {
 		return parsed.data;
 	}
 
-	async saveEntries(resourceType: ResourceType, profile: string, entries: ResourceEntry[]): Promise<void> {
+	async saveEntries(
+		resourceType: ResourceType,
+		profile: string,
+		entries: ResourceEntry[]
+	): Promise<void> {
 		if (typeof localStorage === 'undefined') return;
 		const storedData: StoredData = {
 			version: CURRENT_VERSION,

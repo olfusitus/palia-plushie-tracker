@@ -15,7 +15,7 @@ export async function getProfiles(): Promise<Profile[]> {
 
 export async function addProfile(name: string): Promise<Profile> {
 	const profiles = await getProfiles();
-	if (profiles.some(p => p.name === name)) {
+	if (profiles.some((p) => p.name === name)) {
 		throw new Error(`Profil "${name}" existiert bereits.`);
 	}
 	return await storageService.repository.addProfile(name);
@@ -24,7 +24,7 @@ export async function addProfile(name: string): Promise<Profile> {
 export async function deleteProfile(profileId: string): Promise<void> {
 	const profiles = await getProfiles();
 
-	if (!profiles.some(p => p.id === profileId)) {
+	if (!profiles.some((p) => p.id === profileId)) {
 		throw new Error(`Profile with ID "${profileId}" does not exist.`);
 	}
 	if (profiles.length === 1) {
@@ -53,14 +53,14 @@ export async function renameProfile(profileId: string, newName: string): Promise
 	}
 
 	const profiles = await getProfiles();
-	const profile = profiles.find(p => p.id === profileId);
+	const profile = profiles.find((p) => p.id === profileId);
 	if (!profile) {
 		throw new Error(`Profile with ID "${profileId}" does not exist.`);
 	}
 	if (profile.name === newName) {
 		return; // Nothing to do.
 	}
-	if (profiles.some(p => p.name === newName)) {
+	if (profiles.some((p) => p.name === newName)) {
 		throw new Error(`Profile "${newName}" already exists.`);
 	}
 
@@ -71,9 +71,9 @@ export async function renameProfile(profileId: string, newName: string): Promise
 export async function getActiveProfile(): Promise<Profile | null> {
 	const activeProfileId = await getActiveProfileId();
 	if (!activeProfileId) return null;
-	
+
 	const profiles = await getProfiles();
-	return profiles.find(p => p.id === activeProfileId) || null;
+	return profiles.find((p) => p.id === activeProfileId) || null;
 }
 
 // Updated to accept Profile object or profile ID
@@ -81,7 +81,7 @@ export async function setActiveProfile(profileOrId: Profile | string): Promise<v
 	if (typeof profileOrId === 'string') {
 		// If it's a string, treat it as a profile name and find the corresponding profile
 		const profiles = await getProfiles();
-		const profile = profiles.find(p => p.name === profileOrId);
+		const profile = profiles.find((p) => p.name === profileOrId);
 		if (!profile) {
 			throw new Error(`Profile "${profileOrId}" does not exist.`);
 		}

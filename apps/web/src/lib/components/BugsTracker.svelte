@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { BugResource, Resource } from '$lib/storage';
-	import { _ } from 'svelte-i18n'
+	import { _ } from 'svelte-i18n';
 	// import { exportCSV } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
 
-	const { resources } : {
-		resources : BugResource[]
+	const {
+		resources
+	}: {
+		resources: BugResource[];
 	} = $props<{ resources: BugResource[] }>();
 	// const { resources } = $props<{ resources: BugResource[] }>();
 
@@ -102,8 +104,15 @@
 				>
 					{#each resources as resource (resource.type)}
 						<!-- <li><button on:click={() => downloadCSV(resource)}>Daten exportieren ({resource.name})</button></li> -->
-						<li><a href={`/bugStats/${resource.type}`}>Statistik anzeigen ({resourceName(resource)})</a></li>
-						<li><a href={`/manage/${resource.type}`}>Einträge bearbeiten ({resourceName(resource)})</a></li>
+						<li>
+							<a href={`/bugStats/${resource.type}`}
+								>Statistik anzeigen ({resourceName(resource)})</a
+							>
+						</li>
+						<li>
+							<a href={`/manage/${resource.type}`}>Einträge bearbeiten ({resourceName(resource)})</a
+							>
+						</li>
 					{/each}
 				</ul>
 			</div>
@@ -142,7 +151,7 @@
 								onclick={() => handleRareDrop(resource)}
 								class="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
 							>
-							{resourceName(resource)}
+								{resourceName(resource)}
 							</button>
 						{/each}
 					</div>

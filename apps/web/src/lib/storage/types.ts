@@ -14,8 +14,8 @@ export type BugEntry = BaseResourceEntry;
 export type ResourceEntry = AnimalEntry | BugEntry;
 
 export interface Profile {
-	id: string; 
-	name: string; 
+	id: string;
+	name: string;
 }
 
 export const resourceTypes = [
@@ -53,8 +53,8 @@ export interface StoredData {
 }
 
 export interface ExportData {
-	version: number; 
+	version: number;
 	activeProfileId: string;
-	profiles: Profile[]; 
-	data: Record<string, Record<ResourceType, ResourceEntry[]>>; 
+	profiles: Profile[];
+	data: Record<string, Record<ResourceType, ResourceEntry[]>>;
 }

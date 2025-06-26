@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { exportResourceAsCSV, downloadFile } from '$lib/utils/exporter';
 	import type { ResourceType } from '$lib/storage/types';
+	// import { test } from 'vitest';
 
 	let { title, resourceType, children } = $props<{
 		title: string;
 		resourceType: ResourceType;
-		children: any;
+		children: () => unknown;
 	}>();
 
 	function handleDownloadCSV() {

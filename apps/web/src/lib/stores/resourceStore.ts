@@ -74,7 +74,7 @@ function createResourceStore() {
 			await storageService.repository.addEntry(resourceType, activeProfileId, entry);
 
 			// Update In-Memory-Cache
-			const currentEntries = get({ subscribe })[resourceType] ?? await loadAndCache(resourceType);
+			const currentEntries = get({ subscribe })[resourceType] ?? (await loadAndCache(resourceType));
 			const newEntries = [...currentEntries, entry];
 			update((state) => ({ ...state, [resourceType]: newEntries }));
 		},
@@ -106,7 +106,7 @@ function createResourceStore() {
 			}
 
 			// Update In-Memory-Cache
-			const currentEntries = get({ subscribe })[resourceType] ?? await loadAndCache(resourceType);
+			const currentEntries = get({ subscribe })[resourceType] ?? (await loadAndCache(resourceType));
 			const updatedEntries = [...currentEntries, ...newEntries];
 			update((state) => ({ ...state, [resourceType]: updatedEntries }));
 		},
@@ -118,7 +118,7 @@ function createResourceStore() {
 		deleteEntry: async (resourceType: ResourceType, id: string) => {
 			// Direkter Aufruf der atomaren Methode
 			await storageService.repository.deleteEntry(id);
-			
+
 			// Update In-Memory-Cache
 			const currentEntries = get({ subscribe })[resourceType];
 			if (currentEntries === undefined) {

@@ -3,23 +3,23 @@ import type { Resource } from './storage';
 export const resources: Resource[] = [
 	{
 		type: 'animal_chapaa',
-		availableSizes: ['small', 'medium', 'large'],
+		availableSizes: ['small', 'medium', 'large']
 	},
 	{
 		type: 'animal_sernuk',
-		availableSizes: ['small', 'medium', 'large'],
+		availableSizes: ['small', 'medium', 'large']
 	},
 	{
 		type: 'animal_muujin',
-		availableSizes: ['small', 'medium', 'large'],
+		availableSizes: ['small', 'medium', 'large']
 	},
 	{
 		type: 'animal_ogopuu',
-		availableSizes: ['small', 'medium', 'large'],
+		availableSizes: ['small', 'medium', 'large']
 	},
 	{
 		type: 'animal_shmole',
-		availableSizes: ['small', 'medium', 'large'],
+		availableSizes: ['small', 'medium', 'large']
 	},
 	{
 		type: 'bug_rtb'

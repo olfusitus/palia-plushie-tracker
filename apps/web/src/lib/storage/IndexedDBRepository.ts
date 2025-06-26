@@ -1,11 +1,6 @@
 import { openDB, type IDBPDatabase } from 'idb';
 import type { IStorageRepository } from './repository';
-import {
-	type ResourceEntry,
-	type ResourceType,
-	type Profile,
-	type ExportData
-} from './types';
+import { type ResourceEntry, type ResourceType, type Profile, type ExportData } from './types';
 // import { Resource } from '@tauri-apps/api/core';
 
 const DB_NAME = 'palia_tracker_db';
@@ -32,9 +27,8 @@ export class IndexedDBRepository implements IStorageRepository {
 
 	private async getDB() {
 		// Use globalThis.indexedDB to support fake-indexeddb in test environments
-		const idb = (typeof globalThis !== 'undefined' && globalThis.indexedDB)
-			? globalThis.indexedDB
-			: undefined;
+		const idb =
+			typeof globalThis !== 'undefined' && globalThis.indexedDB ? globalThis.indexedDB : undefined;
 		if (!idb) {
 			throw new Error('IndexedDB is not available in this environment.');
 		}
@@ -45,16 +39,23 @@ export class IndexedDBRepository implements IStorageRepository {
 
 					if (oldVersion < 2) {
 						// --- MIGRATION VON v1 ZU v2 ---
-						
+
 						// Check if this is a fresh database or an existing one
-						const hasOldStores = db.objectStoreNames.contains('profiles') || 
-							RESOURCE_TYPES.some(type => db.objectStoreNames.contains(type));
-						
+						const hasOldStores =
+							db.objectStoreNames.contains('profiles') ||
+							RESOURCE_TYPES.some((type) => db.objectStoreNames.contains(type));
+
 						if (hasOldStores) {
 							// 1. Lese alle Daten aus den alten Stores, bevor sie gelöscht werden.
-							const oldData: { profile: string; resourceType: ResourceType; entries: ResourceEntry[] }[] = [];
-							const oldProfilesList = (await transaction.objectStore('profiles').get('list'))?.value || ['default'];
-							const oldActiveProfileName = (await transaction.objectStore('profiles').get('active'))?.value || 'default';
+							const oldData: {
+								profile: string;
+								resourceType: ResourceType;
+								entries: ResourceEntry[];
+							}[] = [];
+							const oldProfilesList = (await transaction.objectStore('profiles').get('list'))
+								?.value || ['default'];
+							const oldActiveProfileName =
+								(await transaction.objectStore('profiles').get('active'))?.value || 'default';
 
 							for (const resourceType of RESOURCE_TYPES) {
 								for (const profileName of oldProfilesList) {
@@ -68,7 +69,7 @@ export class IndexedDBRepository implements IStorageRepository {
 									}
 								}
 							}
-							
+
 							// 2. Lösche die alten Object Stores.
 							for (const type of RESOURCE_TYPES) {
 								if (db.objectStoreNames.contains(type)) {
@@ -78,15 +79,21 @@ export class IndexedDBRepository implements IStorageRepository {
 							if (db.objectStoreNames.contains('profiles')) {
 								db.deleteObjectStore('profiles');
 							}
-							
+
 							// 3. Erstelle die neuen Object Stores.
-							db.createObjectStore('entries', { keyPath: 'id' }).createIndex('by_profile_resource', ['profileId', 'resourceType']);
+							db.createObjectStore('entries', { keyPath: 'id' }).createIndex(
+								'by_profile_resource',
+								['profileId', 'resourceType']
+							);
 							db.createObjectStore('profiles', { keyPath: 'id' });
 							db.createObjectStore('settings', { keyPath: 'key' });
 
 							// 4. Transformiere und schreibe die Daten in die neuen Stores.
 							// In der upgrade-Funktion:
-							const newProfiles: Profile[] = oldProfilesList.map((name: string) => ({ id: crypto.randomUUID(), name }));
+							const newProfiles: Profile[] = oldProfilesList.map((name: string) => ({
+								id: crypto.randomUUID(),
+								name
+							}));
 							const activeProfile =
 								newProfiles.find((p) => p.name === oldActiveProfileName) ||
 								newProfiles.find((p) => p.name === 'default');
@@ -134,9 +141,9 @@ export class IndexedDBRepository implements IStorageRepository {
 							entriesStore.createIndex('by_profile_resource', ['profileId', 'resourceType']);
 
 							db.createObjectStore('profiles', { keyPath: 'id' });
-							
+
 							db.createObjectStore('settings', { keyPath: 'key' });
-							
+
 							console.log('Fresh database created with v2 schema.');
 						}
 					}
@@ -148,8 +155,11 @@ export class IndexedDBRepository implements IStorageRepository {
 
 	async getEntries(resourceType: ResourceType, profileId: string): Promise<ResourceEntry[]> {
 		const db = await this.getDB();
-		const entries = await db.getAllFromIndex('entries', 'by_profile_resource', [profileId, resourceType]);
-		return entries.map(entry => ({
+		const entries = await db.getAllFromIndex('entries', 'by_profile_resource', [
+			profileId,
+			resourceType
+		]);
+		return entries.map((entry) => ({
 			id: entry.id,
 			timestamp: entry.timestamp,
 			rareDrops: entry.rareDrops,
@@ -157,7 +167,11 @@ export class IndexedDBRepository implements IStorageRepository {
 		}));
 	}
 
-	async addEntry(resourceType: ResourceType, profileId: string, entry: ResourceEntry): Promise<void> {
+	async addEntry(
+		resourceType: ResourceType,
+		profileId: string,
+		entry: ResourceEntry
+	): Promise<void> {
 		const db = await this.getDB();
 		const enrichedEntry = {
 			...entry,
@@ -192,7 +206,7 @@ export class IndexedDBRepository implements IStorageRepository {
 
 		const profiles = await db.getAll('profiles');
 		if (profiles.length == 1) {
-			throw new Error("Cannot delete the last remaining profile");
+			throw new Error('Cannot delete the last remaining profile');
 		}
 
 		const tx = db.transaction(['profiles', 'entries', 'settings'], 'readwrite');
@@ -203,8 +217,8 @@ export class IndexedDBRepository implements IStorageRepository {
 		const index = entriesStore.index('by_profile_resource');
 		const keyRange = IDBKeyRange.bound([profileId, ''], [profileId, '\uffff']);
 		const profileEntries = await index.getAll(keyRange);
-		console.log("index ", index);
-		console.log("profileentries size: ", profileEntries.length);
+		// console.log("index ", index);
+		// console.log("profileentries size: ", profileEntries.length);
 		const deletePromises: Promise<IDBValidKey | void>[] = [];
 
 		for (const entry of profileEntries) {
@@ -215,12 +229,14 @@ export class IndexedDBRepository implements IStorageRepository {
 		deletePromises.push(profilesStore.delete(profileId));
 
 		// If this was the active profile, set the first remaining profile as active
-		const activeProfileId = await settingsStore.get('activeProfileId').then(s => s?.value);
+		const activeProfileId = await settingsStore.get('activeProfileId').then((s) => s?.value);
 		if (activeProfileId === profileId) {
-			const remainingProfiles = profiles.filter(p => p.id !== profileId);
+			const remainingProfiles = profiles.filter((p) => p.id !== profileId);
 			const firstRemainingProfile = remainingProfiles[0];
 			if (firstRemainingProfile) {
-				deletePromises.push(settingsStore.put({ key: 'activeProfileId', value: firstRemainingProfile.id }));
+				deletePromises.push(
+					settingsStore.put({ key: 'activeProfileId', value: firstRemainingProfile.id })
+				);
 			} else {
 				// No profiles left, clear the active profile setting
 				deletePromises.push(settingsStore.delete('activeProfileId'));
@@ -237,14 +253,14 @@ export class IndexedDBRepository implements IStorageRepository {
 		if (!profile) {
 			throw new Error(`Profile with ID ${profileId} not found`);
 		}
-		
+
 		// Check if a profile with the new name already exists
 		const existingProfiles = await db.getAll('profiles');
-		const nameExists = existingProfiles.some(p => p.id !== profileId && p.name === newName);
+		const nameExists = existingProfiles.some((p) => p.id !== profileId && p.name === newName);
 		if (nameExists) {
 			throw new Error(`A profile with the name "${newName}" already exists`);
 		}
-		
+
 		await db.put('profiles', { ...profile, name: newName });
 	}
 

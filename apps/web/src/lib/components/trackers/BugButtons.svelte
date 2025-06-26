@@ -1,11 +1,13 @@
 <script lang="ts">
 	import type { BugResource } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
-	import { _ } from 'svelte-i18n'
+	import { _ } from 'svelte-i18n';
 
-	let {resource}: {
-		resource : BugResource
-	} = $props< { resource: BugResource } >();
+	let {
+		resource
+	}: {
+		resource: BugResource;
+	} = $props<{ resource: BugResource }>();
 	// let { resource } = $props<{ resource: BugResource }>();
 
 	let buttonStatus = $state(false);

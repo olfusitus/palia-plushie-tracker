@@ -8,8 +8,8 @@ export default defineConfig({
 		__TAURI__: process.env.TAURI === 'true'
 	},
 	resolve: process.env.VITEST
-	? {
-			conditions: ['browser']
-		}
-	: undefined
+		? {
+				conditions: ['browser']
+			}
+		: undefined
 });

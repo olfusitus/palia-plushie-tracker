@@ -3,7 +3,7 @@
 	import type { ResourceSize } from '$lib/storage/types';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { onDestroy } from 'svelte';
-	import { _ } from 'svelte-i18n'
+	import { _ } from 'svelte-i18n';
 
 	let { resource } = $props<{ resource: AnimalResource }>();
 
@@ -43,26 +43,26 @@
 		handleClick(size, true);
 		openDropdown = false;
 	}
-	function handleClickOutside(event: MouseEvent){
-		if(openDropdown && detailsRef && !detailsRef.contains(event.target as Node)){
+	function handleClickOutside(event: MouseEvent) {
+		if (openDropdown && detailsRef && !detailsRef.contains(event.target as Node)) {
 			openDropdown = false;
 		}
 	}
 
 	$effect(() => {
-		if(openDropdown && !listenerAdded){
+		if (openDropdown && !listenerAdded) {
 			document.addEventListener('mousedown', handleClickOutside);
 			listenerAdded = true;
-		} else if(!openDropdown && listenerAdded){
+		} else if (!openDropdown && listenerAdded) {
 			document.removeEventListener('mousedown', handleClickOutside);
 			listenerAdded = false;
 		}
 	});
-	onDestroy(()=> {
-		if(listenerAdded){
+	onDestroy(() => {
+		if (listenerAdded) {
 			removeEventListener('mousedown', handleClickOutside);
 		}
-	})
+	});
 </script>
 
 {#each resource.availableSizes as size (size)}
@@ -71,7 +71,9 @@
 		class={buttonClass(size)}
 		disabled={buttonStatus[size]}
 	>
-		{#if buttonStatus[size]}{$_('ui.saved')}{:else}{$_(`resources.${resource.type}.labels.${size}`)}{/if}
+		{#if buttonStatus[size]}{$_('ui.saved')}{:else}{$_(
+				`resources.${resource.type}.labels.${size}`
+			)}{/if}
 	</button>
 {/each}
 <details class="dropdown w-[45%]" bind:open={openDropdown} bind:this={detailsRef}>

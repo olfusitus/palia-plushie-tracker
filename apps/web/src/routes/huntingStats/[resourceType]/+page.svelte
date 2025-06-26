@@ -7,8 +7,11 @@
 	import { buildDistanceHistogramData } from '$lib/utils/chartData';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { _ } from 'svelte-i18n';
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	let stats: Record<string, StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> }> = {};
+
+	let stats: Record<
+		string,
+		StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> }
+	> = {};
 
 	export let data; // kommt von load()
 	const resourceType: ResourceType = data.resourceType as ResourceType;
@@ -31,9 +34,7 @@
 		const res = resources.find((r) => r.type === resourceType);
 		if (!res) return typ;
 		// typ entspricht "small", "medium", "large" → labels[typ] oder fallback
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return $_(`resources.${res.type}.name`) + ' ' + $_(`resources.${res.type}.labels.${typ}`);
-		// ((res as any)?.labels?.[typ] ?? typ);
 	}
 </script>
 
@@ -67,9 +68,20 @@
 						>
 							<!-- <span>{$_(`stats.lowest_distance`)}</span> -->
 							<span>
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-									<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 5.25 7.5 7.5 7.5-7.5m-15 6 7.5 7.5 7.5-7.5" />
-							  	</svg>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="size-6"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="m4.5 5.25 7.5 7.5 7.5-7.5m-15 6 7.5 7.5 7.5-7.5"
+									/>
+								</svg>
 							</span>
 							<span>{data.lowestDistance}</span>
 						</div>
@@ -78,10 +90,25 @@
 						>
 							<!-- <span>{$_(`stats.highest_distance`)}</span> -->
 							<span>
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-									<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 18.75 7.5-7.5 7.5 7.5" />
-									<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 7.5-7.5 7.5 7.5" />
-								</svg> 
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="size-6"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="m4.5 18.75 7.5-7.5 7.5 7.5"
+									/>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="m4.5 12.75 7.5-7.5 7.5 7.5"
+									/>
+								</svg>
 							</span>
 							<span>
 								{data.highestDistance > data.timeSinceLast

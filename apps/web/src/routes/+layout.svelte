@@ -45,8 +45,6 @@
 						}
 						console.log('Added entry:', resourceType, rareDrops, size, incrementBy);
 
-
-
 						return;
 					}
 					// const { action, key, value } = JSON.parse(event.payload);
