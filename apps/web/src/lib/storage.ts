@@ -33,12 +33,24 @@ export async function downloadStorage() {
 	link.click();
 }
 
-export function importStorage(file: File) {
-	const reader = new FileReader();
-	reader.onload = (event) => {
-		if (event.target) {
-			storageService.importData(event.target.result as string);
-		}
-	};
-	reader.readAsText(file);
+export function importStorage(file: File): Promise<void> {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = async (event) => {
+			if (event.target) {
+				try {
+					await storageService.importData(event.target.result as string);
+					resolve();
+				} catch (error) {
+					reject(error);
+				}
+			} else {
+				reject(new Error('Failed to read file'));
+			}
+		};
+		reader.onerror = () => {
+			reject(new Error('Failed to read file'));
+		};
+		reader.readAsText(file);
+	});
 }

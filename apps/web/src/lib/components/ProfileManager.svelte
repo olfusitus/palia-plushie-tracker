@@ -108,11 +108,12 @@
 
 	let fileInput: HTMLInputElement;
 
-	function handleImport() {
+	async function handleImport() {
 		const files = fileInput?.files;
 		if (files && files.length > 0) {
 			try {
-				importStorage(files[0]);
+				toasts.info('Import läuft... Bitte warten.', 10000); // Longer duration for loading
+				await importStorage(files[0]);
 				resourceStore.reset();
 				toasts.success('Import abgeschlossen! Die Seite wird neu geladen.');
 				// Delay to allow the user to see the success message

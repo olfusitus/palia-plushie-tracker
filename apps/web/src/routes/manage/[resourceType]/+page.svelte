@@ -15,7 +15,9 @@
 		resourceStore.ensureLoaded(resourceType);
 	});
 
-	$: daten = $resourceStore[resourceType] || [];
+	$: daten = ($resourceStore[resourceType] || []).sort((a, b) => 
+		new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+	);
 
 	function deleteEntry(entry: ResourceEntry) {
 		if (confirm('Diesen Eintrag wirklich löschen?')) {
@@ -34,7 +36,7 @@
 	</div>
 {:else}
 <ul class="mx-auto max-w-2xl space-y-4">
-	{#each daten.slice().reverse() as eintrag (eintrag.id)}
+	{#each daten as eintrag (eintrag.id)}
 		<li class="card bg-base-100 border-base-200 border shadow">
 			<div class="card-body flex flex-row items-center justify-between p-4">
 				<div>
