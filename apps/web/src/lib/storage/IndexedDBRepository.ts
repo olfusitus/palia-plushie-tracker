@@ -3,7 +3,8 @@ import type { IStorageRepository } from './repository';
 import {
 	type ResourceEntry,
 	type ResourceType,
-	type Profile
+	type Profile,
+	type ExportData
 } from './types';
 // import { Resource } from '@tauri-apps/api/core';
 
@@ -79,38 +80,54 @@ export class IndexedDBRepository implements IStorageRepository {
 							}
 							
 							// 3. Erstelle die neuen Object Stores.
-							const entriesStore = db.createObjectStore('entries', { keyPath: 'id' });
-							entriesStore.createIndex('by_profile_resource', ['profileId', 'resourceType']);
-
-							const profilesStore = db.createObjectStore('profiles', { keyPath: 'id' });
-							
-							const settingsStore = db.createObjectStore('settings', { keyPath: 'key' });
+							db.createObjectStore('entries', { keyPath: 'id' }).createIndex('by_profile_resource', ['profileId', 'resourceType']);
+							db.createObjectStore('profiles', { keyPath: 'id' });
+							db.createObjectStore('settings', { keyPath: 'key' });
 
 							// 4. Transformiere und schreibe die Daten in die neuen Stores.
-							// Erstelle neue Profile mit IDs.
+							// In der upgrade-Funktion:
 							const newProfiles: Profile[] = oldProfilesList.map((name: string) => ({ id: crypto.randomUUID(), name }));
-							const activeProfile = newProfiles.find(p => p.name === oldActiveProfileName) || newProfiles.find(p => p.name === 'default');
+							const activeProfile =
+								newProfiles.find((p) => p.name === oldActiveProfileName) ||
+								newProfiles.find((p) => p.name === 'default');
 
-							// Speichere die neuen Profile.
-							for (const profile of newProfiles) {
-								await profilesStore.add(profile);
-							}
+							const writePromises: Promise<IDBValidKey>[] = [];
 
-							// Speichere das aktive Profil.
+							// 1. Profile, Einstellungen und Einträge zur Transaktion hinzufügen (ohne await in der Schleife!)
+							newProfiles.forEach((profile) => {
+								writePromises.push(transaction.objectStore('profiles').add(profile));
+							});
+
 							if (activeProfile) {
-								await settingsStore.add({ key: 'activeProfileId', value: activeProfile.id });
+								writePromises.push(
+									transaction
+										.objectStore('settings')
+										.add({ key: 'activeProfileId', value: activeProfile.id })
+								);
 							}
 
-							// Speichere die Einträge mit der neuen profileId.
-							for (const data of oldData) {
-								const profileId = newProfiles.find(p => p.name === data.profile)?.id;
+							oldData.forEach((data) => {
+								const profileId = newProfiles.find((p) => p.name === data.profile)?.id;
 								if (profileId) {
-									for (const entry of data.entries) {
-										await entriesStore.add({ ...entry, profileId, resourceType: data.resourceType });
-									}
+									data.entries.forEach((entry) => {
+										const enrichedEntry = {
+											...entry,
+											profileId,
+											resourceType: data.resourceType
+										};
+										// Stelle sicher, dass die versionierte Migration hier stattfindet, falls nötig
+										// z.B. enrichedEntry.version = CURRENT_VERSION;
+										writePromises.push(transaction.objectStore('entries').add(enrichedEntry));
+									});
 								}
-							}
-							console.log('Database migration to v2 completed.');
+							});
+
+							// 2. Warte, bis alle Schreiboperationen in der Transaktion abgeschlossen sind.
+							// Die Transaktion wird automatisch committet, wenn die upgrade-Funktion endet.
+							// Wir warten hier auf die Promises, um sicherzustellen, dass alles durch ist, bevor die Migration als "erfolgreich" gilt.
+							await Promise.all(writePromises);
+
+							console.log('Database migration to v2 (batched) completed.');
 						} else {
 							// Fresh database - just create the new stores
 							const entriesStore = db.createObjectStore('entries', { keyPath: 'id' });
@@ -174,32 +191,44 @@ export class IndexedDBRepository implements IStorageRepository {
 		const db = await this.getDB();
 
 		const profiles = await db.getAll('profiles');
-		if(profiles.length == 1){
+		if (profiles.length == 1) {
 			throw new Error("Cannot delete the last remaining profile");
 		}
-		// Delete all entries for this profile
-		const entries = await db.getAllFromIndex('entries', 'by_profile_resource');
-		const profileEntries = entries.filter(entry => entry.profileId === profileId);
-		
+
+		const tx = db.transaction(['profiles', 'entries', 'settings'], 'readwrite');
+		const profilesStore = tx.objectStore('profiles');
+		const entriesStore = tx.objectStore('entries');
+		const settingsStore = tx.objectStore('settings');
+
+		const index = entriesStore.index('by_profile_resource');
+		const keyRange = IDBKeyRange.bound([profileId, ''], [profileId, '\uffff']);
+		const profileEntries = await index.getAll(keyRange);
+		console.log("index ", index);
+		console.log("profileentries size: ", profileEntries.length);
+		const deletePromises: Promise<IDBValidKey | void>[] = [];
+
 		for (const entry of profileEntries) {
-			await db.delete('entries', entry.id);
+			deletePromises.push(entriesStore.delete(entry.id));
 		}
-		
+
 		// Delete the profile
-		await db.delete('profiles', profileId);
-		
+		deletePromises.push(profilesStore.delete(profileId));
+
 		// If this was the active profile, set the first remaining profile as active
-		const activeProfileId = await this.getActiveProfileId();
+		const activeProfileId = await settingsStore.get('activeProfileId').then(s => s?.value);
 		if (activeProfileId === profileId) {
-			const remainingProfiles = await this.getProfiles();
+			const remainingProfiles = profiles.filter(p => p.id !== profileId);
 			const firstRemainingProfile = remainingProfiles[0];
 			if (firstRemainingProfile) {
-				await this.setActiveProfileId(firstRemainingProfile.id);
+				deletePromises.push(settingsStore.put({ key: 'activeProfileId', value: firstRemainingProfile.id }));
 			} else {
 				// No profiles left, clear the active profile setting
-				await db.delete('settings', 'activeProfileId');
+				deletePromises.push(settingsStore.delete('activeProfileId'));
 			}
 		}
+
+		await Promise.all(deletePromises);
+		await tx.done;
 	}
 
 	async renameProfile(profileId: string, newName: string): Promise<void> {
@@ -230,31 +259,52 @@ export class IndexedDBRepository implements IStorageRepository {
 		await db.put('settings', { key: 'activeProfileId', value: profileId });
 	}
 
-	async importProfileData(profileId: string, data: Record<ResourceType, ResourceEntry[]>): Promise<void> {
+	async importFullDatabase(data: ExportData): Promise<void> {
 		const db = await this.getDB();
-		
-		// Delete existing entries for this profile
-		const existingEntries = await db.getAllFromIndex('entries', 'by_profile_resource');
-		const profileEntries = existingEntries.filter(entry => entry.profileId === profileId);
-		
-		for (const entry of profileEntries) {
-			await db.delete('entries', entry.id);
-		}
-		
-		// Add new entries
-		for(const [resourceType] of Object.entries(data)){
-			console.log(resourceType);
-		}
-		for (const [resourceType, entries] of Object.entries(data)) {
-			console.log("Adding ", entries, " ", resourceType, " Resources.");
-			for (const entry of entries) {
-				const enrichedEntry = {
-					...entry,
-					profileId,
-					resourceType: resourceType as ResourceType
-				};
-				await db.add('entries', enrichedEntry);
+		// Erstelle eine einzige Transaktion für alle Stores, die wir bearbeiten
+		const tx = db.transaction(['profiles', 'settings', 'entries'], 'readwrite');
+
+		const profilesStore = tx.objectStore('profiles');
+		const settingsStore = tx.objectStore('settings');
+		const entriesStore = tx.objectStore('entries');
+
+		// 1. Leere alle Stores
+		await profilesStore.clear();
+		await settingsStore.clear();
+		await entriesStore.clear();
+
+		// 2. Queue alle neuen Schreibvorgänge
+		const writePromises: Promise<IDBValidKey>[] = [];
+
+		// Schreibe Profile
+		data.profiles.forEach((profile: Profile) => {
+			writePromises.push(profilesStore.put(profile));
+		});
+
+		// Schreibe Einstellungen
+		writePromises.push(settingsStore.put({ key: 'activeProfileId', value: data.activeProfileId }));
+
+		// Schreibe Einträge
+		for (const profileId in data.data) {
+			const profileResources = data.data[profileId];
+			for (const resourceType in profileResources) {
+				const entries = profileResources[resourceType as ResourceType];
+				entries.forEach((entry: ResourceEntry) => {
+					writePromises.push(
+						entriesStore.put({
+							...entry,
+							profileId: profileId,
+							resourceType: resourceType as ResourceType
+						})
+					);
+				});
 			}
 		}
+
+		// 3. Führe die Transaktion aus, indem du auf ihr Abschluss-Promise wartest
+		await Promise.all(writePromises);
+		await tx.done;
+
+		console.log('Full database import completed successfully.');
 	}
 }

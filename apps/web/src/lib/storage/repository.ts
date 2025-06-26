@@ -1,4 +1,4 @@
-import type { Profile, ResourceEntry, ResourceType } from '$lib/storage/types';
+import type { Profile, ResourceEntry, ResourceType, ExportData } from '$lib/storage/types';
 
 /**
  * Defines the contract for any storage implementation.
@@ -66,11 +66,11 @@ export interface IStorageRepository {
 	setActiveProfileId(profileId: string): Promise<void>;
 
 	/**
-	 * Imports data for a specific profile.
-	 * @param profileId The ID of the profile to import data for.
-	 * @param data The data to import, organized by resource type.
+	 * Replaces the entire database content with the provided data.
+	 * This is a destructive operation used for importing a full backup.
+	 * @param data The complete data set to import.
 	 */
-	importProfileData(profileId: string, data: Record<ResourceType, ResourceEntry[]>): Promise<void>;
+	importFullDatabase(data: ExportData): Promise<void>;
 }
 
 // DummyRepository für SSR oder Umgebungen ohne IndexedDB
@@ -92,5 +92,5 @@ export class DummyRepository implements IStorageRepository {
 		return 'default';
 	}
 	async setActiveProfileId(): Promise<void> {}
-	async importProfileData(): Promise<void> {}
+	async importFullDatabase(): Promise<void> {}
 }
