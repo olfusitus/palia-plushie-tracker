@@ -134,7 +134,17 @@ describe('IndexedDBRepository', () => {
       'bug_lanternbug': []
     };
 
-    await repo.importProfileData(profile.id, profileData);
+    // Use the new importFullDatabase method
+    const exportData = {
+      version: 1,
+      activeProfileId: profile.id,
+      profiles: [profile],
+      data: {
+        [profile.id]: profileData
+      }
+    };
+
+    await repo.importFullDatabase(exportData);
 
     const animalEntries = await repo.getEntries(resourceType, profile.id);
     const bugEntries = await repo.getEntries('bug_rtb', profile.id);
