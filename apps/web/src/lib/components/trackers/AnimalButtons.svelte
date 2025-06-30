@@ -2,7 +2,6 @@
 	import type { AnimalResource } from '$lib/storage';
 	import type { ResourceSize } from '$lib/storage/types';
 	import { resourceStore } from '$lib/stores/resourceStore';
-	import { onDestroy } from 'svelte';
 	import { _ } from 'svelte-i18n';
 
 	let { resource } = $props<{ resource: AnimalResource }>();
