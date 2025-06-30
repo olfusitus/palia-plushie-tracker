@@ -37,14 +37,7 @@
 					class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
 				>
 					<li><button onclick={handleDownloadCSV}>Daten exportieren (CSV)</button></li>
-					<li>
-						{#if resourceType.startsWith('animal_')}
-							<a href={`/huntingStats/${resourceType}`}>Statistik anzeigen</a>
-						{/if}
-						{#if resourceType.startsWith('bug_')}
-							<a href={`/bugStats/${resourceType}`}>Statistik anzeigen</a>
-						{/if}
-					</li>
+					<li><a href={`/stats/${resourceType}`}>Statistik anzeigen</a></li>
 					<li><a href={`/manage/${resourceType}`}>Einträge bearbeiten</a></li>
 				</ul>
 			</div>
@@ -59,12 +52,7 @@
 			<button onclick={handleDownloadCSV} class="btn btn-outline btn-success w-48">
 				Daten exportieren (CSV)
 			</button>
-			{#if resourceType.startsWith('animal_')}
-				<a href={`/huntingStats/${resourceType}`} class="btn btn-link">Statistik anzeigen</a>
-			{/if}
-			{#if resourceType.startsWith('bug_')}
-				<a href={`/bugStats/${resourceType}`} class="btn btn-link">Statistik anzeigen</a>
-			{/if}
+			<a href={`/stats/${resourceType}`} class="btn btn-link">Statistik anzeigen</a>
 			<a href={`/manage/${resourceType}`} class="btn btn-link">Einträge bearbeiten</a>
 		</div>
 	</div>

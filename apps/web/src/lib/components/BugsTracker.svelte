@@ -105,9 +105,7 @@
 					{#each resources as resource (resource.type)}
 						<!-- <li><button on:click={() => downloadCSV(resource)}>Daten exportieren ({resource.name})</button></li> -->
 						<li>
-							<a href={`/bugStats/${resource.type}`}
-								>Statistik anzeigen ({resourceName(resource)})</a
-							>
+							<a href={`/stats/${resource.type}`}>Statistik anzeigen ({resourceName(resource)})</a>
 						</li>
 						<li>
 							<a href={`/manage/${resource.type}`}>Einträge bearbeiten ({resourceName(resource)})</a
@@ -164,7 +162,7 @@
 				<!-- <button on:click={() => downloadCSV(resource)} class="btn btn-outline btn-success w-48">
 					Daten exportieren ({resource.name})
 				</button> -->
-				<a href={`/bugStats/${resource.type}`} class="btn btn-link"
+				<a href={`/stats/${resource.type}`} class="btn btn-link"
 					>Statistik anzeigen ({resourceName(resource)})</a
 				>
 				<a href={`/manage/${resource.type}`} class="btn btn-link"
