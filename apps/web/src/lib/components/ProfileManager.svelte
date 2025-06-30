@@ -111,6 +111,14 @@
 	async function handleImport() {
 		const files = fileInput?.files;
 		if (files && files.length > 0) {
+			const confirmed = confirm(
+				'Möchtest du wirklich eine neue Datei importieren? Alle deine aktuellen Profile und Daten werden überschrieben. Dieser Vorgang kann nicht rückgängig gemacht werden.'
+			);
+			if (!confirmed) {
+				toasts.info('Import abgebrochen.');
+				return;
+			}
+
 			try {
 				toasts.info('Import läuft... Bitte warten.', 10000); // Longer duration for loading
 				await importStorage(files[0]);
