@@ -105,6 +105,7 @@
 					</li>
 					<li><a href="/bugs2">Käferchen</a></li>
 					<li><a href="/bugs">Käferchen einzeln</a></li>
+					<li><a href="/fish">Fischis</a></li>
 					<li><a href="/manage/profiles"> Verwalten</a></li>
 				</ul>
 			</div>
@@ -153,6 +154,7 @@
 			<li><a href="/animals" onclick={closeDrawer}>Tierchen</a></li>
 			<li><a href="/bugs2" onclick={closeDrawer}>Käferchen</a></li>
 			<li><a href="/bugs" onclick={closeDrawer}>Käferchen einzeln</a></li>
+			<li><a href="/fish" onclick={closeDrawer}>Fischis</a></li>
 			<div class="divider"></div>
 			<li>
 				<a href="/manage/profiles" onclick={closeDrawer}>

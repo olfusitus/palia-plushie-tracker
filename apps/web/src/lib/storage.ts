@@ -21,7 +21,14 @@ export interface BugResource {
 	// label: string;
 }
 
-export type Resource = AnimalResource | BugResource;
+export interface FishResource {
+	type:
+		| 'fish_kilima_waters'
+		| 'fish_ponds';
+}
+
+export type Resource = AnimalResource | BugResource | FishResource;
+
 
 export async function downloadStorage() {
 	const data = await storageService.exportData();

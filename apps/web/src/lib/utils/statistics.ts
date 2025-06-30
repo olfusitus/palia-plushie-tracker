@@ -1,4 +1,4 @@
-import type { AnimalEntry, BugEntry } from '$lib/storage/types';
+import type { AnimalEntry, BugEntry, FishEntry } from '$lib/storage/types';
 
 export interface StatResult {
 	count: number;
@@ -76,6 +76,16 @@ export function calculateAnimalStats(entries: AnimalEntry[]) {
  * @returns An object containing the calculated statistics.
  */
 export function calculateBugStats(entries: BugEntry[]): StatResult {
+	const werte = entries.map((e) => e.rareDrops);
+	return calcStats(werte);
+}
+
+/**
+ * Calculates statistics for bug entries.
+ * @param entries - The array of bug entries to process.
+ * @returns An object containing the calculated statistics.
+ */
+export function calculateFishStats(entries: FishEntry[]): StatResult {
 	const werte = entries.map((e) => e.rareDrops);
 	return calcStats(werte);
 }

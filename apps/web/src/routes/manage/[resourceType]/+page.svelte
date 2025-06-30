@@ -64,7 +64,7 @@
 {/if}
 
 <div class="mt-8 text-center">
-	<a href={resourceType.startsWith('animal_') ? '/animals' : '/bugs2'} class="btn btn-link"
+	<a href={resourceType.startsWith('animal_') ? '/animals' : resourceType.startsWith('bug_')? '/bugs2' : '/fish'} class="btn btn-link"
 		>{$_(`manageResource.back_to_capture`)}</a
 	>
 </div>

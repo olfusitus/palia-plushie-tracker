@@ -11,7 +11,9 @@ export interface AnimalEntry extends BaseResourceEntry {
 
 export type BugEntry = BaseResourceEntry;
 
-export type ResourceEntry = AnimalEntry | BugEntry;
+export type FishEntry = BaseResourceEntry;
+
+export type ResourceEntry = AnimalEntry | BugEntry | FishEntry;
 
 export interface Profile {
 	id: string;
@@ -29,7 +31,9 @@ export const resourceTypes = [
 	'bug_snail',
 	'bug_lunar_fairy_moth',
 	'bug_proudhorn_beetle',
-	'bug_lanternbug'
+	'bug_lanternbug',
+	'fish_kilima_waters',
+	'fish_ponds'
 ] as const;
 
 export type ResourceType = (typeof resourceTypes)[number];

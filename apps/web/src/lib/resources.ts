@@ -38,5 +38,11 @@ export const resources: Resource[] = [
 	},
 	{
 		type: 'bug_lanternbug'
+	},
+	{
+		type: 'fish_kilima_waters'
+	},
+	{
+		type: 'fish_ponds'
 	}
 ];

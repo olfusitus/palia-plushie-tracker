@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { AnimalEntry, BugEntry, ResourceType } from '$lib/storage/types';
+	import type { AnimalEntry, BugEntry, FishEntry, ResourceType } from '$lib/storage/types';
 	import { resources } from '$lib/resources';
-	import { calculateAnimalStats, calculateBugStats, type StatResult } from '$lib/utils/statistics';
+	import { calculateAnimalStats, calculateBugStats, calculateFishStats, type StatResult } from '$lib/utils/statistics';
 	import { buildDistanceHistogramData } from '$lib/utils/chartData';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { _ } from 'svelte-i18n';
@@ -10,7 +10,7 @@
 
 	export let data; // comes from load()
 	const resourceType: ResourceType = data.resourceType as ResourceType;
-	const type: 'animal' | 'bug' | undefined = data.type;
+	const type: 'animal' | 'bug' | 'fish' |undefined = data.type;
 
 	let stats: StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> };
 	let animalStats: Record<
@@ -34,9 +34,16 @@
 				])
 			);
 		} else if (type === 'bug') {
+			const bugStats = calculateBugStats(entries as BugEntry[]);
 			stats = {
-				...calculateBugStats(entries as BugEntry[]),
-				barData: buildDistanceHistogramData(calculateBugStats(entries as BugEntry[]).allDistances)
+				...bugStats,
+				barData: buildDistanceHistogramData(bugStats.allDistances)
+			};
+		} else if (type === 'fish') {
+			const fishStats = calculateFishStats(entries as FishEntry[]);
+			stats = {
+				...fishStats,
+				barData: buildDistanceHistogramData(fishStats.allDistances)
 			};
 		}
 	}
@@ -47,7 +54,7 @@
 
 		if (type === 'animal' && typ) {
 			return $_(`resources.${res.type}.name`) + ' ' + $_(`resources.${res.type}.labels.${typ}`);
-		} else if (type === 'bug') {
+		} else if (type === 'bug' || type === 'fish') {
 			return $_(`resources.${res.type}.name`);
 		}
 		return res.type;
@@ -77,6 +84,16 @@
 
 	<div class="mt-8 text-center">
 		<a href="/bugs2" class="btn btn-link">{$_(`stats.back_to_capture`)}</a>
+	</div>
+{:else if type === 'fish'}
+	<h1 class="mb-6 text-center text-3xl font-bold">
+		🎣 {$_(`resources.${resourceType}.name`)} Stats
+	</h1>
+
+	<StatsDisplay {stats} resourceName={getResourceName(resourceType)} />
+
+	<div class="mt-8 text-center">
+		<a href="/fish" class="btn btn-link">{$_(`stats.back_to_capture`)}</a>
 	</div>
 {:else}
 	<p>Resource type not found or not supported for stats.</p>

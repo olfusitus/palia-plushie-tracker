@@ -6,6 +6,9 @@
 	"bugs": {
 		"title": "Bugs"
 	},
+	"fish": {
+		"title": "Fish"
+	},
 	"stats": {
 		"title_animal": "Animal Stats",
 		"title_bug": "Bug Stats",
@@ -86,6 +89,14 @@
 		},
 		"bug_lanternbug": {
 			"name": "Paper Lanternbug"
+		},
+		"fish_kilima_waters": {
+			"name": "Kilima Waters",
+			"label": "No plushie" 
+		},
+		"fish_ponds": {
+			"name": "Ponds",
+			"label": "No plushie" 
 		}
 	},
 	"ui": {

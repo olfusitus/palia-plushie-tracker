@@ -6,6 +6,9 @@
 	"bugs": {
 		"title": "Käferchen"
 	},
+	"fish": {
+		"title": "Fischis"
+	},
 	"stats": {
 		"title_animal": "Tierchen Stats",
 		"title_bug": "Käferchen Stats",
@@ -86,6 +89,14 @@
 		},
 		"bug_lanternbug": {
 			"name": "Papier-Lampionwürmchen"
+		},
+		"fish_kilima_waters": {
+			"name": "Kilima Gewässer",
+			"label": "Kein Plüschi" 
+		},
+		"fish_ponds": {
+			"name": "Teiche",
+			"label": "Kein Plüschi" 
 		}
 	},
 	"ui": {
