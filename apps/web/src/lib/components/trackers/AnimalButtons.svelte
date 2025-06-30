@@ -36,13 +36,13 @@
 	}
 
 	let detailsRef: HTMLDetailsElement;
-	let listenerAdded = false;
 	let openDropdown: boolean = $state<boolean>(false);
 
 	function handleRareDrop(size: string) {
 		handleClick(size, true);
 		openDropdown = false;
 	}
+
 	function handleClickOutside(event: MouseEvent) {
 		if (openDropdown && detailsRef && !detailsRef.contains(event.target as Node)) {
 			openDropdown = false;
@@ -50,17 +50,12 @@
 	}
 
 	$effect(() => {
-		if (openDropdown && !listenerAdded) {
+		if (openDropdown) {
 			document.addEventListener('mousedown', handleClickOutside);
-			listenerAdded = true;
-		} else if (!openDropdown && listenerAdded) {
-			document.removeEventListener('mousedown', handleClickOutside);
-			listenerAdded = false;
-		}
-	});
-	onDestroy(() => {
-		if (listenerAdded) {
-			removeEventListener('mousedown', handleClickOutside);
+
+			return () => {
+				document.removeEventListener('mousedown', handleClickOutside);
+			};
 		}
 	});
 </script>
