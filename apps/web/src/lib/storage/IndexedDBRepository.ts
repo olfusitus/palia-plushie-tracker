@@ -1,6 +1,7 @@
 import { openDB, type IDBPDatabase } from 'idb';
 import type { IStorageRepository } from './repository';
 import { type ResourceEntry, type ResourceType, type Profile, type ExportData } from './types';
+import { toasts } from '../stores/toastStore';
 // import { Resource } from '@tauri-apps/api/core';
 
 const DB_NAME = 'palia_tracker_db';
@@ -37,114 +38,125 @@ export class IndexedDBRepository implements IStorageRepository {
 				async upgrade(db, oldVersion, newVersion, transaction) {
 					console.log(`Upgrading database from version ${oldVersion} to ${newVersion}...`);
 
+					const canToast = typeof window !== 'undefined';
+
 					if (oldVersion < 2) {
-						// --- MIGRATION VON v1 ZU v2 ---
+						if (canToast) toasts.info('Migration auf neues Datenbankschema gestartet...');
+						try {
+							// --- MIGRATION VON v1 ZU v2 ---
 
-						// Check if this is a fresh database or an existing one
-						const hasOldStores =
-							db.objectStoreNames.contains('profiles') ||
-							RESOURCE_TYPES.some((type) => db.objectStoreNames.contains(type));
+							// Check if this is a fresh database or an existing one
+							const hasOldStores =
+								db.objectStoreNames.contains('profiles') ||
+								RESOURCE_TYPES.some((type) => db.objectStoreNames.contains(type));
 
-						if (hasOldStores) {
-							// 1. Lese alle Daten aus den alten Stores, bevor sie gelöscht werden.
-							const oldData: {
-								profile: string;
-								resourceType: ResourceType;
-								entries: ResourceEntry[];
-							}[] = [];
-							const oldProfilesList = (await transaction.objectStore('profiles').get('list'))
-								?.value || ['default'];
-							const oldActiveProfileName =
-								(await transaction.objectStore('profiles').get('active'))?.value || 'default';
+							if (hasOldStores) {
+								// 1. Lese alle Daten aus den alten Stores, bevor sie gelöscht werden.
+								const oldData: {
+									profile: string;
+									resourceType: ResourceType;
+									entries: ResourceEntry[];
+								}[] = [];
+								const oldProfilesList = (await transaction.objectStore('profiles').get('list'))
+									?.value || ['default'];
+								const oldActiveProfileName =
+									(await transaction.objectStore('profiles').get('active'))?.value || 'default';
 
-							for (const resourceType of RESOURCE_TYPES) {
-								for (const profileName of oldProfilesList) {
-									const record = await transaction.objectStore(resourceType).get(profileName);
-									if (record && record.data && record.data.data.length > 0) {
-										oldData.push({
-											profile: profileName,
-											resourceType: resourceType,
-											entries: record.data.data // Greife auf die tatsächlichen Einträge zu
-										});
+								for (const resourceType of RESOURCE_TYPES) {
+									for (const profileName of oldProfilesList) {
+										const record = await transaction.objectStore(resourceType).get(profileName);
+										if (record && record.data && record.data.data.length > 0) {
+											oldData.push({
+												profile: profileName,
+												resourceType: resourceType,
+												entries: record.data.data // Greife auf die tatsächlichen Einträge zu
+											});
+										}
 									}
 								}
-							}
 
-							// 2. Lösche die alten Object Stores.
-							for (const type of RESOURCE_TYPES) {
-								if (db.objectStoreNames.contains(type)) {
-									db.deleteObjectStore(type);
+								// 2. Lösche die alten Object Stores.
+								for (const type of RESOURCE_TYPES) {
+									if (db.objectStoreNames.contains(type)) {
+										db.deleteObjectStore(type);
+									}
 								}
-							}
-							if (db.objectStoreNames.contains('profiles')) {
-								db.deleteObjectStore('profiles');
-							}
+								if (db.objectStoreNames.contains('profiles')) {
+									db.deleteObjectStore('profiles');
+								}
 
-							// 3. Erstelle die neuen Object Stores.
-							db.createObjectStore('entries', { keyPath: 'id' }).createIndex(
-								'by_profile_resource',
-								['profileId', 'resourceType']
-							);
-							db.createObjectStore('profiles', { keyPath: 'id' });
-							db.createObjectStore('settings', { keyPath: 'key' });
-
-							// 4. Transformiere und schreibe die Daten in die neuen Stores.
-							// In der upgrade-Funktion:
-							const newProfiles: Profile[] = oldProfilesList.map((name: string) => ({
-								id: crypto.randomUUID(),
-								name
-							}));
-							const activeProfile =
-								newProfiles.find((p) => p.name === oldActiveProfileName) ||
-								newProfiles.find((p) => p.name === 'default');
-
-							const writePromises: Promise<IDBValidKey>[] = [];
-
-							// 1. Profile, Einstellungen und Einträge zur Transaktion hinzufügen (ohne await in der Schleife!)
-							newProfiles.forEach((profile) => {
-								writePromises.push(transaction.objectStore('profiles').add(profile));
-							});
-
-							if (activeProfile) {
-								writePromises.push(
-									transaction
-										.objectStore('settings')
-										.add({ key: 'activeProfileId', value: activeProfile.id })
+								// 3. Erstelle die neuen Object Stores.
+								db.createObjectStore('entries', { keyPath: 'id' }).createIndex(
+									'by_profile_resource',
+									['profileId', 'resourceType']
 								);
-							}
+								db.createObjectStore('profiles', { keyPath: 'id' });
+								db.createObjectStore('settings', { keyPath: 'key' });
 
-							oldData.forEach((data) => {
-								const profileId = newProfiles.find((p) => p.name === data.profile)?.id;
-								if (profileId) {
-									data.entries.forEach((entry) => {
-										const enrichedEntry = {
-											...entry,
-											profileId,
-											resourceType: data.resourceType
-										};
-										// Stelle sicher, dass die versionierte Migration hier stattfindet, falls nötig
-										// z.B. enrichedEntry.version = CURRENT_VERSION;
-										writePromises.push(transaction.objectStore('entries').add(enrichedEntry));
-									});
+								// 4. Transformiere und schreibe die Daten in die neuen Stores.
+								// In der upgrade-Funktion:
+								const newProfiles: Profile[] = oldProfilesList.map((name: string) => ({
+									id: crypto.randomUUID(),
+									name
+								}));
+								const activeProfile =
+									newProfiles.find((p) => p.name === oldActiveProfileName) ||
+									newProfiles.find((p) => p.name === 'default');
+
+								const writePromises: Promise<IDBValidKey>[] = [];
+
+								// 1. Profile, Einstellungen und Einträge zur Transaktion hinzufügen (ohne await in der Schleife!)
+								newProfiles.forEach((profile) => {
+									writePromises.push(transaction.objectStore('profiles').add(profile));
+								});
+
+								if (activeProfile) {
+									writePromises.push(
+										transaction
+											.objectStore('settings')
+											.add({ key: 'activeProfileId', value: activeProfile.id })
+									);
 								}
-							});
 
-							// 2. Warte, bis alle Schreiboperationen in der Transaktion abgeschlossen sind.
-							// Die Transaktion wird automatisch committet, wenn die upgrade-Funktion endet.
-							// Wir warten hier auf die Promises, um sicherzustellen, dass alles durch ist, bevor die Migration als "erfolgreich" gilt.
-							await Promise.all(writePromises);
+								oldData.forEach((data) => {
+									const profileId = newProfiles.find((p) => p.name === data.profile)?.id;
+									if (profileId) {
+										data.entries.forEach((entry) => {
+											const enrichedEntry = {
+												...entry,
+												profileId,
+												resourceType: data.resourceType
+											};
+											// Stelle sicher, dass die versionierte Migration hier stattfindet, falls nötig
+											// z.B. enrichedEntry.version = CURRENT_VERSION;
+											writePromises.push(transaction.objectStore('entries').add(enrichedEntry));
+										});
+									}
+								});
 
-							console.log('Database migration to v2 (batched) completed.');
-						} else {
-							// Fresh database - just create the new stores
-							const entriesStore = db.createObjectStore('entries', { keyPath: 'id' });
-							entriesStore.createIndex('by_profile_resource', ['profileId', 'resourceType']);
+								// 2. Warte, bis alle Schreiboperationen in der Transaktion abgeschlossen sind.
+								// Die Transaktion wird automatisch committet, wenn die upgrade-Funktion endet.
+								// Wir warten hier auf die Promises, um sicherzustellen, dass alles durch ist, bevor die Migration als "erfolgreich" gilt.
+								await Promise.all(writePromises);
 
-							db.createObjectStore('profiles', { keyPath: 'id' });
+								if (canToast) toasts.success('Migration erfolgreich abgeschlossen!');
+								console.log('Database migration to v2 (batched) completed.');
+							} else {
+								// Fresh database - just create the new stores
+								const entriesStore = db.createObjectStore('entries', { keyPath: 'id' });
+								entriesStore.createIndex('by_profile_resource', ['profileId', 'resourceType']);
 
-							db.createObjectStore('settings', { keyPath: 'key' });
+								db.createObjectStore('profiles', { keyPath: 'id' });
 
-							console.log('Fresh database created with v2 schema.');
+								db.createObjectStore('settings', { keyPath: 'key' });
+
+								if (canToast) toasts.success('Neue Datenbank erfolgreich erstellt.');
+								console.log('Fresh database created with v2 schema.');
+							}
+						} catch (err) {
+							console.error('Migration error:', err);
+							if (canToast) toasts.error('Fehler bei der Migration der Datenbank!');
+							throw err;
 						}
 					}
 				}
