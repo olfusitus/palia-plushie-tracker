@@ -15,16 +15,23 @@
         Learn more about property inspector components at https://sdpi-components.dev/docs/components
     -->
     <sdpi-item label="Bug">
-        <sdpi-select setting="bug" placeholder="Please choose a bug">
+        <sdpi-select id="bugSelector" setting="bug" placeholder="Please choose a bug">
             <option value="bug_rtb">Rainbow-tipped Butterfly</option>
             <option value="bug_ladybug">Garden Ladybug</option>
             <option value="bug_snail">Garden Snail</option>
             <option value="bug_lunar_fairy_moth">Lunar Fairy Moth</option>
             <option value="bug_proudhorn_beetle">Proud-horned Stag Beetle</option>
             <option value="bug_lanternbug">Paper Lanternbug</option>
+            <option value="bug_rockhopper">Rockhopper</option>
         </sdpi-select>
     </sdpi-item>
-
+    <sdpi-item id="pickSize" label="Size" style='visibility: hidden;'>
+        <sdpi-select setting = "bugSize" placeholder="Please choose a size">
+            <option value="small">Mürrisch</option>
+            <option value="medium">Flammenhorn</option>
+            <option value="large">Irrlicht</option>
+        </sdpi-select>
+    </sdpi-item>
     <sdpi-item label="Plushie"">
         <sdpi-checkbox setting="is_plushie" label="Is it a plushie?"></sdpi-checkbox>
     </sdpi-item>
@@ -50,6 +57,16 @@
             const incrementValueDisplay = document.getElementById("incrementValueDisplay");
             incrementValueDisplay.textContent = ev.target.value;
         });
+        document.querySelector("#bugSelector").addEventListener('valuechange', function (ev) {
+            if(ev.target.value == "bug_rockhopper"){
+                node = document.getElementById('pickSize').style.visibility = 'visible';
+            }
+            else{
+    node = document.getElementById('pickSize').style.visibility = 'hidden';
+            }
+        });
+
+
     </script>
 
     <sdpi-item label="Count">

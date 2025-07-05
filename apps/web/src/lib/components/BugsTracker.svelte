@@ -4,6 +4,7 @@
 	import { _ } from 'svelte-i18n';
 	// import { exportCSV } from '$lib/storage';
 	import { resourceStore } from '$lib/stores/resourceStore';
+	import RockhopperButtons from './trackers/RockhopperButtons.svelte';
 
 	const {
 		resources
@@ -119,13 +120,17 @@
 		<!-- Buttons für alle Bugs -->
 		<div class="flex w-full flex-wrap justify-center gap-4">
 			{#each resources as resource (resource.type)}
-				<button
-					onclick={() => handleClick(resource, false)}
-					class={buttonClass(resource.type)}
-					disabled={buttonStatus[resource.type]}
-				>
-					{#if buttonStatus[resource.type]}Gespeichert ✓{:else}{resourceName(resource)}{/if}
-				</button>
+				{#if resource.availableSizes}
+					<RockhopperButtons {resource} />
+				{:else}
+					<button
+						onclick={() => handleClick(resource, false)}
+						class={buttonClass(resource.type)}
+						disabled={buttonStatus[resource.type]}
+					>
+						{#if buttonStatus[resource.type]}Gespeichert ✓{:else}{resourceName(resource)}{/if}
+					</button>
+				{/if}
 			{/each}
 
 			<!-- Plüschi Dropdown für alle Bugs -->

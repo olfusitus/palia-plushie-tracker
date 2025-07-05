@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { AnimalEntry, BugEntry, FishEntry, ResourceType } from '$lib/storage/types';
+	import type { ResourceEntry, ResourceType } from '$lib/storage/types';
 	import { resources } from '$lib/resources';
-	import { calculateAnimalStats, calculateBugStats, calculateFishStats, type StatResult } from '$lib/utils/statistics';
+	import { calculateStats, type StatResult } from '$lib/utils/statistics';
 	import { buildDistanceHistogramData } from '$lib/utils/chartData';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { _ } from 'svelte-i18n';
@@ -10,41 +10,37 @@
 
 	export let data; // comes from load()
 	const resourceType: ResourceType = data.resourceType as ResourceType;
-	const type: 'animal' | 'bug' | 'fish' |undefined = data.type;
+	const type: 'animal' | 'bug' | 'fish' | undefined = data.type;
 
-	let stats: StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> };
-	let animalStats: Record<
-		string,
-		StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> }
-	> = {};
-
-	// ensure Data is loaded into the store
+	let stats:
+		| (StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> })
+		| Record<string, StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> }>;
 	onMount(() => {
 		resourceStore.ensureLoaded(resourceType);
 	});
 
-	$: entries = $resourceStore[resourceType] || ([] as (AnimalEntry | BugEntry)[]);
+	$: entries = $resourceStore[resourceType] || ([] as ResourceEntry[]);
 
 	$: {
-		if (type === 'animal') {
-			animalStats = Object.fromEntries(
-				Object.entries(calculateAnimalStats(entries as AnimalEntry[])).map(([typ, data]) => [
+		const myStats = calculateStats(entries);
+		// console.log(entries);
+		// console.log(myStats);
+		if ('count' in myStats) {
+			// If it's a single StatResult (no sizes)
+			const singleStats = myStats as StatResult;
+			stats = {
+				...singleStats,
+				barData: buildDistanceHistogramData(singleStats.allDistances)
+			};
+		} else {
+			// If it's a Record<string, StatResult> (with sizes)
+			const sizedStats = myStats as Record<string, StatResult>;
+			stats = Object.fromEntries(
+				Object.entries(sizedStats).map(([typ, data]) => [
 					typ,
 					{ ...data, barData: buildDistanceHistogramData(data.allDistances) }
 				])
 			);
-		} else if (type === 'bug') {
-			const bugStats = calculateBugStats(entries as BugEntry[]);
-			stats = {
-				...bugStats,
-				barData: buildDistanceHistogramData(bugStats.allDistances)
-			};
-		} else if (type === 'fish') {
-			const fishStats = calculateFishStats(entries as FishEntry[]);
-			stats = {
-				...fishStats,
-				barData: buildDistanceHistogramData(fishStats.allDistances)
-			};
 		}
 	}
 
@@ -52,12 +48,13 @@
 		const res = resources.find((r) => r.type === resType);
 		if (!res) return typ || 'Typ nicht gefunden';
 
-		if (type === 'animal' && typ) {
+		if (typ) {
 			return $_(`resources.${res.type}.name`) + ' ' + $_(`resources.${res.type}.labels.${typ}`);
-		} else if (type === 'bug' || type === 'fish') {
+		} else {
 			return $_(`resources.${res.type}.name`);
 		}
-		return res.type;
+
+		// return res.type;
 	}
 </script>
 
@@ -67,7 +64,7 @@
 	</h1>
 
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-		{#each Object.entries(animalStats) as [typ, statData] (typ)}
+		{#each Object.entries(stats) as [typ, statData] (typ)}
 			<StatsDisplay stats={statData} resourceName={getResourceName(resourceType, typ)} />
 		{/each}
 	</div>
@@ -80,7 +77,20 @@
 		🐞 {$_(`resources.${resourceType}.name`)} Stats
 	</h1>
 
-	<StatsDisplay {stats} resourceName={getResourceName(resourceType)} />
+	{#if stats.count !== undefined}
+		<div class="grid grid-cols-1 gap-6">
+			<StatsDisplay
+				stats={stats as StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> }}
+				resourceName={getResourceName(resourceType)}
+			/>
+		</div>
+	{:else}
+		<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+			{#each Object.entries(stats) as [typ, statData] (typ)}
+				<StatsDisplay stats={statData} resourceName={getResourceName(resourceType, typ)} />
+			{/each}
+		</div>
+	{/if}
 
 	<div class="mt-8 text-center">
 		<a href="/bugs2" class="btn btn-link">{$_(`stats.back_to_capture`)}</a>
@@ -90,8 +100,16 @@
 		🎣 {$_(`resources.${resourceType}.name`)} Stats
 	</h1>
 
-	<StatsDisplay {stats} resourceName={getResourceName(resourceType)} />
-
+	{#if entries.length == 0}
+		<div>Fang an zu tracken um dir hier die Statistiken anzeigen zu lassen!</div>
+	{:else}
+		<StatsDisplay
+			stats={stats as StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> }}
+			resourceName={getResourceName(resourceType)}
+		/>
+	{/if}
+	<!-- huhugcc -->
+	<!-- {JSON.stringify(stats)} -->
 	<div class="mt-8 text-center">
 		<a href="/fish" class="btn btn-link">{$_(`stats.back_to_capture`)}</a>
 	</div>
