@@ -93,7 +93,7 @@
 	{/if}
 
 	<div class="mt-8 text-center">
-		<a href="/bugs2" class="btn btn-link">{$_(`stats.back_to_capture`)}</a>
+		<a href="/bugs" class="btn btn-link">{$_(`stats.back_to_capture`)}</a>
 	</div>
 {:else if type === 'fish'}
 	<h1 class="mb-6 text-center text-3xl font-bold">
