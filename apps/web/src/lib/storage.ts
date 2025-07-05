@@ -15,20 +15,19 @@ export interface BugResource {
 		| 'bug_snail'
 		| 'bug_lunar_fairy_moth'
 		| 'bug_proudhorn_beetle'
-		| 'bug_lanternbug';
+		| 'bug_lanternbug'
+		| 'bug_rockhopper';
 	// name: string;
+	availableSizes?: ResourceSize[];
 	// Bugs haben keine sizes, nur ein Label
 	// label: string;
 }
 
 export interface FishResource {
-	type:
-		| 'fish_kilima_waters'
-		| 'fish_ponds';
+	type: 'fish_kilima_waters' | 'fish_ponds';
 }
 
 export type Resource = AnimalResource | BugResource | FishResource;
-
 
 export async function downloadStorage() {
 	const data = await storageService.exportData();
