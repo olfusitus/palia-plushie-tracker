@@ -1,7 +1,8 @@
 import { resources } from '$lib/resources';
 import type { ResourceType } from '$lib/storage/types';
+import type { PageLoad } from './$types';
 
-export function load({ params }) {
+export const load: PageLoad = ({ params }) => {
 	const resourceType: ResourceType = params.resourceType as ResourceType;
 	const resource = resources.find((r) => r.type === resourceType);
 
@@ -18,4 +19,4 @@ export function load({ params }) {
 		resourceType,
 		type
 	};
-}
+};
