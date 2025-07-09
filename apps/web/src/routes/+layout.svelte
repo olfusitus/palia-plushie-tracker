@@ -10,6 +10,7 @@
 	// import { triggerResourceEntriesRefresh } from '$lib/stores/resourceEntriesStore';
 	import ToastContainer from '$lib/components/ToastContainer.svelte';
 	import { resourceStore } from '$lib/stores/resourceStore';
+	import { version } from '$app/environment';
 
 	onMount(() => {
 		// migrateToProfiles();
@@ -94,7 +95,7 @@
 						</svg>
 					</label>
 				</div>
-				<div class=" btn btn-ghost text-primary text-xl normal-case">Palia Hunting Tracker</div>
+				<div class=" btn btn-ghost text-primary text-xl normal-case">Palia Plushie Tracker</div>
 			</div>
 
 			<div class="navbar-center hidden flex-none lg:block">
@@ -143,7 +144,10 @@
 		</main>
 		<footer class="footer footer-center bg-base-300 text-base-content mt-8 rounded-t-xl p-4">
 			<div>
-				<p class="text-sm opacity-70">&copy; {new Date().getFullYear()} Palia Hunting Tracker</p>
+				<p class="text-sm opacity-70">&copy; {new Date().getFullYear()} Palia Plushie Tracker</p>
+			</div>
+			<div>
+				<p class="text-sm opacity-70">Version: {version}</p>
 			</div>
 		</footer>
 	</div>
