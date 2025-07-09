@@ -1,4 +1,10 @@
-import type { AnimalEntry, BugEntry, FishEntry } from '$lib/storage/types';
+import type {
+	AnimalEntry,
+	BugEntry,
+	FishEntry,
+	ResourceEntry,
+	SizedEntry
+} from '$lib/storage/types';
 
 export interface StatResult {
 	count: number;
@@ -51,23 +57,17 @@ function calcStats(werte: number[]): StatResult {
 	};
 }
 
+function isSizedEntry(entry: BugEntry): entry is SizedEntry {
+	return 'type' in entry;
+}
+
 /**
  * Calculates statistics for animal entries.
  * @param entries - The array of animal entries to process.
  * @returns An object containing the calculated statistics.
  */
 export function calculateAnimalStats(entries: AnimalEntry[]) {
-	const grouped: Record<string, number[]> = { small: [], medium: [], large: [] };
-	entries.forEach((e: AnimalEntry) => {
-		grouped[e.type].push(e.rareDrops);
-	});
-
-	return Object.fromEntries(
-		Object.entries(grouped).map(([typ, werte]) => {
-			// const { count, share, totalRareDrops, avgDistance, allDistances, timeSinceLast }: StatResult = calcStats(werte);
-			return [typ, calcStats(werte)];
-		})
-	);
+	return calculateSizedStats(entries);
 }
 
 /**
@@ -75,9 +75,12 @@ export function calculateAnimalStats(entries: AnimalEntry[]) {
  * @param entries - The array of bug entries to process.
  * @returns An object containing the calculated statistics.
  */
-export function calculateBugStats(entries: BugEntry[]): StatResult {
-	const werte = entries.map((e) => e.rareDrops);
-	return calcStats(werte);
+export function calculateBugStats(entries: BugEntry[]): StatResult | Record<string, StatResult> {
+	if (entries.every(isSizedEntry)) {
+		return calculateSizedStats(entries);
+	} else {
+		return calculateUnsizedStats(entries);
+	}
 }
 
 /**
@@ -86,6 +89,30 @@ export function calculateBugStats(entries: BugEntry[]): StatResult {
  * @returns An object containing the calculated statistics.
  */
 export function calculateFishStats(entries: FishEntry[]): StatResult {
+	return calculateUnsizedStats(entries);
+}
+
+export function calculateStats(entries: ResourceEntry[]): StatResult | Record<string, StatResult> {
+	if (entries.every(isSizedEntry)) {
+		return calculateSizedStats(entries);
+	} else {
+		return calculateUnsizedStats(entries);
+	}
+}
+
+function calculateSizedStats(entries: SizedEntry[]): Record<string, StatResult> {
+	const grouped: Record<string, number[]> = { small: [], medium: [], large: [] };
+	entries.forEach((e: SizedEntry) => {
+		grouped[e.type].push(e.rareDrops);
+	});
+
+	return Object.fromEntries(
+		Object.entries(grouped).map(([typ, werte]) => {
+			return [typ, calcStats(werte)];
+		})
+	);
+}
+function calculateUnsizedStats(entries: ResourceEntry[]): StatResult {
 	const werte = entries.map((e) => e.rareDrops);
 	return calcStats(werte);
 }

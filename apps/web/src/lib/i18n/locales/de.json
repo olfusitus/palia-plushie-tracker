@@ -90,13 +90,21 @@
 		"bug_lanternbug": {
 			"name": "Papier-Lampionwürmchen"
 		},
+        "bug_rockhopper": {
+			"name": "Felshüpfer",
+			"labels": {
+				"small": "Mürrisch",
+				"medium": "Flammenhorn",
+				"large": "Irrlicht"
+			}
+		},
 		"fish_kilima_waters": {
 			"name": "Kilima Gewässer",
-			"label": "Kein Plüschi" 
+			"label": "Kein Plüschi"
 		},
 		"fish_ponds": {
 			"name": "Teiche",
-			"label": "Kein Plüschi" 
+			"label": "Kein Plüschi"
 		}
 	},
 	"ui": {

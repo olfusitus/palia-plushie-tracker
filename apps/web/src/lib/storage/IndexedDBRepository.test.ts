@@ -131,7 +131,10 @@ describe('IndexedDBRepository', () => {
 			bug_snail: [],
 			bug_lunar_fairy_moth: [],
 			bug_proudhorn_beetle: [],
-			bug_lanternbug: []
+			bug_lanternbug: [],
+			bug_rockhopper: [],
+			fish_kilima_waters: [],
+			fish_ponds: []
 		};
 
 		// Use the new importFullDatabase method

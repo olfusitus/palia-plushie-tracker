@@ -46,7 +46,7 @@ async fn start_websocket_server(window: WebviewWindow) {
     println!("WebSocket-Server läuft auf ws://localhost:8422");
 
     while let Ok((stream, _)) = listener.accept().await {
-        println!("WebSocket-Verbindung akzeptiert");
+        // println!("WebSocket-Verbindung akzeptiert");
         let window = window.clone();
 
         tauri::async_runtime::spawn(async move {
@@ -58,7 +58,7 @@ async fn start_websocket_server(window: WebviewWindow) {
                         let text = msg.to_text().unwrap();
                         if let Ok(payload) = serde_json::from_str::<IncomingMessage>(text) {
                             if payload.action == "addEntry" {
-                                println!("addEntry: {:?}", text.to_string());
+                                // println!("addEntry: {:?}", text.to_string());
                                 // An Webview (SPA) weiterleiten
                                 let _ = window.emit("ws-to-webview", text.to_string());
                             }

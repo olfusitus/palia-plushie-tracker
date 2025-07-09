@@ -40,6 +40,10 @@ export const resources: Resource[] = [
 		type: 'bug_lanternbug'
 	},
 	{
+		type: 'bug_rockhopper',
+		availableSizes: ['small', 'medium', 'large']
+	},
+	{
 		type: 'fish_kilima_waters'
 	},
 	{
