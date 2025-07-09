@@ -23,7 +23,9 @@
 		resourceStore.ensureLoaded(resourceType);
 	});
 
-	$: entries = $resourceStore[resourceType] || ([] as (AnimalEntry | BugEntry)[]);
+	$: entries = ($resourceStore[resourceType] || []).sort(
+		(a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+	);
 
 	$: {
 		if (type === 'animal') {

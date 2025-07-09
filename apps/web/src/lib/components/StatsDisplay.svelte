@@ -74,7 +74,7 @@
 			<div
 				class="border-base-content bg-base-200 flex w-full items-start justify-between rounded border px-3 py-1 text-sm"
 			>
-				<span>{$_(`stats.last_10_distances`)}</span>
+				<span class="pr-1">{$_(`stats.last_10_distances`)}</span>
 				<span>
 					{stats.allDistances.length
 						? stats.allDistances.slice(-10).join(' → ')
