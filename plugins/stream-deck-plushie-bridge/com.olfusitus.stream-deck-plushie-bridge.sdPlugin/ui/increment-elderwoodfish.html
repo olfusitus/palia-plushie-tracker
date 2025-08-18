@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<script>
+</script>
+
+<html>
+
+<head lang="en">
+    <title>Increment Fish Settings</title>
+    <meta charset="utf-8" />
+    <script src="https://sdpi-components.dev/releases/v4/sdpi-components.js"></script>
+</head>
+
+<body>
+    <!--
+        Learn more about property inspector components at https://sdpi-components.dev/docs/components
+    -->
+    <sdpi-item label="Fish">
+        <sdpi-select setting="fish" placeholder="Please choose a fish">
+            <option value="fish_elderwood_waters">Elderwood</option>
+            <!-- <option value="fish_ponds">Teiche</option> -->
+        </sdpi-select>
+        <sdpi-select setting="type" placeholder="Please choose a fish">
+            <option value="no_plush">No Plush</option>
+            <option value="maws">Maws</option>
+            <option value="shark">Shark</option>
+            <option value="maws_fin">Maws Fin</option>
+            <option value="shark_fin">Shark Fin</option>
+            <option value="floatfish_toadstool">Toadstool</option>
+            <option value="floatfish_piksii">Piksii</option>
+            <option value="floatfish_midnight">Midnight</option>
+        </sdpi-select>
+    </sdpi-item>
+
+    <sdpi-item label="Plushie"">
+        <sdpi-checkbox setting="is_plushie" label="Is it a plushie?"></sdpi-checkbox>
+    </sdpi-item>
+
+    <sdpi-item label="Show Name">
+        <sdpi-checkbox setting="show_name" default="true"></sdpi-checkbox>
+    </sdpi-item>
+
+    <sdpi-item label="Show Counter">
+        <sdpi-checkbox setting="show_counter" default="true"></sdpi-checkbox>
+    </sdpi-item>
+
+    <sdpi-item label="Increment By">
+        <sdpi-range id="incrementBy" setting="incrementBy" min="1" max="50" step="1" default="1" showlabels></sdpi-range>
+    </sdpi-item>
+
+    <sdpi-item label="Increment Value">
+        <div id="incrementValueDisplay">1</div>
+    </sdpi-item>
+
+    <script type="text/javascript">
+        document.querySelector("sdpi-range").addEventListener('valuechange', function (ev) {
+            const incrementValueDisplay = document.getElementById("incrementValueDisplay");
+            incrementValueDisplay.textContent = ev.target.value;
+        });
+    </script>
+
+    <sdpi-item label="Count">
+        <sdpi-textfield setting="count" id="count"></sdpi-textfield>
+    </sdpi-item>
+
+    <!-- <sdpi-item>
+    <sdpi-button class="sdpi-item" id="resetBtn">Count zurücksetzen</sdpi-button>
+    </sdpi-item> -->
+</body>
+
+</html>

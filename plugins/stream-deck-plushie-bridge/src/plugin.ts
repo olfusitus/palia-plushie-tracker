@@ -4,6 +4,7 @@ import streamDeck, { LogLevel } from "@elgato/streamdeck";
 import { AnimalCounter } from "./actions/increment-chapaa";
 import { BugCounter } from "./actions/increment-bug";
 import { FishCounter } from "./actions/increment-fish";
+import { ElderwoodFishCounter } from "./actions/increment-elderwoodfish";
 
 streamDeck.logger.setLevel(LogLevel.TRACE);
 
@@ -12,6 +13,7 @@ streamDeck.logger.setLevel(LogLevel.TRACE);
 streamDeck.actions.registerAction(new AnimalCounter());
 streamDeck.actions.registerAction(new BugCounter());
 streamDeck.actions.registerAction(new FishCounter());
+streamDeck.actions.registerAction(new ElderwoodFishCounter());
 
 // Finally, connect to the Stream Deck.
 streamDeck.connect();

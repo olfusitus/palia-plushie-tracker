@@ -50,6 +50,22 @@
 					"TitleAlignment": "middle"
 				}
 			]
+		},
+		{
+			"Name": "Elderwood Fish",
+			"UUID": "com.olfusitus.stream-deck-plushie-bridge.elderwoodfishincrement",
+			"Icon": "imgs/actions/counter/icon",
+			"Tooltip": "Displays a count, which increments on press.",
+			"PropertyInspectorPath": "ui/increment-elderwoodfish.html",
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/counter/key",
+					"TitleAlignment": "middle"
+				}
+			]
 		}
 	],
 	"Category": "Stream Deck Plushie Bridge",
