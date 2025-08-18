@@ -4,9 +4,9 @@ export interface BaseResourceEntry {
 	rareDrops: number;
 }
 
-export type ResourceSize = 'small' | 'medium' | 'large';
+// export type ResourceSize = 'small' | 'medium' | 'large';
 export interface SizedEntry extends BaseResourceEntry {
-	type: ResourceSize;
+	type: string;
 }
 
 export type AnimalEntry = SizedEntry;
@@ -34,7 +34,8 @@ export const resourceTypes = [
 	'bug_lanternbug',
 	'bug_rockhopper',
 	'fish_kilima_waters',
-	'fish_ponds'
+	'fish_ponds',
+	'fish_elderwood_waters'
 ] as const;
 
 export type ResourceType = (typeof resourceTypes)[number];

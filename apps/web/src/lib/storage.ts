@@ -1,10 +1,10 @@
 import { storageService } from './storage/index';
-import type { ResourceSize } from './storage/types';
+// import type { ResourceSize } from './storage/types';
 
 export interface AnimalResource {
 	type: 'animal_chapaa' | 'animal_sernuk' | 'animal_muujin' | 'animal_ogopuu' | 'animal_shmole';
 	// name: string;
-	availableSizes: ResourceSize[];
+	availableSizes: string[];
 	// labels: Record<ResourceSize, string>;
 }
 
@@ -18,13 +18,14 @@ export interface BugResource {
 		| 'bug_lanternbug'
 		| 'bug_rockhopper';
 	// name: string;
-	availableSizes?: ResourceSize[];
+	availableSizes?: string[];
 	// Bugs haben keine sizes, nur ein Label
 	// label: string;
 }
 
 export interface FishResource {
-	type: 'fish_kilima_waters' | 'fish_ponds';
+	type: 'fish_kilima_waters' | 'fish_ponds' | 'fish_elderwood_waters';
+	availableSizes?: string[];
 }
 
 export type Resource = AnimalResource | BugResource | FishResource;

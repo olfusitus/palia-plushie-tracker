@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { ResourceEntry, ResourceType } from '$lib/storage/types';
+	import type { ResourceType } from '$lib/storage/types';
 	import { resources } from '$lib/resources';
 	import { calculateStats, type StatResult } from '$lib/utils/statistics';
 	import { buildDistanceHistogramData } from '$lib/utils/chartData';

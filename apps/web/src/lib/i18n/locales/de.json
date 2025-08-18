@@ -105,6 +105,19 @@
 		"fish_ponds": {
 			"name": "Teiche",
 			"label": "Kein Plüschi"
+		},
+		"fish_elderwood_waters": {
+			"name": "Elderwood Gewässer",
+			"labels": {
+				"no_plush": "Kein Plüschi",
+				"maws": "Maws",
+				"shark": "Shark",
+				"maws_fin": "Maws Fin",
+				"shark_fin": "Shark Fin",
+				"floatfish_toadstool": "Toadstool",
+				"floatfish_piksii": "Piksii",
+				"floatfish_midnight": "Midnight"
+			}
 		}
 	},
 	"ui": {

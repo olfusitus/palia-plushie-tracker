@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { BugResource } from '$lib/storage';
-	import type { ResourceSize } from '$lib/storage/types';
+	// import type { ResourceSize } from '$lib/storage/types';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { _ } from 'svelte-i18n';
 
@@ -29,7 +29,7 @@
 	}
 
 	function handleClick(size: string, plushie: boolean) {
-		resourceStore.addEntry(resource.type, plushie, size as ResourceSize);
+		resourceStore.addEntry(resource.type, plushie, size);
 		buttonStatus[size] = true;
 		setTimeout(() => {
 			buttonStatus[size] = false;

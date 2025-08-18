@@ -9,7 +9,7 @@ import {
 	// type AnimalEntry,
 	// type BugEntry,
 	type ResourceEntry,
-	type ResourceSize,
+	// type ResourceSize,
 	type ResourceType
 } from '$lib/storage/types';
 import { storageService } from '$lib/storage/index';
@@ -56,7 +56,7 @@ function createResourceStore() {
 			}
 		},
 
-		addEntry: async (resourceType: ResourceType, plushie: boolean, resourceSize?: ResourceSize) => {
+		addEntry: async (resourceType: ResourceType, plushie: boolean, resourceSize?: string) => {
 			const activeProfileId = await getActiveProfileId();
 			if (!activeProfileId) {
 				console.error('No active profile ID found, cannot add entry');
@@ -83,7 +83,7 @@ function createResourceStore() {
 			resourceType: ResourceType,
 			plushie: boolean,
 			count: number,
-			resourceSize?: ResourceSize
+			resourceSize?: string
 		) => {
 			const activeProfileId = await getActiveProfileId();
 			if (!activeProfileId) {

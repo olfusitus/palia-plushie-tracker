@@ -48,5 +48,9 @@ export const resources: Resource[] = [
 	},
 	{
 		type: 'fish_ponds'
+	},
+	{
+		type: 'fish_elderwood_waters',
+		availableSizes: ['no_plush', 'maws', 'shark', 'maws_fin', 'shark_fin', 'floatfish_toadstool', 'floatfish_piksii', 'floatfish_midnight']
 	}
 ];
