@@ -98,6 +98,9 @@
 				"large": "Irrlicht"
 			}
 		},
+        "bug_duskwing": {
+            "name": "Dämmerfalter"
+        },
 		"fish_kilima_waters": {
 			"name": "Kilima Gewässer",
 			"label": "Kein Plüschi"

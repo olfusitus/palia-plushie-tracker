@@ -15,7 +15,8 @@ const bugNames = [
 	{ bug: 'bug_lunar_fairy_moth', name: 'Mondfee-\nMotte' },
 	{ bug: 'bug_proudhorn_beetle', name: 'Stolzhorn-\nKäfer' },
 	{ bug: 'bug_lanternbug', name: 'Laternenkäfer' },
-	{ bug: 'bug_rockhopper', name: 'Felsenhüpfer' }
+	{ bug: 'bug_rockhopper', name: 'Felsenhüpfer' },
+	{ bug: 'bug_duskwing', name: 'Dämmerfalter' }
 ];
 
 function lookupBugName(bug: string): string | undefined {
@@ -108,4 +109,3 @@ type BugCounterSettings = {
 	show_name?: boolean;
 	show_counter?: boolean;
 };
-

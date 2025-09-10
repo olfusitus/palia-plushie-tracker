@@ -16,7 +16,8 @@ export interface BugResource {
 		| 'bug_lunar_fairy_moth'
 		| 'bug_proudhorn_beetle'
 		| 'bug_lanternbug'
-		| 'bug_rockhopper';
+		| 'bug_rockhopper'
+		| 'bug_duskwing';
 	// name: string;
 	availableSizes?: string[];
 	// Bugs haben keine sizes, nur ein Label

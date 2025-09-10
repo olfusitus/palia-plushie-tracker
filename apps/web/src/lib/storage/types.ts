@@ -33,6 +33,7 @@ export const resourceTypes = [
 	'bug_proudhorn_beetle',
 	'bug_lanternbug',
 	'bug_rockhopper',
+	'bug_duskwing',
 	'fish_kilima_waters',
 	'fish_ponds',
 	'fish_elderwood_waters'

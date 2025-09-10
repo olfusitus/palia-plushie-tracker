@@ -44,6 +44,9 @@ export const resources: Resource[] = [
 		availableSizes: ['small', 'medium', 'large']
 	},
 	{
+		type: 'bug_duskwing'
+	},
+	{
 		type: 'fish_kilima_waters'
 	},
 	{
@@ -51,6 +54,15 @@ export const resources: Resource[] = [
 	},
 	{
 		type: 'fish_elderwood_waters',
-		availableSizes: ['no_plush', 'maws', 'shark', 'maws_fin', 'shark_fin', 'floatfish_toadstool', 'floatfish_piksii', 'floatfish_midnight']
+		availableSizes: [
+			'no_plush',
+			'maws',
+			'shark',
+			'maws_fin',
+			'shark_fin',
+			'floatfish_toadstool',
+			'floatfish_piksii',
+			'floatfish_midnight'
+		]
 	}
 ];

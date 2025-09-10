@@ -90,6 +90,17 @@
 		"bug_lanternbug": {
 			"name": "Paper Lanternbug"
 		},
+        "bug_rockhopper": {
+			"name": "Felshüpfer",
+			"labels": {
+				"small": "Grumpy",
+				"medium": "Flame-Horned",
+				"large": "Will-o-wisp"
+			}
+		},
+        "bug_duskwing": {
+            "name": "Duskwing Butterfly"
+        },
 		"fish_kilima_waters": {
 			"name": "Kilima Waters",
 			"label": "No plushie"

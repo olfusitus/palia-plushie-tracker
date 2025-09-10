@@ -18,7 +18,9 @@ const RESOURCE_TYPES: ResourceType[] = [
 	'bug_snail',
 	'bug_lunar_fairy_moth',
 	'bug_proudhorn_beetle',
-	'bug_lanternbug'
+	'bug_lanternbug',
+	'bug_rockhopper',
+	'bug_duskwing'
 ];
 
 export class IndexedDBRepository implements IStorageRepository {
