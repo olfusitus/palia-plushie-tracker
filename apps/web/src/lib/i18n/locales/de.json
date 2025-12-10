@@ -9,6 +9,9 @@
 	"fish": {
 		"title": "Fischis"
 	},
+	"mining": {
+		"title": "Bergbau"
+	},
 	"stats": {
 		"title_animal": "Tierchen Stats",
 		"title_bug": "Käferchen Stats",
@@ -90,7 +93,7 @@
 		"bug_lanternbug": {
 			"name": "Papier-Lampionwürmchen"
 		},
-        "bug_rockhopper": {
+		"bug_rockhopper": {
 			"name": "Felshüpfer",
 			"labels": {
 				"small": "Mürrisch",
@@ -98,9 +101,9 @@
 				"large": "Irrlicht"
 			}
 		},
-        "bug_duskwing": {
-            "name": "Dämmerfalter"
-        },
+		"bug_duskwing": {
+			"name": "Dämmerfalter"
+		},
 		"fish_kilima_waters": {
 			"name": "Kilima Gewässer",
 			"label": "Kein Plüschi"
@@ -121,6 +124,18 @@
 				"floatfish_piksii": "Piksii",
 				"floatfish_midnight": "Midnight"
 			}
+		},
+		"mining_obsidian_kitsuu": {
+			"name": "Obsidian-Kitsuu-Plüschi",
+			"label": "Eisen + Gold"
+		},
+		"mining_caldera_kitsuu": {
+			"name": "Caldera-Kitsuu-Plüschi",
+			"label": "Kupfer + Silber"
+		},
+		"mining_rainbow_kitsuu": {
+			"name": "Regenbogen-Kitsuu-Plüschi",
+			"label": "Palium + Platin"
 		}
 	},
 	"ui": {

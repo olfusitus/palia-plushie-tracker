@@ -64,5 +64,14 @@ export const resources: Resource[] = [
 			'floatfish_piksii',
 			'floatfish_midnight'
 		]
+	},
+	{
+		type: 'mining_obsidian_kitsuu'
+	},
+	{
+		type: 'mining_caldera_kitsuu'
+	},
+	{
+		type: 'mining_rainbow_kitsuu'
 	}
 ];

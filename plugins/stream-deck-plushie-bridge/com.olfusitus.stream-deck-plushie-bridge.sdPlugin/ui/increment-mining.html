@@ -1,0 +1,59 @@
+<!doctype html>
+<script></script>
+
+<html>
+	<head lang="en">
+		<title>Increment Mining Settings</title>
+		<meta charset="utf-8" />
+		<script src="https://sdpi-components.dev/releases/v4/sdpi-components.js"></script>
+	</head>
+
+	<body>
+		<sdpi-item label="Plushie">
+			<sdpi-select setting="mining" placeholder="Please choose a plushie">
+				<option value="mining_obsidian_kitsuu">Obsidian Kitsuu</option>
+				<option value="mining_caldera_kitsuu">Caldera Kitsuu</option>
+				<option value="mining_rainbow_kitsuu">Rainbow Kitsuu</option>
+			</sdpi-select>
+		</sdpi-item>
+
+		<sdpi-item label="Plushie Drop">
+			<sdpi-checkbox setting="is_plushie" label="Log plushie drop"></sdpi-checkbox>
+		</sdpi-item>
+
+		<sdpi-item label="Show Name">
+			<sdpi-checkbox setting="show_name" default="true"></sdpi-checkbox>
+		</sdpi-item>
+
+		<sdpi-item label="Show Counter">
+			<sdpi-checkbox setting="show_counter" default="true"></sdpi-checkbox>
+		</sdpi-item>
+
+		<sdpi-item label="Increment By">
+			<sdpi-range
+				id="incrementBy"
+				setting="incrementBy"
+				min="1"
+				max="50"
+				step="1"
+				default="1"
+				showlabels
+			></sdpi-range>
+		</sdpi-item>
+
+		<sdpi-item label="Increment Value">
+			<div id="incrementValueDisplay">1</div>
+		</sdpi-item>
+
+		<script type="text/javascript">
+			document.querySelector('sdpi-range').addEventListener('valuechange', function (ev) {
+				const incrementValueDisplay = document.getElementById('incrementValueDisplay');
+				incrementValueDisplay.textContent = ev.target.value;
+			});
+		</script>
+
+		<sdpi-item label="Count">
+			<sdpi-textfield setting="count" id="count"></sdpi-textfield>
+		</sdpi-item>
+	</body>
+</html>

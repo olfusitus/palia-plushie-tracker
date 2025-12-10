@@ -69,7 +69,11 @@
 			? '/animals'
 			: resourceType.startsWith('bug_')
 				? '/bugs'
-				: '/fish'}
+				: resourceType.startsWith('fish_')
+					? '/fish'
+					: resourceType.startsWith('mining_')
+						? '/mining'
+						: '/'}
 		class="btn btn-link">{$_(`manageResource.back_to_capture`)}</a
 	>
 </div>

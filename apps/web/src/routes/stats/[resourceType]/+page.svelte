@@ -10,7 +10,7 @@
 
 	export let data; // comes from load()
 	const resourceType: ResourceType = data.resourceType as ResourceType;
-	const type: 'animal' | 'bug' | 'fish' | undefined = data.type;
+	const type: 'animal' | 'bug' | 'fish' | 'mining' | undefined = data.type;
 
 	let stats:
 		| (StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> })
@@ -114,6 +114,23 @@
 	<!-- {JSON.stringify(stats)} -->
 	<div class="mt-8 text-center">
 		<a href="/fish" class="btn btn-link">{$_(`stats.back_to_capture`)}</a>
+	</div>
+{:else if type === 'mining'}
+	<h1 class="mb-6 text-center text-3xl font-bold">
+		⛏️ {$_(`resources.${resourceType}.name`)} Stats
+	</h1>
+
+	{#if entries.length == 0}
+		<div>Fang an zu tracken um dir hier die Statistiken anzeigen zu lassen!</div>
+	{:else}
+		<StatsDisplay
+			stats={stats as StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> }}
+			resourceName={getResourceName(resourceType)}
+		/>
+	{/if}
+
+	<div class="mt-8 text-center">
+		<a href="/mining" class="btn btn-link">{$_(`stats.back_to_capture`)}</a>
 	</div>
 {:else}
 	<p>Resource type not found or not supported for stats.</p>

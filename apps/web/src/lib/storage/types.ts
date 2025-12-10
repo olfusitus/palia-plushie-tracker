@@ -12,8 +12,9 @@ export interface SizedEntry extends BaseResourceEntry {
 export type AnimalEntry = SizedEntry;
 export type BugEntry = BaseResourceEntry | SizedEntry;
 export type FishEntry = BaseResourceEntry;
+export type MiningEntry = BaseResourceEntry;
 
-export type ResourceEntry = AnimalEntry | BugEntry | FishEntry;
+export type ResourceEntry = AnimalEntry | BugEntry | FishEntry | MiningEntry;
 
 export interface Profile {
 	id: string;
@@ -36,7 +37,10 @@ export const resourceTypes = [
 	'bug_duskwing',
 	'fish_kilima_waters',
 	'fish_ponds',
-	'fish_elderwood_waters'
+	'fish_elderwood_waters',
+	'mining_obsidian_kitsuu',
+	'mining_caldera_kitsuu',
+	'mining_rainbow_kitsuu'
 ] as const;
 
 export type ResourceType = (typeof resourceTypes)[number];

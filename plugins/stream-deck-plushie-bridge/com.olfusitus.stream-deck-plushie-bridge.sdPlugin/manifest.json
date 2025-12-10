@@ -9,9 +9,7 @@
 			"Icon": "imgs/actions/counter/icon",
 			"Tooltip": "Displays a count, which increments on press.",
 			"PropertyInspectorPath": "ui/increment-drop.html",
-			"Controllers": [
-				"Keypad"
-			],
+			"Controllers": ["Keypad"],
 			"States": [
 				{
 					"Image": "imgs/actions/counter/key",
@@ -25,9 +23,7 @@
 			"Icon": "imgs/actions/counter/icon",
 			"Tooltip": "Displays a count, which increments on press.",
 			"PropertyInspectorPath": "ui/increment-bug.html",
-			"Controllers": [
-				"Keypad"
-			],
+			"Controllers": ["Keypad"],
 			"States": [
 				{
 					"Image": "imgs/actions/counter/key",
@@ -41,9 +37,21 @@
 			"Icon": "imgs/actions/counter/icon",
 			"Tooltip": "Displays a count, which increments on press.",
 			"PropertyInspectorPath": "ui/increment-fish.html",
-			"Controllers": [
-				"Keypad"
-			],
+			"Controllers": ["Keypad"],
+			"States": [
+				{
+					"Image": "imgs/actions/counter/key",
+					"TitleAlignment": "middle"
+				}
+			]
+		},
+		{
+			"Name": "Mining",
+			"UUID": "com.olfusitus.stream-deck-plushie-bridge.miningincrement",
+			"Icon": "imgs/actions/counter/icon",
+			"Tooltip": "Displays a count, which increments on press.",
+			"PropertyInspectorPath": "ui/increment-mining.html",
+			"Controllers": ["Keypad"],
 			"States": [
 				{
 					"Image": "imgs/actions/counter/key",
@@ -57,9 +65,7 @@
 			"Icon": "imgs/actions/counter/icon",
 			"Tooltip": "Displays a count, which increments on press.",
 			"PropertyInspectorPath": "ui/increment-elderwoodfish.html",
-			"Controllers": [
-				"Keypad"
-			],
+			"Controllers": ["Keypad"],
 			"States": [
 				{
 					"Image": "imgs/actions/counter/key",

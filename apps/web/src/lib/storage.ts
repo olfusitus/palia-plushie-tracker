@@ -29,7 +29,11 @@ export interface FishResource {
 	availableSizes?: string[];
 }
 
-export type Resource = AnimalResource | BugResource | FishResource;
+export interface MiningResource {
+	type: 'mining_obsidian_kitsuu' | 'mining_caldera_kitsuu' | 'mining_rainbow_kitsuu';
+}
+
+export type Resource = AnimalResource | BugResource | FishResource | MiningResource;
 
 export async function downloadStorage() {
 	const data = await storageService.exportData();

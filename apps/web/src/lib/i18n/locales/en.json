@@ -9,6 +9,9 @@
 	"fish": {
 		"title": "Fish"
 	},
+	"mining": {
+		"title": "Mining"
+	},
 	"stats": {
 		"title_animal": "Animal Stats",
 		"title_bug": "Bug Stats",
@@ -90,7 +93,7 @@
 		"bug_lanternbug": {
 			"name": "Paper Lanternbug"
 		},
-        "bug_rockhopper": {
+		"bug_rockhopper": {
 			"name": "Felshüpfer",
 			"labels": {
 				"small": "Grumpy",
@@ -98,9 +101,9 @@
 				"large": "Will-o-wisp"
 			}
 		},
-        "bug_duskwing": {
-            "name": "Duskwing Butterfly"
-        },
+		"bug_duskwing": {
+			"name": "Duskwing Butterfly"
+		},
 		"fish_kilima_waters": {
 			"name": "Kilima Waters",
 			"label": "No plushie"
@@ -108,6 +111,31 @@
 		"fish_ponds": {
 			"name": "Ponds",
 			"label": "No plushie"
+		},
+		"fish_elderwood_waters": {
+			"name": "Elderwood Waters",
+			"labels": {
+				"no_plush": "No plushie",
+				"maws": "Maws",
+				"shark": "Shark",
+				"maws_fin": "Maws Fin",
+				"shark_fin": "Shark Fin",
+				"floatfish_toadstool": "Toadstool",
+				"floatfish_piksii": "Piksii",
+				"floatfish_midnight": "Midnight"
+			}
+		},
+		"mining_obsidian_kitsuu": {
+			"name": "Obsidian Kitsuu Plush",
+			"label": "Iron + Gold"
+		},
+		"mining_caldera_kitsuu": {
+			"name": "Caldera Kitsuu Plush",
+			"label": "Copper + Silver"
+		},
+		"mining_rainbow_kitsuu": {
+			"name": "Rainbow Kitsuu Plush",
+			"label": "Palium + Platinum"
 		}
 	},
 	"ui": {
