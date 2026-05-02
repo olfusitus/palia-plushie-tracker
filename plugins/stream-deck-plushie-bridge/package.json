@@ -1,6 +1,6 @@
 {
 	"name": "stream-deck-plushie-bridge",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"scripts": {
 		"build": "rollup -c",
 		"watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.olfusitus.stream-deck-plushie-bridge\""

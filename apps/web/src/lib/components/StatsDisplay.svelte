@@ -3,11 +3,27 @@
 	import { _ } from 'svelte-i18n';
 	import type { StatResult } from '$lib/utils/statistics';
 	import type { buildDistanceHistogramData } from '$lib/utils/chartData';
+	import type { ResourceType } from '$lib/storage/types';
 
 	export let stats: StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> };
 	// export let resourceType: ResourceType;
 	export let resourceName: string;
+	export let resourceType: ResourceType;
 	// export let getResourceName: (resourceType: ResourceType, typ?: string) => string;
+
+	function formatEntryToken(token: string) {
+		return token
+			.split('_')
+			.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+			.join(' ');
+	}
+
+	function getPlushLabel(plushType: string) {
+		const label = $_(`resources.${resourceType}.labels.${plushType}`);
+		return label === `resources.${resourceType}.labels.${plushType}`
+			? formatEntryToken(plushType)
+			: label;
+	}
 </script>
 
 <div class="card bg-base-100 border-base-200 border shadow-xl">
@@ -18,6 +34,16 @@
 			<span class="badge badge-secondary">{$_(`stats.plushies`)}: {stats.totalRareDrops}</span>
 			<span class="badge badge-accent">{$_(`stats.share`)}: {stats.share}</span>
 		</div>
+		{#if Object.keys(stats.plushBreakdown).length > 0}
+			<div class="divider my-2">{$_(`stats.plush_breakdown`)}</div>
+			<div class="mb-2 flex flex-wrap justify-center gap-2">
+				{#each Object.entries(stats.plushBreakdown) as [plushType, plushCount] (plushType)}
+					<span class="badge badge-outline badge-secondary"
+						>{getPlushLabel(plushType)}: {plushCount}</span
+					>
+				{/each}
+			</div>
+		{/if}
 		<div class="divider my-2">{$_(`stats.distances`)}</div>
 		<div class="flex w-full flex-col gap-1">
 			<div

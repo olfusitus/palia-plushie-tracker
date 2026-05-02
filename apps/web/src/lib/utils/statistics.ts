@@ -9,6 +9,7 @@ export interface StatResult {
 	count: number;
 	share: string;
 	totalRareDrops: number;
+	plushBreakdown: Record<string, number>;
 	lowestDistance: number;
 	highestDistance: number;
 	avgDistance: number;
@@ -21,7 +22,18 @@ export interface StatResult {
  * @param werte - The array of values to process.
  * @returns An object containing the calculated statistics.
  */
-function calcStats(werte: number[]): StatResult {
+function countRareDropTypes(entries: ResourceEntry[]): Record<string, number> {
+	return entries.reduce<Record<string, number>>((counts, entry) => {
+		if (!entry.rareDropType || entry.rareDrops === 0) {
+			return counts;
+		}
+
+		counts[entry.rareDropType] = (counts[entry.rareDropType] ?? 0) + entry.rareDrops;
+		return counts;
+	}, {});
+}
+
+function calcStats(werte: number[], plushBreakdown: Record<string, number>): StatResult {
 	const count = werte.length;
 	const totalRareDrops = werte.reduce((sum, value) => sum + value, 0);
 	const share = totalRareDrops ? ((totalRareDrops / count) * 100).toFixed(2) + '%' : '–';
@@ -48,6 +60,7 @@ function calcStats(werte: number[]): StatResult {
 		count,
 		share,
 		totalRareDrops,
+		plushBreakdown,
 		lowestDistance,
 		highestDistance,
 		avgDistance,
@@ -112,7 +125,7 @@ export function calculateStats(entries: ResourceEntry[]): StatResult | Record<st
 }
 
 function calculateSizedStats(entries: ResourceEntry[]): Record<string, StatResult> {
-	const grouped: Record<string, number[]> = {};
+	const grouped: Record<string, ResourceEntry[]> = {};
 	entries.forEach((entry) => {
 		const key = getVariantKey(entry);
 		if (!key) {
@@ -123,16 +136,22 @@ function calculateSizedStats(entries: ResourceEntry[]): Record<string, StatResul
 			grouped[key] = [];
 		}
 
-		grouped[key].push(entry.rareDrops);
+		grouped[key].push(entry);
 	});
 
 	return Object.fromEntries(
-		Object.entries(grouped).map(([typ, werte]) => {
-			return [typ, calcStats(werte)];
+		Object.entries(grouped).map(([typ, groupedEntries]) => {
+			return [
+				typ,
+				calcStats(
+					groupedEntries.map((entry) => entry.rareDrops),
+					countRareDropTypes(groupedEntries)
+				)
+			];
 		})
 	);
 }
 function calculateUnsizedStats(entries: ResourceEntry[]): StatResult {
 	const werte = entries.map((e) => e.rareDrops);
-	return calcStats(werte);
+	return calcStats(werte, countRareDropTypes(entries));
 }
