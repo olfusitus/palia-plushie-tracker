@@ -46,6 +46,7 @@
 			bug_lunar_fairy_moth: 'btn-info',
 			bug_proudhorn_beetle: 'btn-warning',
 			bug_lanternbug: 'btn-error',
+			bug_fairy_mantis: 'btn-success',
 			// fallback
 			default: 'btn-neutral'
 		};

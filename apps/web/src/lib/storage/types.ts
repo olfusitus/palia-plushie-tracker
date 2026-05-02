@@ -2,11 +2,20 @@ export interface BaseResourceEntry {
 	id: string;
 	timestamp: string;
 	rareDrops: number;
+	variant?: string;
+	rareDropType?: string;
 }
 
-// export type ResourceSize = 'small' | 'medium' | 'large';
+export type ResourceSize = 'small' | 'medium' | 'large';
 export interface SizedEntry extends BaseResourceEntry {
 	type: string;
+}
+
+export interface ResourceEntryInput {
+	rareDrops?: number;
+	type?: string;
+	variant?: string;
+	rareDropType?: string;
 }
 
 export type AnimalEntry = SizedEntry;
@@ -33,8 +42,11 @@ export const resourceTypes = [
 	'bug_lunar_fairy_moth',
 	'bug_proudhorn_beetle',
 	'bug_lanternbug',
+	'bug_fairy_mantis',
 	'bug_rockhopper',
 	'bug_duskwing',
+	'bug_bahari_bee',
+	'bug_golden_glory_bee',
 	'fish_kilima_waters',
 	'fish_ponds',
 	'fish_elderwood_waters',

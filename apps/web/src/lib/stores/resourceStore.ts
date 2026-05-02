@@ -8,6 +8,7 @@
 import {
 	// type AnimalEntry,
 	// type BugEntry,
+	type ResourceEntryInput,
 	type ResourceEntry,
 	// type ResourceSize,
 	type ResourceType
@@ -19,6 +20,32 @@ import { getActiveProfileId } from '$lib/profile';
 // Dictionary mapping ResourceType to an array of ResourceEntry objects
 // Each resource type (e.g., animal_chapaa, animal_sernuk) has its own array of entries
 type ResourceStoreState = Record<ResourceType, ResourceEntry[] | undefined>;
+
+function createEntry(
+	entryOrPlushie: boolean | ResourceEntryInput,
+	legacyType?: string
+): ResourceEntry {
+	const legacyEntry =
+		typeof entryOrPlushie === 'boolean'
+			? {
+				rareDrops: entryOrPlushie ? 1 : 0,
+				...(legacyType !== undefined && { type: legacyType })
+			}
+			: {
+				rareDrops: entryOrPlushie.rareDrops ?? 0,
+				...(entryOrPlushie.type !== undefined && { type: entryOrPlushie.type }),
+				...(entryOrPlushie.variant !== undefined && { variant: entryOrPlushie.variant }),
+				...(entryOrPlushie.rareDropType !== undefined && {
+					rareDropType: entryOrPlushie.rareDropType
+				})
+			};
+
+	return {
+		id: crypto.randomUUID(),
+		timestamp: new Date().toISOString(),
+		...legacyEntry
+	};
+}
 
 /**
  * Creates a Svelte store for managing resource entries
@@ -56,19 +83,18 @@ function createResourceStore() {
 			}
 		},
 
-		addEntry: async (resourceType: ResourceType, plushie: boolean, resourceSize?: string) => {
+		addEntry: async (
+			resourceType: ResourceType,
+			entryOrPlushie: boolean | ResourceEntryInput,
+			resourceSize?: string
+		) => {
 			const activeProfileId = await getActiveProfileId();
 			if (!activeProfileId) {
 				console.error('No active profile ID found, cannot add entry');
 				return;
 			}
 
-			const entry: ResourceEntry = {
-				id: crypto.randomUUID(),
-				timestamp: new Date().toISOString(),
-				rareDrops: plushie ? 1 : 0,
-				...(resourceSize !== undefined && { type: resourceSize })
-			};
+			const entry = createEntry(entryOrPlushie, resourceSize);
 
 			// Direkter Aufruf der atomaren Methode
 			await storageService.repository.addEntry(resourceType, activeProfileId, entry);
@@ -81,7 +107,7 @@ function createResourceStore() {
 
 		addMultipleEntries: async (
 			resourceType: ResourceType,
-			plushie: boolean,
+			entryOrPlushie: boolean | ResourceEntryInput,
 			count: number,
 			resourceSize?: string
 		) => {
@@ -93,12 +119,7 @@ function createResourceStore() {
 
 			const newEntries = Array(count)
 				.fill(null)
-				.map(() => ({
-					id: crypto.randomUUID(),
-					timestamp: new Date().toISOString(),
-					rareDrops: plushie ? 1 : 0,
-					...(resourceSize !== undefined && { type: resourceSize })
-				}));
+				.map(() => createEntry(entryOrPlushie, resourceSize));
 
 			// Add entries one by one using atomic operations
 			for (const entry of newEntries) {

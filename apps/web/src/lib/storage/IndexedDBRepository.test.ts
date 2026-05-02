@@ -35,6 +35,22 @@ describe('IndexedDBRepository', () => {
 		expect(result).toEqual(entries);
 	});
 
+	it('should preserve variant and rare drop type fields', async () => {
+		const profile = await repo.addProfile('testProfile');
+		const hybridEntry: ResourceEntry = {
+			id: 'frog-1',
+			timestamp: '2024-01-03T00:00:00Z',
+			rareDrops: 1,
+			variant: 'small',
+			rareDropType: 'rainbow_frogbert'
+		};
+
+		await repo.addEntry('bug_rockhopper', profile.id, hybridEntry);
+
+		const result = await repo.getEntries('bug_rockhopper', profile.id);
+		expect(result).toEqual([hybridEntry]);
+	});
+
 	it('should return empty array for non-existent profile', async () => {
 		const result = await repo.getEntries(resourceType, 'nonexistent-id');
 		expect(result).toEqual([]);
@@ -132,9 +148,17 @@ describe('IndexedDBRepository', () => {
 			bug_lunar_fairy_moth: [],
 			bug_proudhorn_beetle: [],
 			bug_lanternbug: [],
+			bug_fairy_mantis: [],
 			bug_rockhopper: [],
+			bug_duskwing: [],
+			bug_bahari_bee: [],
+			bug_golden_glory_bee: [],
 			fish_kilima_waters: [],
-			fish_ponds: []
+			fish_ponds: [],
+			fish_elderwood_waters: [],
+			mining_obsidian_kitsuu: [],
+			mining_caldera_kitsuu: [],
+			mining_rainbow_kitsuu: []
 		};
 
 		// Use the new importFullDatabase method

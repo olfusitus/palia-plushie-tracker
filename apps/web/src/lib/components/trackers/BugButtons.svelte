@@ -37,5 +37,5 @@
 	onclick={handleRareDrop}
 	class="btn btn-soft btn-secondary flex h-20 w-[45%] items-center justify-center rounded-lg shadow-md transition-all duration-200 hover:bg-purple-400 active:scale-95 sm:text-lg"
 >
-	{$_('ui.saved')}
+	{$_('ui.plushie')}
 </button>

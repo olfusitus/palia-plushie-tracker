@@ -16,7 +16,10 @@ const bugNames = [
 	{ bug: 'bug_proudhorn_beetle', name: 'Stolzhorn-\nKäfer' },
 	{ bug: 'bug_lanternbug', name: 'Laternenkäfer' },
 	{ bug: 'bug_rockhopper', name: 'Felsenhüpfer' },
-	{ bug: 'bug_duskwing', name: 'Dämmerfalter' }
+	{ bug: 'bug_duskwing', name: 'Dämmerfalter' },
+	{ bug: 'bug_bahari_bee', name: 'Bahari\nBiene' },
+	{ bug: 'bug_golden_glory_bee', name: 'Goldruhm-\nBiene' },
+	{ bug: 'bug_fairy_mantis', name: 'Fairy\nMantis' }
 ];
 
 function lookupBugName(bug: string): string | undefined {
@@ -85,6 +88,12 @@ export class BugCounter extends SingletonAction<BugCounterSettings> {
 		// streamDeck.logger.info(`Connecting to websocket...`);
 		socket.on('open', () => {
 			// streamDeck.logger.info(`Websocket connected!`);
+			const resolvedRareDropType =
+				settings.bug === 'bug_rockhopper' && settings.is_plushie
+					? settings.rareDropType === 'rainbow_frogbert'
+						? 'rainbow_frogbert'
+						: settings.bugSize
+					: settings.rareDropType;
 
 			socket.send(
 				JSON.stringify({
@@ -92,7 +101,9 @@ export class BugCounter extends SingletonAction<BugCounterSettings> {
 					resourceType: settings.bug,
 					rareDrops: settings.is_plushie ? 1 : 0,
 					incrementBy: settings.incrementBy,
-					size: settings.bugSize ? settings.bugSize : ''
+					size: settings.bugSize ? settings.bugSize : '',
+					variant: settings.bugSize ? settings.bugSize : undefined,
+					rareDropType: resolvedRareDropType
 				})
 			);
 			socket.close();
@@ -104,6 +115,7 @@ type BugCounterSettings = {
 	count?: string;
 	bug?: string;
 	bugSize?: string;
+	rareDropType?: string;
 	is_plushie?: boolean;
 	incrementBy?: number;
 	show_name?: boolean;

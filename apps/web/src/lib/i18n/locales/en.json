@@ -93,16 +93,26 @@
 		"bug_lanternbug": {
 			"name": "Paper Lanternbug"
 		},
+		"bug_fairy_mantis": {
+			"name": "Fairy Mantis"
+		},
 		"bug_rockhopper": {
 			"name": "Felshüpfer",
 			"labels": {
 				"small": "Grumpy",
 				"medium": "Flame-Horned",
-				"large": "Will-o-wisp"
+				"large": "Will-o-wisp",
+				"rainbow_frogbert": "Rainbow Frogbert"
 			}
 		},
 		"bug_duskwing": {
 			"name": "Duskwing Butterfly"
+		},
+		"bug_bahari_bee": {
+			"name": "Bahari Bee"
+		},
+		"bug_golden_glory_bee": {
+			"name": "Golden Glory Bee"
 		},
 		"fish_kilima_waters": {
 			"name": "Kilima Waters",

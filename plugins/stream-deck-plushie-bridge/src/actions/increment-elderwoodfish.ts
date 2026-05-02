@@ -73,7 +73,7 @@ export class ElderwoodFishCounter extends SingletonAction<ElderwoodFishCounterSe
 			// streamDeck.logger.info(`Websocket connected!`);
 
 			socket.send(
-				JSON.stringify({ action: 'addEntry', resourceType: settings.fish, rareDrops: settings.is_plushie ? 1 : 0, size: settings.type, incrementBy: settings.incrementBy }));
+				JSON.stringify({ action: 'addEntry', resourceType: settings.fish, rareDrops: settings.is_plushie ? 1 : 0, size: settings.type, rareDropType: settings.type, incrementBy: settings.incrementBy }));
 			socket.close();
 		});
 	}

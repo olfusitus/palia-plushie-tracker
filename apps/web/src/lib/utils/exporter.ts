@@ -12,13 +12,14 @@ export function exportResourceAsCSV(resourceType: ResourceType): string {
 	const entries = allData[resourceType] || [];
 
 	// 3. Generate the CSV rows.
-	const headers = ['id', 'timestamp', 'type', 'rareDrops'];
+	const headers = ['id', 'timestamp', 'variant', 'rareDropType', 'rareDrops'];
 	const rows = [
 		headers.join(','), // CSV header row
 		...entries.map((entry) => {
-			// Gracefully handle both AnimalEntry and BugEntry
-			const type = 'type' in entry ? entry.type : 'N/A';
-			return [entry.id, entry.timestamp, type, entry.rareDrops].join(',');
+			const variant = entry.variant ?? ('type' in entry ? entry.type : 'N/A');
+			return [entry.id, entry.timestamp, variant, entry.rareDropType ?? 'N/A', entry.rareDrops].join(
+				','
+			);
 		})
 	];
 

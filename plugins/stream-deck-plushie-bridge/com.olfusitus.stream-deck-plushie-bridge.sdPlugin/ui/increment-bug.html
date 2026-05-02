@@ -22,8 +22,11 @@
             <option value="bug_lunar_fairy_moth">Lunar Fairy Moth</option>
             <option value="bug_proudhorn_beetle">Proud-horned Stag Beetle</option>
             <option value="bug_lanternbug">Paper Lanternbug</option>
+            <option value="bug_fairy_mantis">Fairy Mantis</option>
             <option value="bug_rockhopper">Rockhopper</option>
             <option value="bug_duskwing">Duskwing</option>
+            <option value="bug_bahari_bee">Bahari Bee</option>
+            <option value="bug_golden_glory_bee">Golden Glory Bee</option>
         </sdpi-select>
     </sdpi-item>
     <sdpi-item id="pickSize" label="Size" style='visibility: hidden;'>
@@ -33,7 +36,13 @@
             <option value="large">Irrlicht</option>
         </sdpi-select>
     </sdpi-item>
-    <sdpi-item label="Plushie"">
+    <sdpi-item id="pickPlushType" label="Plush Type" style='visibility: hidden;'>
+        <sdpi-select setting="rareDropType" placeholder="Please choose a plush type">
+            <option value="matching_variant">Matching variant plush</option>
+            <option value="rainbow_frogbert">Rainbow Frogbert</option>
+        </sdpi-select>
+    </sdpi-item>
+    <sdpi-item label="Plushie">
         <sdpi-checkbox setting="is_plushie" label="Is it a plushie?"></sdpi-checkbox>
     </sdpi-item>
 
@@ -54,18 +63,28 @@
     </sdpi-item>
 
     <script type="text/javascript">
+        const bugSelector = document.querySelector("#bugSelector");
+        const plushieCheckbox = document.querySelector('sdpi-checkbox[setting="is_plushie"]');
+        const pickSize = document.getElementById('pickSize');
+        const pickPlushType = document.getElementById('pickPlushType');
+
+        function plushieChecked() {
+            return plushieCheckbox?.checked === true || plushieCheckbox?.value === true || plushieCheckbox?.value === 'true';
+        }
+
+        function updateRockhopperControls() {
+            const isRockhopper = bugSelector?.value === 'bug_rockhopper';
+            pickSize.style.visibility = isRockhopper ? 'visible' : 'hidden';
+            pickPlushType.style.visibility = isRockhopper && plushieChecked() ? 'visible' : 'hidden';
+        }
+
         document.querySelector("sdpi-range").addEventListener('valuechange', function (ev) {
             const incrementValueDisplay = document.getElementById("incrementValueDisplay");
             incrementValueDisplay.textContent = ev.target.value;
         });
-        document.querySelector("#bugSelector").addEventListener('valuechange', function (ev) {
-            if(ev.target.value == "bug_rockhopper"){
-                node = document.getElementById('pickSize').style.visibility = 'visible';
-            }
-            else{
-    node = document.getElementById('pickSize').style.visibility = 'hidden';
-            }
-        });
+        bugSelector.addEventListener('valuechange', updateRockhopperControls);
+        plushieCheckbox.addEventListener('valuechange', updateRockhopperControls);
+        updateRockhopperControls();
 
 
     </script>

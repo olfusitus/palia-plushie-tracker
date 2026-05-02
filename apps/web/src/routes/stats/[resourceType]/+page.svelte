@@ -1,8 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { ResourceType } from '$lib/storage/types';
+	import type { AnimalEntry, BugEntry, FishEntry, ResourceType } from '$lib/storage/types';
 	import { resources } from '$lib/resources';
-	import { calculateStats, type StatResult } from '$lib/utils/statistics';
+	import {
+		calculateAnimalStats,
+		calculateBugStats,
+		calculateFishStats,
+		type StatResult
+	} from '$lib/utils/statistics';
 	import { buildDistanceHistogramData } from '$lib/utils/chartData';
 	import { resourceStore } from '$lib/stores/resourceStore';
 	import { _ } from 'svelte-i18n';
@@ -11,6 +16,8 @@
 	export let data; // comes from load()
 	const resourceType: ResourceType = data.resourceType as ResourceType;
 	const type: 'animal' | 'bug' | 'fish' | 'mining' | undefined = data.type;
+	const resource = resources.find((r) => r.type === resourceType);
+	const bugHasVariants = type === 'bug' && Boolean(resource && 'availableSizes' in resource);
 
 	let stats:
 		| (StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> })
@@ -24,7 +31,14 @@
 	);
 
 	$: {
-		const myStats = calculateStats(entries);
+		const myStats =
+			type === 'animal'
+				? calculateAnimalStats(entries as AnimalEntry[])
+				: type === 'bug'
+					? bugHasVariants
+						? calculateBugStats(entries as BugEntry[])
+						: calculateFishStats(entries as FishEntry[])
+					: calculateFishStats(entries as FishEntry[]);
 		// console.log(entries);
 		// console.log(myStats);
 		if ('count' in myStats) {

@@ -93,16 +93,26 @@
 		"bug_lanternbug": {
 			"name": "Papier-Lampionwürmchen"
 		},
+		"bug_fairy_mantis": {
+			"name": "Fairy-Mantis"
+		},
 		"bug_rockhopper": {
 			"name": "Felshüpfer",
 			"labels": {
 				"small": "Mürrisch",
 				"medium": "Flammenhorn",
-				"large": "Irrlicht"
+				"large": "Irrlicht",
+				"rainbow_frogbert": "Regenbogen-Frogbert"
 			}
 		},
 		"bug_duskwing": {
 			"name": "Dämmerfalter"
+		},
+		"bug_bahari_bee": {
+			"name": "Bahari Biene"
+		},
+		"bug_golden_glory_bee": {
+			"name": "Goldruhm-Biene"
 		},
 		"fish_kilima_waters": {
 			"name": "Kilima Gewässer",
