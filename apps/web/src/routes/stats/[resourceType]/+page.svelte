@@ -81,7 +81,7 @@
 
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 		{#each Object.entries(stats) as [typ, statData] (typ)}
-			<StatsDisplay stats={statData} resourceName={getResourceName(resourceType, typ)} />
+			<StatsDisplay stats={statData} resourceName={getResourceName(resourceType, typ)} {resourceType} />
 		{/each}
 	</div>
 
@@ -98,12 +98,13 @@
 			<StatsDisplay
 				stats={stats as StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> }}
 				resourceName={getResourceName(resourceType)}
+				{resourceType}
 			/>
 		</div>
 	{:else}
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 			{#each Object.entries(stats) as [typ, statData] (typ)}
-				<StatsDisplay stats={statData} resourceName={getResourceName(resourceType, typ)} />
+				<StatsDisplay stats={statData} resourceName={getResourceName(resourceType, typ)} {resourceType} />
 			{/each}
 		</div>
 	{/if}
@@ -122,6 +123,7 @@
 		<StatsDisplay
 			stats={stats as StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> }}
 			resourceName={getResourceName(resourceType)}
+			{resourceType}
 		/>
 	{/if}
 	<!-- huhugcc -->
@@ -140,6 +142,7 @@
 		<StatsDisplay
 			stats={stats as StatResult & { barData: ReturnType<typeof buildDistanceHistogramData> }}
 			resourceName={getResourceName(resourceType)}
+			{resourceType}
 		/>
 	{/if}
 
