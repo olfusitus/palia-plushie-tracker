@@ -19,6 +19,25 @@
 		(a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
 	);
 
+	function formatEntryToken(token: string) {
+		return token
+			.split('_')
+			.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+			.join(' ');
+	}
+
+	function getVariantLabel(entry: ResourceEntry) {
+		if (entry.variant) {
+			return formatEntryToken(entry.variant);
+		}
+
+		if ('type' in entry && entry.type) {
+			return formatEntryToken(entry.type);
+		}
+
+		return null;
+	}
+
 	function deleteEntry(entry: ResourceEntry) {
 		if (confirm('Diesen Eintrag wirklich löschen?')) {
 			resourceStore.deleteEntry(resourceType, entry.id);
@@ -45,8 +64,14 @@
 							{new Date(eintrag.timestamp).toLocaleString()}
 						</p>
 						<p class="text-base-content font-semibold">
-							{#if 'type' in eintrag}
-								<span class="badge badge-outline badge-info mr-2">{eintrag.type.toUpperCase()}</span
+							{#if getVariantLabel(eintrag)}
+								<span class="badge badge-outline badge-info mr-2"
+									>{getVariantLabel(eintrag)}</span
+								>
+							{/if}
+							{#if eintrag.rareDropType}
+								<span class="badge badge-outline badge-secondary mr-2"
+									>{formatEntryToken(eintrag.rareDropType)}</span
 								>
 							{/if}
 							<span class="badge badge-outline badge-info"

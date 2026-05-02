@@ -1,8 +1,26 @@
 import { storageService } from '$lib/storage/index';
 import type { Profile } from '$lib/storage/types';
 
+export async function ensureDefaultProfile(): Promise<Profile> {
+	const profiles = await storageService.repository.getProfiles();
+	if (profiles.length === 0) {
+		const profile = await storageService.repository.addProfile('default');
+		await storageService.repository.setActiveProfileId(profile.id);
+		return profile;
+	}
+
+	const activeProfileId = await storageService.repository.getActiveProfileId();
+	const activeProfile = activeProfileId ? profiles.find((p) => p.id === activeProfileId) : null;
+	if (activeProfile) {
+		return activeProfile;
+	}
+
+	await storageService.repository.setActiveProfileId(profiles[0].id);
+	return profiles[0];
+}
+
 export async function getActiveProfileId(): Promise<string | null> {
-	return await storageService.repository.getActiveProfileId();
+	return (await ensureDefaultProfile()).id;
 }
 
 export async function setActiveProfileId(profileId: string): Promise<void> {
@@ -10,6 +28,7 @@ export async function setActiveProfileId(profileId: string): Promise<void> {
 }
 
 export async function getProfiles(): Promise<Profile[]> {
+	await ensureDefaultProfile();
 	return await storageService.repository.getProfiles();
 }
 

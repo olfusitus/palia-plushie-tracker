@@ -2,8 +2,7 @@ import type {
 	AnimalEntry,
 	BugEntry,
 	FishEntry,
-	ResourceEntry,
-	SizedEntry
+	ResourceEntry
 } from '$lib/storage/types';
 
 export interface StatResult {
@@ -57,8 +56,20 @@ function calcStats(werte: number[]): StatResult {
 	};
 }
 
-function isSizedEntry(entry: BugEntry): entry is SizedEntry {
-	return 'type' in entry;
+function getVariantKey(entry: ResourceEntry): string | undefined {
+	if (entry.variant) {
+		return entry.variant;
+	}
+
+	if ('type' in entry && entry.type) {
+		return entry.type;
+	}
+
+	return undefined;
+}
+
+function hasVariantKey(entry: ResourceEntry): boolean {
+	return getVariantKey(entry) !== undefined;
 }
 
 /**
@@ -76,7 +87,7 @@ export function calculateAnimalStats(entries: AnimalEntry[]) {
  * @returns An object containing the calculated statistics.
  */
 export function calculateBugStats(entries: BugEntry[]): StatResult | Record<string, StatResult> {
-	if (entries.every(isSizedEntry)) {
+	if (entries.length > 0 && entries.every(hasVariantKey)) {
 		return calculateSizedStats(entries);
 	} else {
 		return calculateUnsizedStats(entries);
@@ -93,17 +104,26 @@ export function calculateFishStats(entries: FishEntry[]): StatResult {
 }
 
 export function calculateStats(entries: ResourceEntry[]): StatResult | Record<string, StatResult> {
-	if (entries.every(isSizedEntry)) {
+	if (entries.length > 0 && entries.every(hasVariantKey)) {
 		return calculateSizedStats(entries);
 	} else {
 		return calculateUnsizedStats(entries);
 	}
 }
 
-function calculateSizedStats(entries: SizedEntry[]): Record<string, StatResult> {
-	const grouped: Record<string, number[]> = { small: [], medium: [], large: [] };
-	entries.forEach((e: SizedEntry) => {
-		grouped[e.type].push(e.rareDrops);
+function calculateSizedStats(entries: ResourceEntry[]): Record<string, StatResult> {
+	const grouped: Record<string, number[]> = {};
+	entries.forEach((entry) => {
+		const key = getVariantKey(entry);
+		if (!key) {
+			return;
+		}
+
+		if (!grouped[key]) {
+			grouped[key] = [];
+		}
+
+		grouped[key].push(entry.rareDrops);
 	});
 
 	return Object.fromEntries(

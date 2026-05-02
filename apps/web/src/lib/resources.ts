@@ -40,11 +40,20 @@ export const resources: Resource[] = [
 		type: 'bug_lanternbug'
 	},
 	{
+		type: 'bug_fairy_mantis'
+	},
+	{
 		type: 'bug_rockhopper',
 		availableSizes: ['small', 'medium', 'large']
 	},
 	{
 		type: 'bug_duskwing'
+	},
+	{
+		type: 'bug_bahari_bee'
+	},
+	{
+		type: 'bug_golden_glory_bee'
 	},
 	{
 		type: 'fish_kilima_waters'

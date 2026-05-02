@@ -10,9 +10,11 @@
 	// import { triggerResourceEntriesRefresh } from '$lib/stores/resourceEntriesStore';
 	import ToastContainer from '$lib/components/ToastContainer.svelte';
 	import { resourceStore } from '$lib/stores/resourceStore';
+	import { ensureDefaultProfile } from '$lib/profile';
 	import { version } from '$app/environment';
 
-	onMount(() => {
+	onMount(async () => {
+		await ensureDefaultProfile();
 		// migrateToProfiles();
 		// eslint-disable-next-line no-undef
 		if (__TAURI__) {
@@ -29,22 +31,57 @@
 					if (data.action === 'addEntry') {
 						console.log('Received action:', data.action);
 						// eslint-disable-next-line @typescript-eslint/no-unused-vars
-						const { action, resourceType, size, rareDrops, incrementBy } = data;
+						const { action, resourceType, size, rareDrops, incrementBy, variant, rareDropType } =
+							data;
+						const entryCount = Number(incrementBy ?? 1);
+						const normalizedRareDrops = Number(rareDrops ?? 0);
 
-						if (incrementBy == 1) {
-							if (typeof size !== 'undefined') {
-								resourceStore.addEntry(resourceType, rareDrops, size);
+						if (typeof variant !== 'undefined' || typeof rareDropType !== 'undefined') {
+							const entryInput = {
+								rareDrops: normalizedRareDrops,
+								...(typeof size !== 'undefined' && { type: size }),
+								...(typeof variant !== 'undefined' && { variant }),
+								...(typeof rareDropType !== 'undefined' && { rareDropType })
+							};
+
+							if (entryCount === 1) {
+								resourceStore.addEntry(resourceType, entryInput);
 							} else {
-								resourceStore.addEntry(resourceType, rareDrops);
+								resourceStore.addMultipleEntries(resourceType, entryInput, entryCount);
 							}
 						} else {
-							if (typeof size !== 'undefined') {
-								resourceStore.addMultipleEntries(resourceType, rareDrops, incrementBy, size);
+							if (entryCount === 1) {
+								if (typeof size !== 'undefined') {
+									resourceStore.addEntry(resourceType, normalizedRareDrops > 0, size);
+								} else {
+									resourceStore.addEntry(resourceType, normalizedRareDrops > 0);
+								}
 							} else {
-								resourceStore.addMultipleEntries(resourceType, rareDrops, incrementBy);
+								if (typeof size !== 'undefined') {
+									resourceStore.addMultipleEntries(
+										resourceType,
+										normalizedRareDrops > 0,
+										entryCount,
+										size
+									);
+								} else {
+									resourceStore.addMultipleEntries(
+										resourceType,
+										normalizedRareDrops > 0,
+										entryCount
+									);
+								}
 							}
 						}
-						console.log('Added entry:', resourceType, rareDrops, size, incrementBy);
+						console.log(
+							'Added entry:',
+							resourceType,
+							normalizedRareDrops,
+							size,
+							entryCount,
+							variant,
+							rareDropType
+						);
 
 						return;
 					}

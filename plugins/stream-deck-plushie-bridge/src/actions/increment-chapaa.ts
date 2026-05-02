@@ -104,7 +104,7 @@ export class AnimalCounter extends SingletonAction<CounterSettings> {
 			// streamDeck.logger.info(`Websocket connected!`);
 
 			socket.send(
-				JSON.stringify({ action: 'addEntry', resourceType: settings.animal, size: settings.animal_size? settings.animal_size : 'small', rareDrops: settings.is_plushie ? 1 : 0, incrementBy: settings.incrementBy }));
+				JSON.stringify({ action: 'addEntry', resourceType: settings.animal, size: settings.animal_size? settings.animal_size : 'small', variant: settings.animal_size ? settings.animal_size : 'small', rareDrops: settings.is_plushie ? 1 : 0, incrementBy: settings.incrementBy }));
 			socket.close();
 		});
 

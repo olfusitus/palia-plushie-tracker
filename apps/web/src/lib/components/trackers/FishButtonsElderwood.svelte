@@ -24,7 +24,10 @@
 	}
 
 	function handlePlushieDrop(plushType: string) {
-		resourceStore.addEntry(resource.type, true, plushType);
+		resourceStore.addEntry(resource.type, {
+			rareDrops: 1,
+			rareDropType: plushType
+		});
 		dropdownButtonStatus = true;
 		setTimeout(() => {
 			dropdownButtonStatus = false;

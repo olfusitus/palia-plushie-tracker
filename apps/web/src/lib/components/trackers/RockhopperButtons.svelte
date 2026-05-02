@@ -14,6 +14,8 @@
 		}
 	}
 
+	const rainbowFrogbert = 'rainbow_frogbert';
+
 	function buttonClass(size: string): string {
 		const base =
 			'btn w-[45%] h-20 sm:text-lg rounded-lg shadow-md active:scale-95 active:shadow-inner text-white';
@@ -29,7 +31,10 @@
 	}
 
 	function handleClick(size: string, plushie: boolean) {
-		resourceStore.addEntry(resource.type, plushie, size);
+		resourceStore.addEntry(resource.type, {
+			rareDrops: plushie ? 1 : 0,
+			variant: size
+		});
 		buttonStatus[size] = true;
 		setTimeout(() => {
 			buttonStatus[size] = false;
@@ -40,8 +45,16 @@
 	let detailsRef: HTMLDetailsElement;
 	let openDropdown: boolean = $state<boolean>(false);
 
-	function handleRareDrop(size: string) {
-		handleClick(size, true);
+	function handleRareDrop(size: string, rareDropType: string) {
+		resourceStore.addEntry(resource.type, {
+			rareDrops: 1,
+			variant: size,
+			rareDropType
+		});
+		buttonStatus[size] = true;
+		setTimeout(() => {
+			buttonStatus[size] = false;
+		}, 500);
 		openDropdown = false;
 	}
 
@@ -83,8 +96,15 @@
 		<ul class="menu dropdown-content bg-base-300 rounded-box w-52 p-2 shadow-sm">
 			{#each resource.availableSizes as size (size)}
 				<li>
-					<button onclick={() => handleRareDrop(size)}>
-						{$_(`resources.${resource.type}.labels.${size}`)}
+					<button onclick={() => handleRareDrop(size, size)}>
+						{$_(`resources.${resource.type}.labels.${size}`)} {$_('ui.plushie')}
+					</button>
+				</li>
+				<li>
+					<button onclick={() => handleRareDrop(size, rainbowFrogbert)}>
+						{$_(`resources.${resource.type}.labels.${size}`)} - {$_(
+							`resources.${resource.type}.labels.${rainbowFrogbert}`
+						)}
 					</button>
 				</li>
 			{/each}

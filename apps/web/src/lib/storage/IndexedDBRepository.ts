@@ -19,8 +19,11 @@ const RESOURCE_TYPES: ResourceType[] = [
 	'bug_lunar_fairy_moth',
 	'bug_proudhorn_beetle',
 	'bug_lanternbug',
+	'bug_fairy_mantis',
 	'bug_rockhopper',
-	'bug_duskwing'
+	'bug_duskwing',
+	'bug_bahari_bee',
+	'bug_golden_glory_bee'
 ];
 
 export class IndexedDBRepository implements IStorageRepository {
@@ -177,7 +180,9 @@ export class IndexedDBRepository implements IStorageRepository {
 			id: entry.id,
 			timestamp: entry.timestamp,
 			rareDrops: entry.rareDrops,
-			...(entry.type && { type: entry.type }) // Only include type if it exists (for AnimalEntry)
+			...(entry.type && { type: entry.type }),
+			...(entry.variant && { variant: entry.variant }),
+			...(entry.rareDropType && { rareDropType: entry.rareDropType })
 		}));
 	}
 
@@ -311,8 +316,11 @@ export class IndexedDBRepository implements IStorageRepository {
 			writePromises.push(profilesStore.put(profile));
 		});
 
-		// Schreibe Einstellungen
-		writePromises.push(settingsStore.put({ key: 'activeProfileId', value: data.activeProfileId }));
+		// Preserve the imported active profile when present; otherwise fall back to the first profile.
+		const importedActiveProfileId = data.activeProfileId || data.profiles[0]?.id || '';
+		writePromises.push(
+			settingsStore.put({ key: 'activeProfileId', value: importedActiveProfileId })
+		);
 
 		// Schreibe Einträge
 		for (const profileId in data.data) {

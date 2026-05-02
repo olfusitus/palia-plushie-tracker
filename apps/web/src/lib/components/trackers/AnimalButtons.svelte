@@ -27,7 +27,10 @@
 	}
 
 	function handleClick(size: string, plushie: boolean) {
-		resourceStore.addEntry(resource.type, plushie, size as ResourceSize);
+		resourceStore.addEntry(resource.type, {
+			rareDrops: plushie ? 1 : 0,
+			variant: size as ResourceSize
+		});
 		buttonStatus[size] = true;
 		setTimeout(() => {
 			buttonStatus[size] = false;
