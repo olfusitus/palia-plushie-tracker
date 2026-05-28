@@ -36,6 +36,7 @@ export const resourceTypes = [
 	'animal_muujin',
 	'animal_ogopuu',
 	'animal_shmole',
+	'animal_jaakcat',
 	'bug_rtb',
 	'bug_ladybug',
 	'bug_snail',
