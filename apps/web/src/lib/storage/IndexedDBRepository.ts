@@ -13,6 +13,7 @@ const RESOURCE_TYPES: ResourceType[] = [
 	'animal_muujin',
 	'animal_ogopuu',
 	'animal_shmole',
+	'animal_jaakcat',
 	'bug_rtb',
 	'bug_ladybug',
 	'bug_snail',
@@ -68,6 +69,10 @@ export class IndexedDBRepository implements IStorageRepository {
 									(await transaction.objectStore('profiles').get('active'))?.value || 'default';
 
 								for (const resourceType of RESOURCE_TYPES) {
+									if (!db.objectStoreNames.contains(resourceType)) {
+										continue;
+									}
+
 									for (const profileName of oldProfilesList) {
 										const record = await transaction.objectStore(resourceType).get(profileName);
 										if (record && record.data && record.data.data.length > 0) {

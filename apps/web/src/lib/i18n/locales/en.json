@@ -76,6 +76,14 @@
 				"large": "Piksii"
 			}
 		},
+		"animal_jaakcat": {
+			"name": "Jaakcat",
+			"labels": {
+				"small": "Jaakcat",
+				"medium": "Midnight",
+				"large": "Hollow"
+			}
+		},
 		"bug_rtb": {
 			"name": "Rainbow-tipped Butterfly"
 		},

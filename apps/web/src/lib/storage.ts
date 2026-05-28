@@ -2,7 +2,13 @@ import { storageService } from './storage/index';
 // import type { ResourceSize } from './storage/types';
 
 export interface AnimalResource {
-	type: 'animal_chapaa' | 'animal_sernuk' | 'animal_muujin' | 'animal_ogopuu' | 'animal_shmole';
+	type:
+		| 'animal_chapaa'
+		| 'animal_sernuk'
+		| 'animal_muujin'
+		| 'animal_ogopuu'
+		| 'animal_shmole'
+		| 'animal_jaakcat';
 	// name: string;
 	availableSizes: string[];
 	// labels: Record<ResourceSize, string>;

@@ -76,6 +76,14 @@
 				"large": "Piksii"
 			}
 		},
+		"animal_jaakcat": {
+			"name": "Jaakkatze",
+			"labels": {
+				"small": "Jaakkatze",
+				"medium": "Mitternacht",
+				"large": "Hohle"
+			}
+		},
 		"bug_rtb": {
 			"name": "Regenbogenfalter"
 		},

@@ -22,6 +22,10 @@ export const resources: Resource[] = [
 		availableSizes: ['small', 'medium', 'large']
 	},
 	{
+		type: 'animal_jaakcat',
+		availableSizes: ['small', 'medium', 'large']
+	},
+	{
 		type: 'bug_rtb'
 	},
 	{
