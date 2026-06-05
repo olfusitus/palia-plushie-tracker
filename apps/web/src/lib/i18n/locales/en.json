@@ -84,6 +84,14 @@
 				"large": "Hollow"
 			}
 		},
+		"animal_highlands_sernuk": {
+			"name": "Highlands Sernuk",
+			"labels": {
+				"small": "Highland",
+				"medium": "Golden",
+				"large": "Royal"
+			}
+		},
 		"bug_rtb": {
 			"name": "Rainbow-tipped Butterfly"
 		},

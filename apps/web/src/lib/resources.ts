@@ -26,6 +26,10 @@ export const resources: Resource[] = [
 		availableSizes: ['small', 'medium', 'large']
 	},
 	{
+		type: 'animal_highlands_sernuk',
+		availableSizes: ['small', 'medium', 'large']
+	},
+	{
 		type: 'bug_rtb'
 	},
 	{

@@ -14,6 +14,7 @@ const RESOURCE_TYPES: ResourceType[] = [
 	'animal_ogopuu',
 	'animal_shmole',
 	'animal_jaakcat',
+	'animal_highlands_sernuk',
 	'bug_rtb',
 	'bug_ladybug',
 	'bug_snail',

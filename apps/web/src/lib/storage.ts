@@ -8,7 +8,8 @@ export interface AnimalResource {
 		| 'animal_muujin'
 		| 'animal_ogopuu'
 		| 'animal_shmole'
-		| 'animal_jaakcat';
+		| 'animal_jaakcat'
+		| 'animal_highlands_sernuk';
 	// name: string;
 	availableSizes: string[];
 	// labels: Record<ResourceSize, string>;

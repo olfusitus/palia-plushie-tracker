@@ -84,6 +84,14 @@
 				"large": "Hohle"
 			}
 		},
+		"animal_highlands_sernuk": {
+			"name": "Hochland-Sernuk",
+			"labels": {
+				"small": "Hochland",
+				"medium": "Golden",
+				"large": "Königlich"
+			}
+		},
 		"bug_rtb": {
 			"name": "Regenbogenfalter"
 		},

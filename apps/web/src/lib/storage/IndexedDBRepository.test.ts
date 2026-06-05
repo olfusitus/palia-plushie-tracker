@@ -144,6 +144,7 @@ describe('IndexedDBRepository', () => {
 			animal_ogopuu: [],
 			animal_shmole: [],
 			animal_jaakcat: [],
+			animal_highlands_sernuk: [],
 			bug_ladybug: [],
 			bug_snail: [],
 			bug_lunar_fairy_moth: [],
